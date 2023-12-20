@@ -8,22 +8,28 @@ import Home from './pages/Home';
 import AdminHome from './admin/AdminHome';
 import AddProduct from './admin/pages/AddProduct';
 import EditProduct from './admin/pages/EditProduct';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
 
 const App = () => {
 	return (
-		<Routes>
-			{/* Regular Website Routes */}
-			<Route path='/' element={<Home />} />
+		<>
+			<Navbar />
+			<Hero />
+			<Routes>
+				{/* Regular Website Routes */}
+				<Route path='/' element={<Home />} />
 
-			{/* Admin Product Routes */}
-			<Route path='/admin' element={<AdminHome />} />
-			<Route path='/admin/addproduct' element={<AddProduct />} />
-			<Route path='/admin/editproduct/:id' element={<EditProduct />} />
+				{/* Admin Product Routes */}
+				<Route path='/admin' element={<AdminHome />} />
+				<Route path='/admin/addproduct' element={<AddProduct />} />
+				<Route path='/admin/editproduct/:id' element={<EditProduct />} />
 
-			{/* Admin Users Routes */}
+				{/* Admin Users Routes */}
 
-			{/* Store User Routes */}
-		</Routes>
+				{/* Store User Routes */}
+			</Routes>
+		</>
 	);
 };
 export default App;
