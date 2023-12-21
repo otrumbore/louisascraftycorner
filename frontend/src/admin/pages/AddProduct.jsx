@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 import LoadingModal from '../components/LoadingModal';
 
 const AddProduct = () => {
-	const [id, setId] = useState('');
+	const [storeId, setStoreId] = useState('');
 	const [name, setName] = useState('');
 	const [description, setDesciption] = useState('');
 	const [price, setPrice] = useState('');
@@ -24,7 +24,7 @@ const AddProduct = () => {
 
 	const handleAddProduct = () => {
 		const data = {
-			id,
+			storeId,
 			name,
 			description,
 			price,
@@ -67,8 +67,8 @@ const AddProduct = () => {
 					<label className='text-xl mr-4 text-gray-500'>Store ID</label>
 					<input
 						type='text'
-						value={id}
-						onChange={(e) => setId(e.target.value)}
+						value={storeId}
+						onChange={(e) => setStoreId(e.target.value)}
 						className='border-2 border-gray-500 px-4 py-2 w-full'
 					/>
 				</div>

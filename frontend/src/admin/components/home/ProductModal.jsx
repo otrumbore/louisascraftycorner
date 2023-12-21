@@ -51,7 +51,7 @@ const ProductModal = ({ product, onClose }) => {
 					</div>
 					<div className='flex justify-end items-center gap-x-2'>
 						<h2 className='my-1'>
-							{product.rating === !undefined
+							{product.rating !== undefined && product.rating > 0
 								? product.rating + '/5'
 								: 'No Rating'}
 						</h2>

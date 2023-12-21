@@ -50,7 +50,7 @@ const ProductsTable = ({ products }) => {
 				{products.map((product, index) => (
 					<tr key={product._id} className='h-8'>
 						<td className='border border-slate-700 rounded-md text-center'>
-							{product.id}
+							{product.storeId}
 						</td>
 
 						<td className='border border-slate-700 rounded-md text-center'>

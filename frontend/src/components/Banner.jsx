@@ -3,7 +3,7 @@ import { MdClose } from 'react-icons/md';
 export default function Banner({ style }) {
 	return (
 		<div
-			className={`w-full top-0 left-0 bg-opacity-75 flex items-center gap-x-6 overflow-hidden bg-gray-50 px-5 py-2 sm:px-3 sm:before:flex-1 ${style}`}
+			className={`w-full top-0 left-0 bg-opacity-75 flex items-center gap-x-6 overflow-hidden bg-gray-50 px-5 py-2 sm:px-3 sm:before:flex-1 z-50 ${style}`}
 		>
 			<div className='flex flex-wrap w-full max-w-[1200px] items-center justify-center gap-x-4 gap-y-2'>
 				<p className='text-sm leading-6 text-gray-900'>
@@ -15,7 +15,7 @@ export default function Banner({ style }) {
 					>
 						<circle cx={1} cy={1} r={1} />
 					</svg>
-					On orders over $50 in the USA
+					On orders over $25 in the USA
 				</p>
 				{/* <a
 					href='#'

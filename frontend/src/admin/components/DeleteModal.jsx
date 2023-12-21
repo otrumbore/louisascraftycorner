@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { MdOutlineDescription, MdPriceCheck } from 'react-icons/md';
 import { SiMonkeytype } from 'react-icons/si';
-import Spinner from './Spinner';
+import LoadingModal from '../components/LoadingModal';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
@@ -16,17 +16,18 @@ const DeleteModal = ({ product, onClose }) => {
 		axios
 			.delete(`http://10.0.0.85:5555/products/${product._id}`)
 			.then((response) => {
-				setLoading(false);
 				enqueueSnackbar('Product deleted sucessfully, reloading...', {
 					variant: 'success',
 					anchorOrigin: { horizontal: 'right', vertical: 'top' },
 				});
-				onClose();
+				//onClose();
 				// Perform a page refresh
 				// Set a timer before reloading the page
 				setTimeout(() => {
+					onClose();
+					setLoading(false);
 					window.location.reload();
-				}, 1500); // Set the timer to 1500 milliseconds (1.5 seconds) - Change as needed
+				}, 1000); // Set the timer to 1500 milliseconds (1.5 seconds) - Change as needed
 			})
 			.catch((error) => {
 				setLoading(false);
@@ -43,7 +44,7 @@ const DeleteModal = ({ product, onClose }) => {
 				onClick={(event) => event.stopPropagation()}
 				className='w-[600px] max-w-full max-h-[80vh] bg-white rounded-xl p-4 flex flex-col relative'
 			>
-				{loading && <Spinner />}
+				{loading && <LoadingModal loading={loading} />}
 				<AiOutlineClose
 					className='absolute right-6 top-6 text-3xl text-red-600 cursor-pointer'
 					onClick={onClose}

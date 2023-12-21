@@ -29,7 +29,7 @@ const EditProduct = () => {
 		axios
 			.get(`http://10.0.0.85:5555/products/${id}`)
 			.then((response) => {
-				setStoreId(response.data.data.id);
+				setStoreId(response.data.data.storeId);
 				setName(response.data.data.name);
 				setDescription(response.data.data.description);
 				setPrice(response.data.data.price);
@@ -55,6 +55,7 @@ const EditProduct = () => {
 	}, []);
 
 	const handleEditProduct = () => {
+		//const id = storeId;
 		const data = {
 			storeId,
 			name,
@@ -69,6 +70,7 @@ const EditProduct = () => {
 			img,
 		};
 		setLoading(true);
+		console.log(id);
 		axios
 			.put(`http://10.0.0.85:5555/products/${id}`, data)
 			.then(() => {
@@ -90,7 +92,7 @@ const EditProduct = () => {
 	};
 
 	return (
-		<div className='p-4'>
+		<div className='p-4 mt-[8rem]'>
 			<BackButton />
 			<h1 className='text-3xl my-4'>Edit Product</h1>
 			<LoadingModal loading={loading} />
@@ -166,6 +168,15 @@ const EditProduct = () => {
 						type='text'
 						value={tags}
 						onChange={(e) => setTags(e.target.value)}
+						className='border-2 border-gray-500 px-4 py-2 w-full'
+					/>
+				</div>
+				<div className='my-4'>
+					<label className='text-xl mr-4 text-gray-500'>Rating</label>
+					<input
+						type='text'
+						value={rating || ''}
+						onChange={(e) => setRating(e.target.value)}
 						className='border-2 border-gray-500 px-4 py-2 w-full'
 					/>
 				</div>

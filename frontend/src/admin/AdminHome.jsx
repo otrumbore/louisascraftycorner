@@ -27,7 +27,12 @@ const AdminHome = () => {
 			});
 	}, []);
 	return (
-		<div className='p-4'>
+		<div className='p-4 mt-[8rem]'>
+			<LoadingModal loading={loading} />
+			<div className='flex w-full justify-center'>
+				<h1 className='text-5xl lg:text-6xl'>Admin Home</h1>
+			</div>
+
 			{/* <div className='flex justify-center items-center gap-x-4'>
 				<button
 					className='bg-sky-300 hover:bg-sky-600 px-4 py-1 rounded-lg'
@@ -42,7 +47,7 @@ const AdminHome = () => {
 					Card Layout
 				</button>
 			</div> */}
-			<div className='flex justify-end items-center gap-x-4'>
+			<div className='hidden lg:flex justify-end items-center gap-x-4'>
 				<span>Hello {'Odnel Trumbore'}</span>
 				<button className='bg-sky-300 hover:bg-sky-600 px-4 py-1 rounded-lg'>
 					Logout
