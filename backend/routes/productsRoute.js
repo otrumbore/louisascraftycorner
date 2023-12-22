@@ -17,7 +17,7 @@ const router = express.Router();
 router.post('/', async (request, response) => {
 	try {
 		const {
-			id,
+			storeId,
 			name,
 			description,
 			price,
@@ -31,7 +31,7 @@ router.post('/', async (request, response) => {
 		} = request.body;
 
 		const newProduct = await Product.create({
-			id,
+			storeId,
 			name,
 			description,
 			price,
@@ -91,7 +91,7 @@ router.put('/:id', async (request, response) => {
 		const updatedProduct = await Product.findByIdAndUpdate(id, request.body, {
 			new: true,
 		});
-
+		//console.log(request.body.storeId);
 		if (!updatedProduct) {
 			return response.status(404).send({ message: 'Product not found' });
 		}

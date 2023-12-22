@@ -2,14 +2,16 @@ import mongoose from 'mongoose';
 
 const productSchema = mongoose.Schema(
 	{
-		id: {
+		storeId: {
 			type: Number,
 			required: true,
 			validate: {
 				validator: function (value) {
 					// Validation for positive numbers with a maximum of 6 digits
 					return (
-						Number.isInteger(value) && value > 0 && value.toString().length <= 6
+						Number.isInteger(value) &&
+						value > 0 &&
+						value.toString().length === 6
 					);
 				},
 				message: 'ID must be a positive number with a maximum of 6 digits',
@@ -24,6 +26,7 @@ const productSchema = mongoose.Schema(
 		description: {
 			type: String,
 			required: true,
+			trim: true,
 			// Additional validation or sanitization for the description field, if needed
 		},
 		price: {
@@ -52,11 +55,13 @@ const productSchema = mongoose.Schema(
 		type: {
 			type: String,
 			required: true,
+			trim: true,
 			// Additional validation or sanitization for the 'type' field, if needed
 		},
 		category: {
 			type: String,
 			required: true,
+			trim: true,
 			// Additional validation or sanitization for the 'category' field, if needed
 		},
 		rating: {
@@ -64,7 +69,7 @@ const productSchema = mongoose.Schema(
 			validate: {
 				validator: function (value) {
 					// Validation for rating within the range of 1 to 5
-					return value >= 1 && value <= 5;
+					return value >= 0 && value <= 5;
 				},
 				message: 'Rating must be between 1 and 5',
 			},
@@ -72,6 +77,7 @@ const productSchema = mongoose.Schema(
 		tags: {
 			type: String,
 			required: true,
+			trim: true,
 			// Additional validation or sanitization for the 'tags' field, if needed
 		},
 		inventory: {
