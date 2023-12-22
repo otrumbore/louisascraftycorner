@@ -118,11 +118,12 @@ const EditProduct = () => {
 				</div>
 				<div className='my-4'>
 					<label className='text-xl mr-4 text-gray-500'>Description</label>
-					<input
+					<textarea
 						type='text'
 						value={description}
 						onChange={(e) => setDescription(e.target.value)}
-						className='border-2 border-gray-500 px-4 py-2 w-full'
+						className='border-2 border-gray-500 px-4 py-2 w-full resize-none'
+						rows={6}
 					/>
 				</div>
 				<div className='my-4'>

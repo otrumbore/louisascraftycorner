@@ -3,7 +3,10 @@ import { RxHamburgerMenu } from 'react-icons/rx';
 import { IoIosSearch } from 'react-icons/io';
 import { FaRegUser } from 'react-icons/fa6';
 import Banner from './Banner';
-import { MdOutlineShoppingCart } from 'react-icons/md';
+import {
+	MdOutlineFormatIndentIncrease,
+	MdOutlineShoppingCart,
+} from 'react-icons/md';
 import { Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import Logo500 from '../assets/Logo500.png';
 
@@ -16,9 +19,10 @@ const Navbar = () => {
 
 	const isAdmin = false;
 
+	const defaulNavtStyle = 'bg-opacity-90 top-10 shadow shadow-gray-600';
+
 	useEffect(() => {
-		pathName !== '/' &&
-			setNavStyle('bg-opacity-90 top-10 shadow shadow-gray-600');
+		pathName !== '/' && setNavStyle(defaulNavtStyle);
 	}, []);
 
 	useEffect(() => {
@@ -28,11 +32,11 @@ const Navbar = () => {
 			setScrolled(isScrolled);
 
 			if (isScrolled && pathName === '/') {
-				setNavStyle('bg-opacity-90 top-0 shadow shadow-gray-600');
+				setNavStyle(defaulNavtStyle);
 			} else if (isScrolled && pathName !== '/') {
 				setNavStyle('bg-opacity-90 top-0 shadow shadow-gray-600');
 			} else if (!isScrolled && pathName !== '/') {
-				setNavStyle('bg-opacity-90 top-10 shadow shadow-gray-600');
+				setNavStyle(defaulNavtStyle);
 			} else {
 				setNavStyle('bg-opacity-0 glass top-12');
 			}

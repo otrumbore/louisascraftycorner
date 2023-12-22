@@ -74,7 +74,7 @@ const ProductPage = () => {
 								className='h-full w-fit object-cover rounded-2xl shadow-2xl shadow-gray-400'
 							/>
 						</div>
-						<div className='p-4 h-full'>
+						<div className='p-4 h-full items-center'>
 							<div className='w-full mb-10 flex items-center justify-between'>
 								<div className='text-sm'>Store ID: {product.storeId}</div>
 
@@ -86,13 +86,13 @@ const ProductPage = () => {
 										<div className='flex'>
 											{[...Array(Math.floor(product.rating))].map(
 												(_, index) => (
-													<FaStar key={index} size={25} />
+													<FaStar key={index} size={22} />
 												)
 											)}
-											{product.rating % 1 !== 0 && <FaStarHalfAlt size={25} />}
+											{product.rating % 1 !== 0 && <FaStarHalfAlt size={22} />}
 											{[...Array(5 - Math.ceil(product.rating))].map(
 												(_, index) => (
-													<FaRegStar key={index} size={25} />
+													<FaRegStar key={index} size={22} />
 												)
 											)}
 										</div>
@@ -115,7 +115,7 @@ const ProductPage = () => {
 								</div>
 							</div>
 							<div className='mt-4 w-full flex justify-center items-center'>
-								<p className='flex w-full lg:text-center'>
+								<p className='flex w-full lg:text-center whitespace-pre-line'>
 									{product.description}
 								</p>
 							</div>
