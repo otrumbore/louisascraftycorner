@@ -9,6 +9,7 @@ import AdminHome from './admin/AdminHome';
 import AddProduct from './admin/pages/AddProduct';
 import EditProduct from './admin/pages/EditProduct';
 import Navbar from './components/Navbar';
+import ProductPage from './pages/ProductPage';
 //import Hero from './components/Hero';
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
 			<Routes>
 				{/* Regular Website Routes */}
 				<Route path='/' element={<Home />} />
+				<Route path='/product/:id' element={<ProductPage />} />
 
 				{/* Admin Product Routes */}
 				<Route path='/admin' element={<AdminHome />} />

@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { MdOutlineDescription, MdPriceCheck } from 'react-icons/md';
 import { SiMonkeytype } from 'react-icons/si';
-import LoadingModal from '../components/LoadingModal';
+import LoadingModal from '../../components/LoadingModal';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { LOCALIP } from '../../config';
 
 const DeleteModal = ({ product, onClose }) => {
 	const [loading, setLoading] = useState(false);
@@ -14,7 +15,7 @@ const DeleteModal = ({ product, onClose }) => {
 	const handleDeleteBook = () => {
 		setLoading(true);
 		axios
-			.delete(`http://10.0.0.85:5555/products/${product._id}`)
+			.delete(`http://${LOCALIP}:5555/products/${product._id}`)
 			.then((response) => {
 				enqueueSnackbar('Product deleted sucessfully, reloading...', {
 					variant: 'success',

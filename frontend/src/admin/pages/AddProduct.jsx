@@ -3,7 +3,8 @@ import BackButton from '../components/BackButton';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import LoadingModal from '../components/LoadingModal';
+import LoadingModal from '../../components/LoadingModal';
+import { LOCALIP } from '../../config';
 
 const AddProduct = () => {
 	const [storeId, setStoreId] = useState('');
@@ -38,10 +39,10 @@ const AddProduct = () => {
 		};
 		setLoading(true);
 		axios
-			.post('http://10.0.0.85:5555/products', data)
+			.post(`http://${LOCALIP}:5555/products`, data)
 			.then(() => {
 				setLoading(false);
-				enqueueSnackbar('Product added', {
+				enqueueSnackbar(`Product ${data.name} added`, {
 					variant: 'success',
 					anchorOrigin: { horizontal: 'right', vertical: 'top' },
 				});

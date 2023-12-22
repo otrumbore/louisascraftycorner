@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import Hero from '../components/Hero';
-import LoadingModal from '../admin/components/LoadingModal';
+import LoadingModal from '../components/LoadingModal';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
+import { useLocation } from 'react-router-dom';
+import { LOCALIP } from '../config';
 
 const Home = () => {
 	const [newArrivals, setNewArrivals] = useState([]);
 	const [loading, setLoading] = useState(false);
 
+	const location = useLocation();
+
 	useEffect(() => {
+		console.log(location.pathname);
 		setLoading(true);
 		axios
-			.get('http://10.0.0.85:5555/products')
+			.get(`http://${LOCALIP}:5555/products`)
 			.then((response) => {
 				setNewArrivals(response.data.data);
-				setLoading(false);
+				//setLoading(false);
 			})
 			.catch((error) => {
 				console.log(error);
@@ -36,12 +41,12 @@ const Home = () => {
 					{/* Links to new products */}
 					<div className='w-full py-4 flex flex-col items-center justify-center'>
 						<h3 className='text-3xl lg:text-4xl'>
-							<span className='text-red-600'>New </span>
-							<span className='text-green-600'>Christmas </span>
-							<span className='text-red-600'>Arrivals</span>
+							<span className='text-[#b8860b]'>New Christmas Arrivals</span>
 						</h3>
 						{/* <p>Newest Christmas Products:</p> */}
-						<ProductCard numProducts={6} products={newArrivals} />
+						<div className='mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8 w-[90%]'>
+							<ProductCard numProducts={3} products={newArrivals} />
+						</div>
 					</div>
 				</div>
 			</div>

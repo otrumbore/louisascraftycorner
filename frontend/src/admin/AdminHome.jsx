@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import LoadingModal from './components/LoadingModal';
+import LoadingModal from '../components/LoadingModal';
 import { Link } from 'react-router-dom';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { BsInfoCircle } from 'react-icons/bs';
 import { MdOutlineAddBox, MdOutlineDelete } from 'react-icons/md';
 import ProductsTable from './components/home/ProductsTable';
 import ProductCard from './components/home/ProductCard';
+import { LOCALIP } from '../config';
 
 const AdminHome = () => {
 	const [products, setProducts] = useState([]);
@@ -16,7 +17,7 @@ const AdminHome = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get('http://10.0.0.85:5555/products')
+			.get(`http://${LOCALIP}:5555/products`)
 			.then((response) => {
 				setProducts(response.data.data);
 				setLoading(false);

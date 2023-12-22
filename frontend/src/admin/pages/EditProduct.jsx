@@ -3,7 +3,8 @@ import BackButton from '../components/BackButton';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import LoadingModal from '../components/LoadingModal';
+import LoadingModal from '../../components/LoadingModal';
+import { LOCALIP } from '../../config';
 
 const EditProduct = () => {
 	const [storeId, setStoreId] = useState('');
@@ -27,7 +28,7 @@ const EditProduct = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`http://10.0.0.85:5555/products/${id}`)
+			.get(`http://${LOCALIP}:5555/products/${id}`)
 			.then((response) => {
 				setStoreId(response.data.data.storeId);
 				setName(response.data.data.name);
@@ -72,7 +73,7 @@ const EditProduct = () => {
 		setLoading(true);
 		console.log(id);
 		axios
-			.put(`http://10.0.0.85:5555/products/${id}`, data)
+			.put(`http://${LOCALIP}:5555/products/${id}`, data)
 			.then(() => {
 				setLoading(false);
 				enqueueSnackbar('Product updated', {

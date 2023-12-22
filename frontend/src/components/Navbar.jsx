@@ -4,22 +4,38 @@ import { IoIosSearch } from 'react-icons/io';
 import { FaRegUser } from 'react-icons/fa6';
 import Banner from './Banner';
 import { MdOutlineShoppingCart } from 'react-icons/md';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation, useParams } from 'react-router-dom';
+import Logo500 from '../assets/Logo500.png';
 
 const Navbar = () => {
 	const [scrolled, setScrolled] = useState(false);
-	const [navStyle, setNavStyle] = useState('bg-opacity-0 glass top-12');
+	const [navStyle, setNavStyle] = useState('bg-opacity-0 glass top-10');
 	const navigate = useNavigate();
+	const location = useLocation();
+	const pathName = location.pathname;
 
-	const isAdmin = true;
+	const isAdmin = false;
+
+	useEffect(() => {
+		pathName !== '/' &&
+			setNavStyle('bg-opacity-90 top-10 shadow shadow-gray-600');
+	}, []);
 
 	useEffect(() => {
 		const handleScroll = () => {
-			const isScrolled = window.scrollY > 0;
+			const currentScrollPos = window.scrollY;
+			const isScrolled = currentScrollPos > 0;
 			setScrolled(isScrolled);
-			isScrolled
-				? setNavStyle('bg-opacity-90 top-0 shadow shadow-gray-600')
-				: setNavStyle('bg-opacity-0 glass top-12');
+
+			if (isScrolled && pathName === '/') {
+				setNavStyle('bg-opacity-90 top-0 shadow shadow-gray-600');
+			} else if (isScrolled && pathName !== '/') {
+				setNavStyle('bg-opacity-90 top-0 shadow shadow-gray-600');
+			} else if (!isScrolled && pathName !== '/') {
+				setNavStyle('bg-opacity-90 top-10 shadow shadow-gray-600');
+			} else {
+				setNavStyle('bg-opacity-0 glass top-12');
+			}
 		};
 
 		window.addEventListener('scroll', handleScroll);
@@ -27,7 +43,7 @@ const Navbar = () => {
 		return () => {
 			window.removeEventListener('scroll', handleScroll);
 		};
-	}, []);
+	}, [pathName]);
 
 	const navData = [
 		{ linkName: 'Home', linkTo: '/' },
@@ -45,22 +61,28 @@ const Navbar = () => {
 	];
 	return (
 		<div>
-			<Banner style={scrolled ? 'hidden' : 'fixed'} />
+			<Banner
+				style={
+					scrolled ? 'hidden' : pathName !== '/' ? 'bg-gray-400 fixed' : 'fixed'
+				}
+			/>
 			<nav
-				className={`fixed flex ${navStyle} left-0 p-2 px-4 w-full h-[4rem] bg-gray-200 justify-center items-center z-50`}
+				className={`fixed flex ${navStyle} left-0 p-2 px-4 w-full h-[4rem] bg-gray-200 justify-center items-center z-50 transition-all duration-200`}
 			>
 				<div className='flex w-full max-w-[1400px] h-fit items-center justify-between'>
 					<div className='flex text-gray-600 items-center'>
-						<RxHamburgerMenu className='lg:hidden mr-4 ' size={30} />
-						<div className='border-2 rounded-md border-gray-600 px-4 py-2'>
-							Logo
+						<RxHamburgerMenu className='lg:hidden' size={30} />
+						<div className='rounded-md w-[150px] h-[150px] -mt-4'>
+							<Link to='/'>
+								<img
+									src={Logo500}
+									alt="Louisa's Crafty Corner Logo"
+									className='w-auto h-full'
+								/>
+							</Link>
 						</div>
 					</div>
-					<div
-						className={`hidden lg:flex ${
-							isAdmin ? 'w-[75%]' : 'w-[30%] ml-16'
-						}`}
-					>
+					<div className={`hidden lg:flex ${isAdmin ? 'w-[75%]' : 'w-[40%]'}`}>
 						<ul className='flex text-gray-800 w-full items-center justify-evenly list-none'>
 							{navData.map((item, index) => (
 								<li
