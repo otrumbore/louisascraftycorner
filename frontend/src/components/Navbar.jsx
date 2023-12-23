@@ -19,11 +19,8 @@ const Navbar = () => {
 
 	const isAdmin = false;
 
-	const defaulNavtStyle = 'bg-opacity-90 top-10 shadow shadow-gray-600';
-
-	useEffect(() => {
-		pathName !== '/' && setNavStyle(defaulNavtStyle);
-	}, []);
+	const defaultNavStyle = 'bg-opacity-90 top-0 shadow shadow-gray-600';
+	const homePagePath = '/';
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -31,23 +28,28 @@ const Navbar = () => {
 			const isScrolled = currentScrollPos > 0;
 			setScrolled(isScrolled);
 
-			if (isScrolled && pathName === '/') {
-				setNavStyle(defaulNavtStyle);
-			} else if (isScrolled && pathName !== '/') {
-				setNavStyle('bg-opacity-90 top-0 shadow shadow-gray-600');
-			} else if (!isScrolled && pathName !== '/') {
-				setNavStyle(defaulNavtStyle);
+			if (!isScrolled && pathName === homePagePath) {
+				setNavStyle('bg-opacity-0 glass top-10');
 			} else {
-				setNavStyle('bg-opacity-0 glass top-12');
+				setNavStyle(
+					isScrolled
+						? defaultNavStyle
+						: 'bg-opacity-90 top-10 shadow shadow-gray-600'
+				);
 			}
 		};
 
+		handleScroll(); // Initial call to set navbar style based on scroll position
 		window.addEventListener('scroll', handleScroll);
 
 		return () => {
 			window.removeEventListener('scroll', handleScroll);
 		};
-	}, [pathName]);
+	}, [pathName, defaultNavStyle, homePagePath]);
+
+	useEffect(() => {
+		console.log('Current navStyle: ' + navStyle);
+	}, [navStyle]); // Log changes to navStyle
 
 	const navData = [
 		{ linkName: 'Home', linkTo: '/' },
@@ -67,11 +69,15 @@ const Navbar = () => {
 		<div>
 			<Banner
 				style={
-					scrolled ? 'hidden' : pathName !== '/' ? 'bg-gray-400 fixed' : 'fixed'
+					scrolled
+						? 'hidden'
+						: pathName !== '/'
+						? 'bg-slate-400 fixed'
+						: 'fixed'
 				}
 			/>
 			<nav
-				className={`fixed flex ${navStyle} left-0 p-2 px-4 w-full h-[4rem] bg-gray-200 justify-center items-center z-50 transition-all duration-200`}
+				className={`fixed flex ${navStyle} left-0 p-2 px-4 w-full h-[4rem] bg-slate-200 justify-center items-center z-50 transition-all duration-200`}
 			>
 				<div className='flex w-full max-w-[1400px] h-fit items-center justify-between'>
 					<div className='flex text-gray-600 items-center'>
@@ -87,10 +93,14 @@ const Navbar = () => {
 						</div>
 					</div>
 					<div className={`hidden lg:flex ${isAdmin ? 'w-[75%]' : 'w-[40%]'}`}>
-						<ul className='flex text-gray-800 w-full items-center justify-evenly list-none'>
+						<ul
+							className={`flex w-full items-center justify-evenly list-none ${
+								scrolled || pathName !== '/' ? 'text-gray-600' : 'text-white'
+							}`}
+						>
 							{navData.map((item, index) => (
 								<li
-									className={`px-3 py-1 rounded-3xl hover:border-2 hover:bg-gray-300 hover:border-gray-400 hover:scale-105 transition-all duration-100 `}
+									className={`px-3 py-1 rounded-md hover:border-2 hover:bg-slate-300 hover:border-slate-400 hover:bg-opacity-50 hover:scale-105 transition-all duration-100 cursor-pointer`}
 									key={index}
 								>
 									<Link to={item.linkTo}>{item.linkName}</Link>
@@ -100,7 +110,7 @@ const Navbar = () => {
 							{isAdmin &&
 								navAdminData.map((item, index) => (
 									<li
-										className={`px-3 py-1 rounded-3xl hover:border-2 hover:bg-gray-300 hover:border-gray-400 hover:scale-105 transition-all duration-100 `}
+										className={`px-3 py-1 rounded-md hover:border-2 hover:bg-slate-300 hover:border-slate-400 hover:bg-opacity-50 hover:scale-105 transition-all duration-100 cursor-pointer`}
 										key={index}
 									>
 										<Link to={item.linkTo}>{item.linkName}</Link>
@@ -108,17 +118,21 @@ const Navbar = () => {
 								))}
 						</ul>
 					</div>
-					<div className='flex items-center gap-x-4 text-gray-600'>
+					<div
+						className={`flex items-center gap-x-4  ${
+							scrolled || pathName !== '/' ? 'text-gray-600' : 'text-white'
+						}`}
+					>
 						<IoIosSearch
-							className='hover:border-2 hover:bg-gray-300 p-1 hover:border-gray-400 rounded-3xl hover:scale-125 transition-all duration-100'
+							className='hover:border-2 hover:bg-gray-300 p-1 hover:border-gray-400 rounded-md hover:scale-125 transition-all duration-100 cursor-pointer'
 							size={33}
 						/>
 						<FaRegUser
-							className='hover:border-2 hover:bg-gray-300 p-1 hover:border-gray-400 hover:rounded-3xl hover:scale-125 transition-all duration-100'
+							className='hover:border-2 hover:bg-gray-300 p-1 hover:border-gray-400 rounded-md hover:scale-125 transition-all duration-100 cursor-pointer'
 							size={30}
 						/>
 						<MdOutlineShoppingCart
-							className='hover:border-2 hover:bg-gray-300 p-1 hover:border-gray-400 rounded-3xl hover:scale-125 transition-all duration-100'
+							className='hover:border-2 hover:bg-gray-300 p-1 hover:border-gray-400 rounded-md hover:scale-125 transition-all duration-100 cursor-pointer'
 							size={34}
 						/>
 					</div>

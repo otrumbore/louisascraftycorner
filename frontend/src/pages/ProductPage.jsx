@@ -124,14 +124,14 @@ const ProductPage = () => {
 
 							<div className='mt-10 grid grid-cols-2 w-full items-center'>
 								<div className='mlg:mt-0 flex items-center justify-start'>
-									<button className='flex items-center border-4 px-4 py-2 border-gray-400 bg-gray-300 hover:bg-gray-400 hover:shadow-lg transition-all duration-100 rounded-full gap-x-2'>
+									<button className='flex items-center border-4 px-4 py-2 border-slate-500 bg-slate-400 hover:bg-slate-500 hover:text-white hover:shadow-lg hover:shadow-slate-500 transition-all duration-100 rounded-full gap-x-2'>
 										<FaRegHeart size={25} />
 										<span className='hidden lg:block'>Add to Favorites</span>
 									</button>
 								</div>
 								<div className='flex'>
 									<div className='flex w-full items-center justify-end'>
-										<div className='flex justify-between items-center gap-x-6 border-4 px-4 py-2 lg:h-12 rounded-3xl border-gray-400 bg-gray-300'>
+										<div className='flex justify-between items-center gap-x-6 border-4 px-4 py-2 lg:h-12 rounded-3xl border-slate-500 bg-slate-400 hover:text-white'>
 											<FaMinus
 												className='hover:cursor-pointer'
 												size={20}
@@ -161,7 +161,7 @@ const ProductPage = () => {
 								</div>
 							</div>
 							<div className='w-full mt-4 flex justify-center'>
-								<button className='border-4 py-4 lg:py-3 text-xl border-gray-400 bg-gray-300 hover:bg-gray-400 hover:shadow-lg rounded-full w-full'>
+								<button className='border-4 py-4 lg:py-3 text-xl border-slate-500 bg-slate-400 hover:bg-slate-500 hover:border-slate-500 hover:text-white hover:shadow-lg hover:shadow-slate-500 transition-all duration-100 rounded-full w-full'>
 									Add to Cart
 								</button>
 							</div>
