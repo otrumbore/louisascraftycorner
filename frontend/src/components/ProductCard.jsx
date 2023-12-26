@@ -17,7 +17,7 @@ const ProductCard = ({ numProducts, products }) => {
 			{products.slice(0, numProducts).map((item) => (
 				<div
 					key={item._id}
-					className='flex flex-col items-center pb-4 border-4 border-gray-300 space-y-2 rounded-xl justify-between bg-gray-100 shadow-lg shadow-gray-600'
+					className='flex flex-col items-center pb-4 border-4 border-gray-300 space-y-2 rounded-xl justify-between bg-gray-100 shadow-lg shadow-gray-600 lg:hover:scale-110'
 				>
 					<div className='flex flex-col gap-y-4'>
 						{item.sale > 0 && (

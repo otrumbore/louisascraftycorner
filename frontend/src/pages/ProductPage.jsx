@@ -21,7 +21,7 @@ import { LOCALIP } from '../config';
 const ProductPage = () => {
 	const [product, setProduct] = useState({});
 	const [relatedProducts, setRelatedProducts] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [qty, setQty] = useState(1);
 	const { id } = useParams();
 	const navigate = useNavigate();
@@ -69,17 +69,25 @@ const ProductPage = () => {
 					<div className='w-full grid grid-cols-1 lg:grid-cols-2 max-w-[1400px] items-start justify-start'>
 						<div className='h-[500px] flex'>
 							<img
-								src={SantaHat}
+								src={product.img === '' ? SantaHat : ''}
 								alt={product.name + ' image'}
-								className='h-full w-fit object-cover rounded-2xl shadow-2xl shadow-gray-400'
+								className='h-full w-fit object-cover rounded-2xl shadow-2xl shadow-gray-400 lg:hover:scale-110'
 							/>
 						</div>
 						<div className='p-4 h-full items-center'>
 							<div className='w-full mb-10 flex items-center justify-between'>
 								<div className='text-sm'>Store ID: {product.storeId}</div>
 
-								<div className='hidden lg:block text-sm'>
-									Category: {product.category}
+								<div className='hidden lg:flex text-sm space-x-1'>
+									<p>Category:</p>
+									<p>
+										{
+											product.category
+												? product.category.charAt(0).toUpperCase() +
+												  product.category.slice(1)
+												: 'No category available' // Or any default text/message you want to display
+										}
+									</p>
 								</div>
 								<div className=''>
 									{product.rating > 0 ? (
@@ -115,7 +123,7 @@ const ProductPage = () => {
 								</div>
 							</div>
 							<div className='mt-4 w-full flex justify-center items-center'>
-								<p className='flex w-full lg:text-center whitespace-pre-line'>
+								<p className='flex w-full lg:text-center whitespace-pre-line text-lg'>
 									{product.description}
 								</p>
 							</div>
@@ -152,6 +160,7 @@ const ProductPage = () => {
 																		horizontal: 'right',
 																		vertical: 'top',
 																	},
+																	autoHideDuration: 2000,
 																}
 														  )
 												}
