@@ -1,5 +1,5 @@
 import React from 'react';
-import SantaHat from '../assets/product-img/santa-hat-ordiment.png';
+import SantaHat from '../../assets/product-img/santa-hat-ordiment.png';
 
 const Hero = () => {
 	return (

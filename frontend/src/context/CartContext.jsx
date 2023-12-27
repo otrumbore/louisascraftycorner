@@ -51,6 +51,22 @@ export function CartProvider({ children }) {
 		return totalQuantity;
 	};
 
+	const updateCartItem = (itemId, newQty) => {
+		// Remove the old item from the cart
+		const updatedCartItems = cartItems.filter((item) => item._id !== itemId);
+
+		// Find the product to be updated (if it exists)
+		const productToUpdate = cartItems.find((item) => item._id === itemId);
+
+		if (productToUpdate) {
+			// Add the updated item with the new quantity
+			setCartItems([...updatedCartItems, { ...productToUpdate, qty: newQty }]);
+		} else {
+			// If the item was not found, retain the existing cart items
+			setCartItems(cartItems);
+		}
+	};
+
 	return (
 		<CartContext.Provider
 			value={{
@@ -60,6 +76,7 @@ export function CartProvider({ children }) {
 				clearCart,
 				cartTotal,
 				cartItemsCount,
+				updateCartItem,
 			}}
 		>
 			{children}

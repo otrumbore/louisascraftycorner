@@ -10,6 +10,7 @@ import { MdAddShoppingCart } from 'react-icons/md';
 import SantaHat from '../assets/product-img/santa-hat-ordiment.png';
 import DefaultProductImg from '../assets/product-img/default.png';
 import { Link } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 import { useCart } from '../context/CartContext';
 
 const ProductCard = ({
@@ -20,6 +21,7 @@ const ProductCard = ({
 	currProduct,
 }) => {
 	const [showProducts, setShowProducts] = useState([]);
+	const { enqueueSnackbar } = useSnackbar();
 
 	const {
 		cartItems,
@@ -142,10 +144,24 @@ const ProductCard = ({
 										? 'opacity-50 cursor-not-allowed'
 										: ''
 								}`}
-								onClick={() =>
-									!cartItems.some((cartItem) => cartItem._id === item._id) &&
-									addToCart(item, 1)
-								}
+								onClick={() => {
+									if (
+										!cartItems.some((cartItem) => cartItem._id === item._id)
+									) {
+										addToCart(item, 1);
+										enqueueSnackbar(
+											'Added ' + item.name + ' to cart with quantity 1',
+											{
+												variant: 'success',
+												anchorOrigin: {
+													horizontal: 'right',
+													vertical: 'top',
+												},
+												autoHideDuration: 2000,
+											}
+										);
+									}
+								}}
 								disabled={cartItems.some(
 									(cartItem) => cartItem._id === item._id
 								)}

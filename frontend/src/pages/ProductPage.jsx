@@ -26,6 +26,7 @@ const ProductPage = () => {
 	const [relatedProducts, setRelatedProducts] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [qty, setQty] = useState(1);
+	const [productInCart, setProductInCart] = useState(false);
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const { enqueueSnackbar } = useSnackbar();
@@ -33,8 +34,14 @@ const ProductPage = () => {
 	const [selectedProduct, setSelectedProduct] = useState({});
 
 	//cart stuff
-	const { cartItems, addToCart, removeFromCart, clearCart, cartTotal } =
-		useCart();
+	const {
+		cartItems,
+		addToCart,
+		removeFromCart,
+		clearCart,
+		cartTotal,
+		updateCartItem,
+	} = useCart();
 
 	useEffect(() => {
 		setLoading(true);
@@ -46,8 +53,15 @@ const ProductPage = () => {
 			})
 			.catch((error) => {
 				console.log(error);
-				alert('Could not find product');
 				setLoading(false);
+				enqueueSnackbar('Product does not exist!', {
+					variant: 'error',
+					anchorOrigin: {
+						horizontal: 'right',
+						vertical: 'top',
+					},
+					autoHideDuration: 5000,
+				});
 				navigate('/');
 			});
 		axios
@@ -57,8 +71,15 @@ const ProductPage = () => {
 			})
 			.catch((error) => {
 				console.log(error);
-				alert('Could not find product');
 				setLoading(false);
+				enqueueSnackbar('Could not load products', {
+					variant: 'error',
+					anchorOrigin: {
+						horizontal: 'right',
+						vertical: 'top',
+					},
+					autoHideDuration: 2000,
+				});
 				navigate('/');
 			});
 		//setRelatedProducts(allProducts.data.data);
@@ -73,10 +94,76 @@ const ProductPage = () => {
 	}, [product, relatedProducts]);
 
 	useEffect(() => {
+		setProductInCart(
+			cartItems.some((cartItem) => cartItem._id === product._id)
+		);
+		// Check if the product is in the cart and set the quantity accordingly
+		if (productInCart) {
+			const cartItem = cartItems.find((item) => item._id === product._id);
+			if (cartItem) {
+				setQty(cartItem.qty);
+			}
+			if (cartItem) {
+				setQty(cartItem.qty); // Set quantity to cart item's quantity
+			} else {
+				setQty(1);
+			}
+		}
+
 		if (qty > 0) {
 			setSelectedProduct({ ...product, qty: qty });
 		}
-	}, [product, qty]);
+
+		// Set qty to cart quantity if the product is in the cart
+		const cartItem = cartItems.find((cartItem) => cartItem._id === product._id);
+		//console.log(cartItem);
+		//setQty(1);
+		//console.log(productInCart);
+	}, [cartItems, product]);
+
+	const updateCartQty = () => {
+		if (productInCart) {
+			//let newQty = 0;
+			const cartItem = cartItems.find(
+				(cartItem) => cartItem._id === product._id
+			);
+			if (cartItem.qty === qty) {
+				enqueueSnackbar(
+					product.name + ' is already quantity ' + qty + '. Nothing updated!',
+					{
+						variant: 'info',
+						anchorOrigin: {
+							horizontal: 'right',
+							vertical: 'top',
+						},
+						autoHideDuration: 3000,
+					}
+				);
+				return;
+			}
+			updateCartItem(product._id, qty);
+			enqueueSnackbar('Updated ' + product.name + ' to quantity ' + qty, {
+				variant: 'success',
+				anchorOrigin: {
+					horizontal: 'right',
+					vertical: 'top',
+				},
+				autoHideDuration: 2000,
+			});
+			return;
+		}
+
+		// If the product is not in the cart or the item is removed, add the product to the cart
+		addToCart(selectedProduct, qty);
+		enqueueSnackbar('Added ' + product.name + ' to cart with quantity ' + qty, {
+			variant: 'success',
+			anchorOrigin: {
+				horizontal: 'right',
+				vertical: 'top',
+			},
+			autoHideDuration: 2000,
+		});
+	};
 
 	return (
 		<>
@@ -203,10 +290,14 @@ const ProductPage = () => {
 							<div className='w-full mt-4 flex justify-center'>
 								<button
 									className='flex items-center justify-center border-4 py-4 lg:py-3 text-xl border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-lg hover:shadow-slate-400 transition-all duration-100 rounded-md w-full'
-									onClick={() => addToCart(selectedProduct, qty)}
+									onClick={updateCartQty}
 								>
 									<MdAddShoppingCart size={27} />
-									<p className='ml-4 text-2xl'>Add to Cart</p>
+									{productInCart ? (
+										<p className='ml-4 text-2xl'>Update QTY?</p>
+									) : (
+										<p className='ml-4 text-2xl'>Add to Cart</p>
+									)}
 								</button>
 							</div>
 						</div>
