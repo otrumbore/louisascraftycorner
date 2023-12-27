@@ -24,6 +24,7 @@ const Footer = () => {
 					</div>
 
 					<ul className='mt-4 flex flex-col items-center space-y-2'>
+						<li>Track a Package</li>
 						<li>Help</li>
 						<li>Terms of Use</li>
 						<li>Privacy Policy</li>

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import LoadingModal from '../components/LoadingModal';
 import SantaHat from '../assets/product-img/santa-hat-ordiment.png';
+import DefaultProductImg from '../assets/product-img/default.png';
 import {
 	FaRegHeart,
 	FaHeart,
@@ -14,9 +15,11 @@ import {
 	FaPlus,
 	FaMinus,
 } from 'react-icons/fa';
+import { MdAddShoppingCart } from 'react-icons/md';
 import { useSnackbar } from 'notistack';
 import ProductCard from '../components/ProductCard';
 import { LOCALIP } from '../config';
+import { useCart } from '../context/CartContext';
 
 const ProductPage = () => {
 	const [product, setProduct] = useState({});
@@ -27,8 +30,15 @@ const ProductPage = () => {
 	const navigate = useNavigate();
 	const { enqueueSnackbar } = useSnackbar();
 
+	const [selectedProduct, setSelectedProduct] = useState({});
+
+	//cart stuff
+	const { cartItems, addToCart, removeFromCart, clearCart, cartTotal } =
+		useCart();
+
 	useEffect(() => {
 		setLoading(true);
+		//const allProducts = useContext(ShopContext);
 		axios
 			.get(`http://${LOCALIP}:5555/products/${id}`)
 			.then((response) => {
@@ -51,6 +61,7 @@ const ProductPage = () => {
 				setLoading(false);
 				navigate('/');
 			});
+		//setRelatedProducts(allProducts.data.data);
 		window.scrollTo(0, 0);
 	}, [id]);
 
@@ -61,6 +72,12 @@ const ProductPage = () => {
 		//console.log(product);
 	}, [product, relatedProducts]);
 
+	useEffect(() => {
+		if (qty > 0) {
+			setSelectedProduct({ ...product, qty: qty });
+		}
+	}, [product, qty]);
+
 	return (
 		<>
 			<div className='p-4 mt-[8rem] h-full lg:mt-[10rem]'>
@@ -69,7 +86,13 @@ const ProductPage = () => {
 					<div className='w-full grid grid-cols-1 lg:grid-cols-2 max-w-[1400px] items-start justify-start'>
 						<div className='h-[500px] flex'>
 							<img
-								src={product.img === '' ? SantaHat : ''}
+								src={
+									product.img === '' || product.img === undefined
+										? DefaultProductImg
+										: product.img === 'santaHat'
+										? SantaHat
+										: product.img
+								}
 								alt={product.name + ' image'}
 								className='h-full w-fit object-cover rounded-2xl shadow-2xl shadow-gray-400 lg:hover:scale-110'
 							/>
@@ -110,7 +133,15 @@ const ProductPage = () => {
 								</div>
 							</div>
 							<div className='mt-6 lg:mb-10 flex items-center justify-center'>
-								<h3 className='text-3xl lg:text-4xl'>{product.name}</h3>
+								<h3 className='text-3xl lg:text-4xl'>
+									{product.name + ' - '}
+									{
+										product.type
+											? product.type.charAt(0).toUpperCase() +
+											  product.type.slice(1)
+											: '' // Or any default text/message you want to display
+									}
+								</h3>
 							</div>
 							<div className='mt-4 mb-10 w-full grid grid-cols-1 items-center'>
 								<div className='flex justify-evenly text-2xl'>
@@ -132,14 +163,14 @@ const ProductPage = () => {
 
 							<div className='mt-10 grid grid-cols-2 w-full items-center'>
 								<div className='mlg:mt-0 flex items-center justify-start'>
-									<button className='flex items-center border-4 px-4 py-2 border-slate-500 bg-slate-400 hover:bg-slate-500 hover:text-white hover:shadow-lg hover:shadow-slate-500 transition-all duration-100 rounded-full gap-x-2'>
+									<button className='flex items-center border-4 px-4 py-2 border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-lg hover:shadow-slate-400 transition-all duration-100 rounded-md gap-x-2'>
 										<FaRegHeart size={25} />
 										<span className='hidden lg:block'>Add to Favorites</span>
 									</button>
 								</div>
 								<div className='flex'>
 									<div className='flex w-full items-center justify-end'>
-										<div className='flex justify-between items-center gap-x-6 border-4 px-4 py-2 lg:h-12 rounded-3xl border-slate-500 bg-slate-400 hover:text-white'>
+										<div className='flex justify-between items-center gap-x-6 border-4 px-4 py-2 lg:h-12 rounded-md border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:shadow-lg hover:shadow-slate-400 hover:text-white'>
 											<FaMinus
 												className='hover:cursor-pointer'
 												size={20}
@@ -170,8 +201,12 @@ const ProductPage = () => {
 								</div>
 							</div>
 							<div className='w-full mt-4 flex justify-center'>
-								<button className='border-4 py-4 lg:py-3 text-xl border-slate-500 bg-slate-400 hover:bg-slate-500 hover:border-slate-500 hover:text-white hover:shadow-lg hover:shadow-slate-500 transition-all duration-100 rounded-full w-full'>
-									Add to Cart
+								<button
+									className='flex items-center justify-center border-4 py-4 lg:py-3 text-xl border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-lg hover:shadow-slate-400 transition-all duration-100 rounded-md w-full'
+									onClick={() => addToCart(selectedProduct, qty)}
+								>
+									<MdAddShoppingCart size={27} />
+									<p className='ml-4 text-2xl'>Add to Cart</p>
 								</button>
 							</div>
 						</div>
@@ -187,7 +222,13 @@ const ProductPage = () => {
 						</h3>
 						{/* <p>Newest Christmas Products:</p> */}
 						<div className='mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8 w-[90%]'>
-							<ProductCard numProducts={3} products={relatedProducts} />
+							<ProductCard
+								numProducts={10}
+								products={relatedProducts}
+								filterCategory={product.category}
+								filterType={product.type}
+								currProduct={product._id}
+							/>
 						</div>
 					</div>
 				</div>

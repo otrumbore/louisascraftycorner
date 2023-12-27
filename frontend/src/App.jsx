@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { CartProvider } from './context/CartContext';
 
 //components
 import Navbar from './components/Navbar';
@@ -16,14 +17,18 @@ import ProductPage from './pages/ProductPage';
 import SiteSettings from './admin/pages/SiteSettings';
 //import Hero from './components/Hero';
 
+import ShopContextProvider from './context/ShopContext';
+import Cart from './pages/Cart';
+
 const App = () => {
 	return (
-		<>
+		<CartProvider>
 			<Navbar />
 			<Routes>
 				{/* Regular Website Routes */}
 				<Route path='/' element={<Home />} />
 				<Route path='/product/:id' element={<ProductPage />} />
+				<Route path='/cart' element={<Cart />} />
 
 				{/* Admin Product Routes */}
 				<Route path='/admin' element={<AdminHome />} />
@@ -36,7 +41,7 @@ const App = () => {
 				{/* Store User Routes */}
 			</Routes>
 			<Footer />
-		</>
+		</CartProvider>
 	);
 };
 export default App;

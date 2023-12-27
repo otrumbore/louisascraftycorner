@@ -5,3 +5,11 @@
 :root {
 	@apply bg-slate-100 text-gray-800;
 }
+
+.tooltip {
+	@apply invisible absolute;
+}
+
+.has-tooltip:hover .tooltip {
+	@apply visible z-50;
+}
