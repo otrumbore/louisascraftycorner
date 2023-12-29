@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { IoIosSearch } from 'react-icons/io';
-import { FaRegUser } from 'react-icons/fa6';
+import { FaRegUser, FaRegHeart } from 'react-icons/fa6';
 import Banner from './Banner';
 import { MdOutlineShoppingCart, MdClose } from 'react-icons/md';
 import { Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import LogoBlack from '../assets/logo-cropped-black.png';
 import LogoWhite from '../assets/logo-cropped-white.png';
 import { useCart } from '../context/CartContext';
+import { useUser } from '../context/UserContext';
 
 const Navbar = () => {
 	const [scrolled, setScrolled] = useState(false);
@@ -18,8 +19,7 @@ const Navbar = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const pathName = location.pathname;
-
-	const isAdmin = false;
+	const { userDetails, isAdmin } = useUser();
 
 	//cart stuff
 	const {
@@ -76,8 +76,6 @@ const Navbar = () => {
 	const navAdminData = [
 		{ linkName: 'Admin Home', linkTo: '/admin' },
 		{ linkName: 'Orders', linkTo: '/admin' },
-		{ linkName: 'Products', linkTo: '/admin' },
-		{ linkName: 'Users', linkTo: '/admin' },
 		{ linkName: 'Site Settings', linkTo: '/admin/site_settings' },
 	];
 
@@ -117,7 +115,9 @@ const Navbar = () => {
 							</Link>
 						</div>
 					</div>
-					<div className={`hidden lg:flex ${isAdmin ? 'w-[75%]' : 'w-[40%]'}`}>
+					<div
+						className={`hidden lg:flex ${isAdmin() ? 'w-[75%]' : 'w-[40%]'}`}
+					>
 						<ul
 							className={`flex w-full items-center justify-evenly list-none ${
 								scrolled || pathName !== '/' ? 'text-gray-600' : 'text-white'
@@ -131,8 +131,8 @@ const Navbar = () => {
 									<Link to={item.linkTo}>{item.linkName}</Link>
 								</li>
 							))}
-							{isAdmin && <span className='text-2xl'>|</span>}
-							{isAdmin &&
+							{isAdmin() && <span className='text-2xl'>|</span>}
+							{isAdmin() &&
 								navAdminData.map((item, index) => (
 									<li
 										className={`px-3 py-1 rounded-md hover:border-2 hover:bg-slate-300 hover:border-slate-400 hover:text-gray-600 hover:bg-opacity-90 hover:scale-105 transition-all duration-100 cursor-pointer`}
@@ -148,14 +148,16 @@ const Navbar = () => {
 							scrolled || pathName !== '/' ? 'text-gray-600' : 'text-white'
 						}`}
 					>
-						<IoIosSearch
-							className='hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 hover:scale-125 transition-all duration-100 cursor-pointer'
-							size={33}
-						/>
-						<FaRegUser
+						<FaRegHeart
 							className='hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 hover:scale-125 transition-all duration-100 cursor-pointer'
 							size={30}
 						/>
+						<Link to='/user/dashboard'>
+							<FaRegUser
+								className='hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 hover:scale-125 transition-all duration-100 cursor-pointer'
+								size={30}
+							/>
+						</Link>
 						<Link to={'/cart'}>
 							<span className='inline-flex items-center font-medium hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 transition-all duration-100 cursor-pointer'>
 								<MdOutlineShoppingCart className='' size={25} />
@@ -222,8 +224,8 @@ const Navbar = () => {
 									</Link>
 								</li>
 							))}
-							{isAdmin && <div>------</div>}
-							{isAdmin &&
+							{isAdmin() && <div>------</div>}
+							{isAdmin() &&
 								navAdminData.map((item, index) => (
 									<li className='py-2' key={index}>
 										<Link to={item.linkTo} className='text-black'>

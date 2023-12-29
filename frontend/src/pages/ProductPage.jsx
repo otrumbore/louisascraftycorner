@@ -57,7 +57,7 @@ const ProductPage = () => {
 				enqueueSnackbar('Product does not exist!', {
 					variant: 'error',
 					anchorOrigin: {
-						horizontal: 'right',
+						horizontal: 'center',
 						vertical: 'top',
 					},
 					autoHideDuration: 5000,
@@ -75,7 +75,7 @@ const ProductPage = () => {
 				enqueueSnackbar('Could not load products', {
 					variant: 'error',
 					anchorOrigin: {
-						horizontal: 'right',
+						horizontal: 'center',
 						vertical: 'top',
 					},
 					autoHideDuration: 2000,
@@ -98,11 +98,9 @@ const ProductPage = () => {
 			cartItems.some((cartItem) => cartItem._id === product._id)
 		);
 		// Check if the product is in the cart and set the quantity accordingly
+		const cartItem = cartItems.find((cartItem) => cartItem._id === product._id);
+
 		if (productInCart) {
-			const cartItem = cartItems.find((item) => item._id === product._id);
-			if (cartItem) {
-				setQty(cartItem.qty);
-			}
 			if (cartItem) {
 				setQty(cartItem.qty); // Set quantity to cart item's quantity
 			} else {
@@ -113,13 +111,7 @@ const ProductPage = () => {
 		if (qty > 0) {
 			setSelectedProduct({ ...product, qty: qty });
 		}
-
-		// Set qty to cart quantity if the product is in the cart
-		const cartItem = cartItems.find((cartItem) => cartItem._id === product._id);
-		//console.log(cartItem);
-		//setQty(1);
-		//console.log(productInCart);
-	}, [cartItems, product]);
+	}, [cartItems, product, productInCart]);
 
 	const updateCartQty = () => {
 		if (productInCart) {
@@ -133,7 +125,7 @@ const ProductPage = () => {
 					{
 						variant: 'info',
 						anchorOrigin: {
-							horizontal: 'right',
+							horizontal: 'center',
 							vertical: 'top',
 						},
 						autoHideDuration: 3000,
@@ -145,7 +137,7 @@ const ProductPage = () => {
 			enqueueSnackbar('Updated ' + product.name + ' to quantity ' + qty, {
 				variant: 'success',
 				anchorOrigin: {
-					horizontal: 'right',
+					horizontal: 'center',
 					vertical: 'top',
 				},
 				autoHideDuration: 2000,
@@ -158,7 +150,7 @@ const ProductPage = () => {
 		enqueueSnackbar('Added ' + product.name + ' to cart with quantity ' + qty, {
 			variant: 'success',
 			anchorOrigin: {
-				horizontal: 'right',
+				horizontal: 'center',
 				vertical: 'top',
 			},
 			autoHideDuration: 2000,
@@ -275,7 +267,7 @@ const ProductPage = () => {
 																{
 																	variant: 'info',
 																	anchorOrigin: {
-																		horizontal: 'right',
+																		horizontal: 'center',
 																		vertical: 'top',
 																	},
 																	autoHideDuration: 2000,

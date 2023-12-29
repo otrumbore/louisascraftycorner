@@ -57,7 +57,7 @@ const userSchema = mongoose.Schema(
 		],
 		emailMarketing: {
 			type: Number,
-			enum: [1, 2],
+			enum: [0, 1],
 			default: 1,
 		},
 		lastActivity: {
@@ -69,7 +69,7 @@ const userSchema = mongoose.Schema(
 		},
 		profilePicture: {
 			type: String,
-			default: 'default-user-image.png',
+			default: 'default',
 		},
 		dateOfBirth: {
 			type: Date,
@@ -83,10 +83,6 @@ const userSchema = mongoose.Schema(
 				default: 'US',
 			},
 			postalCode: String,
-		},
-		jwtToken: {
-			type: String,
-			default: null,
 		},
 	},
 	{

@@ -154,7 +154,7 @@ const ProductCard = ({
 											{
 												variant: 'success',
 												anchorOrigin: {
-													horizontal: 'right',
+													horizontal: 'center',
 													vertical: 'top',
 												},
 												autoHideDuration: 2000,

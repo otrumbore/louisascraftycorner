@@ -5,23 +5,43 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import LoadingModal from '../../components/LoadingModal';
 import { LOCALIP } from '../../config';
+import Cookies from 'js-cookie';
+import { useUser } from '../../context/UserContext';
 
 const SiteSettings = () => {
 	const [websiteBanner, setWebsiteBanner] = useState('');
 
-	const { id } = useParams();
+	//const { id } = useParams();
+	const [id, setId] = useState('');
 
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const { enqueueSnackbar } = useSnackbar();
 
+	const { isAdmin } = useUser();
+
 	useEffect(() => {
 		setLoading(true);
-		axios
-			.get(`http://${LOCALIP}:5555/products/${id}`)
-			.then((response) => {
-				setWebsiteBanner(response.data.data.storeId);
+		const checkUser = async () => {
+			try {
+				const token = Cookies.get('token');
+				if (token) {
+					!isAdmin() && navigate('/user/dashboard');
+					return;
+				}
+				navigate('/login');
+			} catch (error) {
+				console.error('Admin user: ', error.message);
+				navigate('/');
+			}
+		};
 
+		checkUser();
+		axios
+			.get(`http://${LOCALIP}:5555/admin/site_settings/`)
+			.then((response) => {
+				setWebsiteBanner(response.data?.data[0]?.website_banner);
+				setId(response.data.data[0]._id);
 				setLoading(false);
 			})
 			.catch((error) => {
@@ -38,12 +58,13 @@ const SiteSettings = () => {
 	const handleEditWebsiteSettings = () => {
 		//const id = storeId;
 		const data = {
-			websiteBanner,
+			website_banner: websiteBanner,
 		};
 		setLoading(true);
 		console.log(id);
+		console.log(data);
 		axios
-			.put(`http://${LOCALIP}:5555/products/${id}`, data)
+			.put(`http://${LOCALIP}:5555/admin/site_settings/${id}`, data)
 			.then(() => {
 				setLoading(false);
 				enqueueSnackbar('Product updated', {
@@ -77,7 +98,10 @@ const SiteSettings = () => {
 						className='border-2 border-gray-500 px-4 py-2 w-full'
 					/>
 				</div>
-				<button className='p-2 bg-sky-300 m-8' onClick={handleEditProduct}>
+				<button
+					className='p-2 bg-sky-300 m-8'
+					onClick={handleEditWebsiteSettings}
+				>
 					Save
 				</button>
 			</div>

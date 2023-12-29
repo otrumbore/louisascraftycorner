@@ -13,7 +13,7 @@ const router = express.Router();
 // 	}
 //   };
 
-// Creating a site_settings
+// Creating site_settings
 router.post('/', async (request, response) => {
 	try {
 		const { website_banner } = request.body;
@@ -29,7 +29,7 @@ router.post('/', async (request, response) => {
 	}
 });
 
-// Get all products
+// Get all site_settings
 router.get('/', async (request, response) => {
 	try {
 		const settings = await siteSettings.find({});
@@ -43,7 +43,7 @@ router.get('/', async (request, response) => {
 	}
 });
 
-// Get product by ID
+// Get site_settings by ID
 router.get('/:id', async (request, response) => {
 	try {
 		const { id } = request.params;
@@ -62,7 +62,7 @@ router.get('/:id', async (request, response) => {
 	}
 });
 
-// Update a product by ID
+// Update a site_settings by ID
 router.put('/:id', async (request, response) => {
 	try {
 		const { id } = request.params;
