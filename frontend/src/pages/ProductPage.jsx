@@ -53,7 +53,7 @@ const ProductPage = () => {
 			})
 			.catch((error) => {
 				console.log(error);
-				setLoading(false);
+				//setLoading(false);
 				enqueueSnackbar('Product does not exist!', {
 					variant: 'error',
 					anchorOrigin: {
@@ -306,7 +306,7 @@ const ProductPage = () => {
 						{/* <p>Newest Christmas Products:</p> */}
 						<div className='mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8 w-[90%]'>
 							<ProductCard
-								numProducts={10}
+								numProducts={3}
 								products={relatedProducts}
 								filterCategory={product.category}
 								filterType={product.type}

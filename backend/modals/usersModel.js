@@ -48,17 +48,14 @@ const userSchema = mongoose.Schema(
 				message: 'Invalid phone number format',
 			},
 		},
-		roles: [
-			{
-				type: String,
-				enum: ['user', 'moderator', 'admin'],
-				default: 'user',
-			},
-		],
+		role: {
+			type: String,
+			enum: ['user', 'moderator', 'admin'],
+			default: 'user',
+		},
 		emailMarketing: {
-			type: Number,
-			enum: [0, 1],
-			default: 1,
+			type: Boolean,
+			default: true,
 		},
 		lastActivity: {
 			type: Date,

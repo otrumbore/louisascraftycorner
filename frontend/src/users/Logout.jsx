@@ -7,11 +7,12 @@ import { useUser } from '../context/UserContext';
 const Logout = () => {
 	const navigate = useNavigate();
 	const { enqueueSnackbar } = useSnackbar();
-	const { addUserDetails } = useUser();
+	const { addUserDetails, sendActivityStatus } = useUser();
 
 	useEffect(() => {
 		const handleLogout = async () => {
 			try {
+				sendActivityStatus(false);
 				// Clear the token cookie using js-cookie
 				Cookies.remove('token', { path: '/' });
 				//clear userDetails context

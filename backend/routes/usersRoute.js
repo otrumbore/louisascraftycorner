@@ -29,7 +29,7 @@ router.post('/register', async (request, response) => {
 			password,
 			email,
 			phoneNumber,
-			roles,
+			role,
 			emailMarketing,
 			lastActivity,
 			isActive,
@@ -47,7 +47,7 @@ router.post('/register', async (request, response) => {
 			password: hashedPassword,
 			email,
 			phoneNumber,
-			roles,
+			role,
 			emailMarketing,
 			lastActivity,
 			isActive,
@@ -130,6 +130,30 @@ router.get('/getUser', verifyToken, async (req, res) => {
 		res.status(200).json(userData);
 	} catch (error) {
 		console.error('User data retrieval error:', error.message);
+		res.status(500).json({ message: 'Server Error' });
+	}
+});
+
+// Update user data route
+router.put('/updateUser/:userId', verifyToken, async (req, res) => {
+	try {
+		const userId = req.params.userId; // Extract userId from request parameters
+		const updatedUserData = req.body; // New user data to update
+
+		// Find the user by ID and update the user data
+		const updatedUser = await User.findByIdAndUpdate(
+			userId,
+			{ $set: updatedUserData },
+			{ new: true } // Return the updated document
+		);
+
+		if (!updatedUser) {
+			return res.status(404).json({ message: 'User not found' });
+		}
+
+		res.status(200).json(updatedUser);
+	} catch (error) {
+		console.error('User data update error:', error.message);
 		res.status(500).json({ message: 'Server Error' });
 	}
 });
