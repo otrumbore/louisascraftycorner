@@ -3,6 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useSnackbar } from 'notistack';
 import LoadingModal from '../components/LoadingModal';
+import { LOCALIP } from '../config';
 
 const UserContext = createContext();
 
@@ -30,7 +31,7 @@ export function UserProvider({ children }) {
 		try {
 			const token = Cookies.get('token');
 			if (token) {
-				const res = await axios.get('http://10.0.0.85:5555/user/getUser', {
+				const res = await axios.get(`http://${LOCALIP}:5555/user/getUser`, {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
@@ -71,7 +72,7 @@ export function UserProvider({ children }) {
 			};
 			axios
 				.put(
-					`http://10.0.0.85:5555/user/updateUser/${userDetails._id}`,
+					`http://${LOCALIP}:5555/user/updateUser/${userDetails._id}`,
 					activityData,
 					config
 				)

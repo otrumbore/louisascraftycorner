@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios'; // Import Axios
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { LOCALIP } from '../config';
 
 const Register = () => {
 	const [formData, setFormData] = useState({
@@ -47,7 +48,7 @@ const Register = () => {
 
 			// Make a POST request to your backend API
 			const res = await axios.post(
-				'http://10.0.0.85:5555/user/register',
+				`http://${LOCALIP}:5555/user/register`,
 				newUser
 			);
 

@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack';
 import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie'; // Import the js-cookie library
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
+import { LOCALIP } from '../config';
 
 const Login = () => {
 	const [formData, setFormData] = useState({
@@ -37,7 +38,7 @@ const Login = () => {
 
 	const loginUser = async () => {
 		try {
-			const res = await axios.post('http://10.0.0.85:5555/user/login', {
+			const res = await axios.post(`http://${LOCALIP}:5555/user/login`, {
 				username,
 				password,
 			});
@@ -64,7 +65,7 @@ const Login = () => {
 		try {
 			const token = Cookies.get('token');
 			if (token) {
-				const res = await axios.get('http://10.0.0.85:5555/user/getUser', {
+				const res = await axios.get(`http://${LOCALIP}:5555/user/getUser`, {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},

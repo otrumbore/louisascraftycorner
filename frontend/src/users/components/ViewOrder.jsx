@@ -9,7 +9,7 @@ const ViewOrder = ({ orderNum, setViewOrder }) => {
 				onClick={() => {
 					setViewOrder('');
 				}}
-				className='text-gray-600 flex items-center space-x-2'
+				className='text-gray-600 flex items-center space-x-2 cursor-pointer'
 			>
 				<FaArrowLeft size={30} />
 				<span>Back</span>

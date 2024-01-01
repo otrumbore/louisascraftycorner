@@ -6,6 +6,7 @@ import SantaHat from '../assets/product-img/santa-hat-ordiment.png';
 import { MdOutlineDeleteForever, MdEdit } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { LOCALIP } from '../config';
 
 const Cart = () => {
 	const [loading, setLoading] = useState(false);
@@ -29,7 +30,7 @@ const Cart = () => {
 	}, [cartItems]);
 
 	const checkout = async () => {
-		await fetch('http://10.0.0.85:5555/checkout', {
+		await fetch(`http://${LOCALIP}:5555/checkout`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

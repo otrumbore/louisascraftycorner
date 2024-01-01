@@ -56,20 +56,26 @@ const Dashboard = () => {
 					</h2>
 					<h2 className='hidden lg:block text-xl font-bold'>Dashboard</h2>
 					<div className='mt-4 w-full lg:w-auto'>
-						<ul className='px-6 flex flex-wrap w-full gap-x-8 items-center justify-between md:px-0 md:justify-center'>
+						<ul
+							className={`px-6 flex flex-wrap w-full gap-x-8 items-center justify-between md:px-0 md:justify-center`}
+						>
 							<li
 								onClick={() => {
 									setDashView('orders');
 								}}
-								className='border-b-4 border-transparent border-dashed hover:border-slate-400 pb-2'
+								className={`border-b-4 border-transparent border-slate-400 border-dashed hover:border-current pb-2 cursor-pointer ${
+									dashView === 'orders' && 'border-current'
+								}`}
 							>
-								<BiPurchaseTagAlt size={30} />
+								<BiPurchaseTagAlt size={29} />
 							</li>
 							<li
 								onClick={() => {
 									setDashView('favorites');
 								}}
-								className='border-b-4 border-transparent border-dashed hover:border-slate-400 pb-2'
+								className={`border-b-4 border-transparent border-slate-400 border-dashed hover:border-current pb-2 cursor-pointer ${
+									dashView === 'favorites' && 'border-current'
+								}`}
 							>
 								<FaRegHeart size={27} />
 							</li>
@@ -77,7 +83,9 @@ const Dashboard = () => {
 								onClick={() => {
 									setDashView('profile');
 								}}
-								className='border-b-4 border-transparent border-dashed hover:border-slate-400 pb-2'
+								className={`border-b-4 border-slate-400 border-transparent border-dashed hover:border-current pb-2 cursor-pointer ${
+									dashView === 'profile' && 'border-current'
+								}`}
 							>
 								<FaRegUser size={27} />
 							</li>
@@ -85,11 +93,13 @@ const Dashboard = () => {
 								onClick={() => {
 									setDashView('settings');
 								}}
-								className='border-b-4 border-transparent border-dashed hover:border-slate-400 pb-2'
+								className={`border-b-4 border-transparent border-slate-400  border-dashed hover:border-current pb-2 cursor-pointer ${
+									dashView === 'settings' && 'border-current'
+								}`}
 							>
 								<MdOutlineSettings size={30} />
 							</li>
-							<li className='border-b-4 border-transparent border-dashed hover:border-slate-400 pb-2'>
+							<li className='border-b-4 border-transparent border-slate-400 border-dashed hover:border-current pb-2 cursor-pointer'>
 								<Link to='/user/logout'>
 									<MdLogout className='' size={27} />
 								</Link>
