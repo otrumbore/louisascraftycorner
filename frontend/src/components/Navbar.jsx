@@ -148,10 +148,12 @@ const Navbar = () => {
 							scrolled || pathName !== '/' ? 'text-gray-600' : 'text-white'
 						}`}
 					>
-						<FaRegHeart
-							className='hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 hover:scale-125 transition-all duration-100 cursor-pointer'
-							size={30}
-						/>
+						<Link to='/user/dashboard#favorites'>
+							<FaRegHeart
+								className='hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 hover:scale-125 transition-all duration-100 cursor-pointer'
+								size={30}
+							/>
+						</Link>
 						<Link to='/user/dashboard'>
 							<FaRegUser
 								className='hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 hover:scale-125 transition-all duration-100 cursor-pointer'

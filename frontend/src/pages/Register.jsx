@@ -34,16 +34,23 @@ const Register = () => {
 				return;
 			}
 
+			// Validate email using regex pattern
+			const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailPattern.test(email)) {
+				setRegisterError('Please enter a valid email address!');
+				return;
+			}
+
 			if (confirmPassword !== password) {
 				setRegisterError('Passwords do not match!');
 				return;
 			}
 
 			const newUser = {
-				name,
-				username,
-				email,
-				password,
+				name: name.trim(),
+				username: username.trim(),
+				email: email.trim(),
+				password: password.trim(),
 			};
 
 			// Make a POST request to your backend API
@@ -63,7 +70,7 @@ const Register = () => {
 					autoHideDuration: 10000,
 				}
 			);
-			console.log('User registered:', res.data); // Log the response data (for verification, remove in production)
+			//console.log('User registered:', res.data); // Log the response data (for verification, remove in production)
 
 			// Clear form fields after successful registration
 			setFormData({
@@ -77,6 +84,14 @@ const Register = () => {
 			// Handle any further actions after successful registration (redirect, show success message, etc.)
 		} catch (error) {
 			console.error('Registration error:', error.message);
+			enqueueSnackbar('Error: ' + error.message, {
+				variant: 'error',
+				anchorOrigin: {
+					horizontal: 'center',
+					vertical: 'top',
+				},
+				autoHideDuration: 10000,
+			});
 			// Handle error responses (show error message to the user, etc.)
 		}
 	};

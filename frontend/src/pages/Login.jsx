@@ -47,7 +47,7 @@ const Login = () => {
 
 			// Set token in a cookie with expiration time (adjust the expiry as needed)
 			const now = new Date();
-			const expirationTime = new Date(now.getTime() + 3600 * 1000); // Expiry in 1 hour
+			const expirationTime = new Date(now.getTime() + 24 * 60 * 60 * 1000); // Expiry in 24 hours
 			Cookies.set('token', res.data.token, {
 				expires: expirationTime,
 				path: '/',

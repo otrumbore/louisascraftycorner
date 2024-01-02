@@ -7,7 +7,8 @@ import stripe from 'stripe';
 import productsRoute from './routes/productsRoute.js';
 import siteSettingsRoute from './routes/siteSettingsRoute.js';
 import usersRoute from './routes/usersRoute.js';
-import { Product } from './modals/productsModel.js';
+import userFavoritesRoute from './routes/userFavoritesRoute.js';
+
 import crypto from 'crypto';
 
 //const secret = crypto.randomBytes(32).toString('hex');
@@ -64,6 +65,7 @@ app.get('/', (req, res) => {
 app.use('/products', productsRoute);
 app.use('/admin/site_settings', siteSettingsRoute);
 app.use('/user', usersRoute);
+app.use('/user/favorites', userFavoritesRoute);
 
 mongoose
 	.connect(mongoDBURL)

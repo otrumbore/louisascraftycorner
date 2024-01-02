@@ -16,6 +16,8 @@ const Dashboard = () => {
 	const navigate = useNavigate();
 	const [dashView, setDashView] = useState('');
 
+	const userRewards = 60;
+
 	const location = useLocation();
 
 	// Function to extract the hash fragment from the location pathname
@@ -51,55 +53,63 @@ const Dashboard = () => {
 						Welcome,
 						{userDetails.name
 							? ' ' + userDetails.name.split(' ')[0] || userDetails.name
-							: ''}{' '}
-						{isAdmin() && <FaStar size={30} className='text-yellow-500 ml-2' />}
+							: ''}
+						{isAdmin() && <FaStar size={30} className='text-yellow-400 ml-2' />}
 					</h2>
 					<h2 className='hidden lg:block text-xl font-bold'>Dashboard</h2>
-					<div className='mt-4 w-full lg:w-auto'>
+					<div className='lg:mt-4 w-full lg:w-auto'>
 						<ul
 							className={`px-6 flex flex-wrap w-full gap-x-8 items-center justify-between md:px-0 md:justify-center`}
 						>
 							<li
 								onClick={() => {
-									setDashView('orders');
+									navigate('#orders');
 								}}
-								className={`border-b-4 border-transparent border-slate-400 border-dashed hover:border-current pb-2 cursor-pointer ${
-									dashView === 'orders' && 'border-current'
+								className={`cursor-pointer ${
+									dashView === 'orders'
+										? 'border-b-4 border-slate-400 border-dashed pb-2'
+										: 'border-b-4 border-opacity-0 border-dashed border-slate-400 hover:border-opacity-100 pb-2'
 								}`}
 							>
 								<BiPurchaseTagAlt size={29} />
 							</li>
 							<li
 								onClick={() => {
-									setDashView('favorites');
+									navigate('#favorites');
 								}}
-								className={`border-b-4 border-transparent border-slate-400 border-dashed hover:border-current pb-2 cursor-pointer ${
-									dashView === 'favorites' && 'border-current'
+								className={`cursor-pointer ${
+									dashView === 'favorites'
+										? 'border-b-4 border-slate-400 border-dashed pb-2'
+										: 'border-b-4 border-opacity-0 border-dashed border-slate-400 hover:border-opacity-100 pb-2'
 								}`}
 							>
 								<FaRegHeart size={27} />
 							</li>
 							<li
 								onClick={() => {
-									setDashView('profile');
+									navigate('#profile');
 								}}
-								className={`border-b-4 border-slate-400 border-transparent border-dashed hover:border-current pb-2 cursor-pointer ${
-									dashView === 'profile' && 'border-current'
+								className={`cursor-pointer ${
+									dashView === 'profile'
+										? 'border-b-4 border-slate-400 border-dashed pb-2'
+										: 'border-b-4 border-opacity-0 border-dashed border-slate-400 hover:border-opacity-100 pb-2'
 								}`}
 							>
 								<FaRegUser size={27} />
 							</li>
 							<li
 								onClick={() => {
-									setDashView('settings');
+									navigate('#settings');
 								}}
-								className={`border-b-4 border-transparent border-slate-400  border-dashed hover:border-current pb-2 cursor-pointer ${
-									dashView === 'settings' && 'border-current'
+								className={`cursor-pointer ${
+									dashView === 'settings'
+										? 'border-b-4 border-slate-400 border-dashed pb-2'
+										: 'border-b-4 border-opacity-0 border-dashed border-slate-400 hover:border-opacity-100 pb-2'
 								}`}
 							>
 								<MdOutlineSettings size={30} />
 							</li>
-							<li className='border-b-4 border-transparent border-slate-400 border-dashed hover:border-current pb-2 cursor-pointer'>
+							<li className='border-b-4 border-opacity-0 border-slate-400 border-dashed hover:border-opacity-100 pb-2 cursor-pointer'>
 								<Link to='/user/logout'>
 									<MdLogout className='' size={27} />
 								</Link>
@@ -107,6 +117,37 @@ const Dashboard = () => {
 						</ul>
 					</div>
 				</div>
+				<div className='w-full flex items-center justify-center'>
+					<div className='mt-8 w-full md:w-[50vw] lg:w-[30vw] flex flex-col justify-center items-center gap-y-2'>
+						<p className='hidden'>Loyalty Rewards:</p>
+						<div className='w-full bg-gray-200 h-8 rounded-full relative'>
+							<div className='flex text-yellow-400 justify-center items-center absolute left-0 right-0 z-10'>
+								{userRewards === 50 ? (
+									<FaStar size={30} className='animate-bounce' />
+								) : (
+									userRewards <= 51 && <FaStar size={30} />
+								)}
+							</div>
+							<div className='flex text-yellow-400 justify-end items-center absolute right-0 px-1 z-10'>
+								<FaStar size={30} />
+							</div>
+							<div
+								className={`flex bg-slate-600 text-lg h-8 font-medium text-blue-100 items-center justify-center p-0.5 leading-none rounded-full relative`}
+								style={{ width: `${userRewards}%` }}
+							>
+								{userRewards + '%'}
+								{userRewards >= 30 && userRewards <= 50
+									? ' - $5 off'
+									: userRewards >= 51
+									? ' - $10 off'
+									: userRewards === 100
+									? 'Complete!'
+									: ''}
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<div className='mt-8'>
 					{dashView === 'orders' ? (
 						<Orders />
