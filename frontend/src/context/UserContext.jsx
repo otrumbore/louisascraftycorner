@@ -4,11 +4,14 @@ import Cookies from 'js-cookie';
 import { useSnackbar } from 'notistack';
 import LoadingModal from '../components/LoadingModal';
 import { LOCALIP } from '../config';
+import { useNavigate } from 'react-router-dom';
 
 const UserContext = createContext();
 
 export function UserProvider({ children }) {
+	const navigate = useNavigate();
 	const [userDetails, setUserDetails] = useState({});
+	const [userFavorites, setUserFavorites] = useState({});
 	const { enqueueSnackbar } = useSnackbar();
 	const [loading, setLoading] = useState(false);
 	const [userIsActive, setUserIsActive] = useState(true);
@@ -31,18 +34,47 @@ export function UserProvider({ children }) {
 		try {
 			const token = Cookies.get('token');
 			if (token) {
-				const res = await axios.get(`http://${LOCALIP}:5555/user/getUser`, {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				});
+				try {
+					const userDetailsResponse = await axios.get(
+						`http://${LOCALIP}:5555/user/getUser`,
+						{
+							headers: {
+								Authorization: `Bearer ${token}`,
+							},
+						}
+					);
 
-				addUserDetails(res.data);
-				setLoading(false);
+					addUserDetails(userDetailsResponse.data);
+
+					const favoritesResponse = await axios.get(
+						`http://${LOCALIP}:5555/api/user/favorites/${userDetailsResponse.data._id}`,
+						{
+							headers: {
+								Authorization: `Bearer ${token}`,
+							},
+						}
+					);
+
+					setUserFavorites(favoritesResponse.data.data.items); // Assuming favoritesResponse.data contains a count property
+					//console.log(userFavorites); // Logging the length of the items array
+
+					//setLoading(false);
+				} catch (error) {
+					console.error('Error fetching user details or favorites:', error);
+					setLoading(false);
+				}
 			} else {
 				setLoading(false);
+				navigate('/');
 			}
 		} catch (error) {
+			const token = Cookies.get('token');
+			if (token) {
+				Cookies.remove('token');
+				setUserDetails({});
+				setUserFavoritesCount({});
+				navigate('/login');
+			}
 			console.error('User data fetch error:', error.message);
 			enqueueSnackbar('Failed to fetch user data', {
 				variant: 'error',
@@ -54,6 +86,12 @@ export function UserProvider({ children }) {
 			});
 		}
 	};
+
+	// Log userFavorites when it changes
+	useEffect(() => {
+		//console.log(userFavorites);
+		setLoading(false);
+	}, [userFavorites, userDetails]);
 
 	// Function to send user activity status to the server
 	const sendActivityStatus = (isActive) => {
@@ -143,7 +181,13 @@ export function UserProvider({ children }) {
 
 	return (
 		<UserContext.Provider
-			value={{ userDetails, addUserDetails, isAdmin, sendActivityStatus }}
+			value={{
+				userDetails,
+				addUserDetails,
+				isAdmin,
+				sendActivityStatus,
+				userFavorites,
+			}}
 		>
 			<LoadingModal loading={loading} />
 			{children}

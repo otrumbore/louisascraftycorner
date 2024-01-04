@@ -65,25 +65,29 @@ const Cart = () => {
 									key={i}
 								>
 									<div className='flex items-center'>
-										<div className='flex h-[100px] w-[100px] items-center justify-center'>
-											<img
-												src={
-													item.img === '' || item.img === undefined
-														? DefaultProductImg
-														: item.img === 'santaHat' && SantaHat
-												}
-												alt={item.name + ' image'}
-												className='object-cover border-2 border-slate-300 h-full w-full rounded-md'
-											/>
-										</div>
+										<Link to={`/product/${item._id}`}>
+											<div className='flex h-[100px] w-[100px] items-center justify-center'>
+												<img
+													src={
+														item.img === '' || item.img === undefined
+															? DefaultProductImg
+															: item.img === 'santaHat' && SantaHat
+													}
+													alt={item.name + ' image'}
+													className='object-cover border-2 border-slate-300 h-full w-full rounded-md'
+												/>
+											</div>
+										</Link>
 										<div className='flex flex-col w-full items-center justify-between lg:gap-y-4'>
 											<div className='pl-4 flex flex-col gap-y-2 lg:flex-row w-full justify-between'>
-												<div className='font-bold text-lg'>
-													{item.name} -{' '}
-													{item.type &&
-														item.type.charAt(0).toUpperCase() +
-															item.type.slice(1)}
-												</div>
+												<Link to={`/product/${item._id}`}>
+													<div className='font-bold text-lg'>
+														{item.name} -{' '}
+														{item.type &&
+															item.type.charAt(0).toUpperCase() +
+																item.type.slice(1)}
+													</div>
+												</Link>
 												<div className='flex lg:text-xl'>
 													$
 													{item.sale > 0 ? (

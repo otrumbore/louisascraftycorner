@@ -99,17 +99,20 @@ const Login = () => {
 	const onSubmit = (e) => {
 		e.preventDefault();
 
-		setUsernamePattern('/^[a-zA-Z0-9._!-]{4,30}$/');
+		setUsernamePattern('^[a-zA-Z0-9._!-]{4,30}$');
 		setPasswordPattern(
-			'/^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[!@#$%^&*()]).{8,}$/'
+			'^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()]).{8,}$'
 		);
 
-		if (!username.match(usernamePattern) || !password.match(passwordPattern)) {
-			!username.match(usernamePattern) &&
+		if (
+			!username.match(new RegExp(usernamePattern)) ||
+			!password.match(new RegExp(passwordPattern))
+		) {
+			!username.match(new RegExp(usernamePattern)) &&
 				setLoginError(
 					'Username must be alphanumeric with optional period, underscore, hyphen, and exclamation mark.'
 				);
-			!password.match(passwordPattern) &&
+			!password.match(new RegExp(passwordPattern)) &&
 				setLoginError(
 					'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character, and be at least 8 characters long.'
 				);

@@ -292,6 +292,16 @@ const ProductPage = () => {
 									)}
 								</button>
 							</div>
+							<div className='hidden w-full mt-4 flex justify-center'>
+								<button className='btn' onClick={updateCartQty}>
+									<MdAddShoppingCart size={27} />
+									{productInCart ? (
+										<p className='ml-4 text-2xl'>Update QTY?</p>
+									) : (
+										<p className='ml-4 text-2xl'>Add to Cart</p>
+									)}
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>

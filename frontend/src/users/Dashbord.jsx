@@ -46,7 +46,7 @@ const Dashboard = () => {
 	//console.log(userDetails);
 
 	return (
-		<div className='p-4 mt-[8rem] w-full flex items-center justify-center'>
+		<div className='p-4 mt-[8rem] min-h-[65vh] w-full flex justify-center'>
 			<div className='px-1 w-full max-w-[1400px] items-center justify-between text-gray-600'>
 				<div className='flex w-full flex-col lg:flex-row items-center justify-between gap-y-6'>
 					<h2 className='text-2xl flex flex-wrap'>
@@ -89,7 +89,7 @@ const Dashboard = () => {
 								onClick={() => {
 									navigate('#profile');
 								}}
-								className={`cursor-pointer ${
+								className={`hidden cursor-pointer ${
 									dashView === 'profile'
 										? 'border-b-4 border-slate-400 border-dashed pb-2'
 										: 'border-b-4 border-opacity-0 border-dashed border-slate-400 hover:border-opacity-100 pb-2'

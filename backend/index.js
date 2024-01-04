@@ -65,7 +65,7 @@ app.get('/', (req, res) => {
 app.use('/products', productsRoute);
 app.use('/admin/site_settings', siteSettingsRoute);
 app.use('/user', usersRoute);
-app.use('/user/favorites', userFavoritesRoute);
+app.use('/api/user/favorites', userFavoritesRoute);
 
 mongoose
 	.connect(mongoDBURL)

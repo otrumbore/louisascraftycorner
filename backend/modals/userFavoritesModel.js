@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 
 const favoritesSchema = mongoose.Schema(
 	{
+		userId: {
+			type: String,
+			required: true,
+		},
 		email: {
 			type: String,
 			unique: true,
@@ -15,10 +19,6 @@ const favoritesSchema = mongoose.Schema(
 				},
 				message: 'Invalid email format',
 			},
-		},
-		userId: {
-			type: String,
-			required: true,
 		},
 		items: [
 			{

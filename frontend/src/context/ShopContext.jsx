@@ -4,7 +4,7 @@ import { LOCALIP } from '../config.js';
 
 export const ShopContext = createContext(null);
 
-const ShopContextProvider = (props) => {
+const FavoritesContextProvider = (props) => {
 	// const [contextValue, setContextValue] = useState([]);
 
 	// useEffect(() => {
@@ -28,4 +28,4 @@ const ShopContextProvider = (props) => {
 	);
 };
 
-export default ShopContextProvider;
+export default FavoritesContextProvider;

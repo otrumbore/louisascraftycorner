@@ -19,7 +19,7 @@ const Navbar = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const pathName = location.pathname;
-	const { userDetails, isAdmin } = useUser();
+	const { userDetails, isAdmin, userFavorites } = useUser();
 
 	//cart stuff
 	const {
@@ -149,10 +149,16 @@ const Navbar = () => {
 						}`}
 					>
 						<Link to='/user/dashboard#favorites'>
-							<FaRegHeart
-								className='hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 hover:scale-125 transition-all duration-100 cursor-pointer'
-								size={30}
-							/>
+							<span className='inline-flex items-center font-medium hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 transition-all duration-100 cursor-pointer'>
+								<FaRegHeart className='' size={25} />
+								<p
+									className={` ${
+										userFavorites.length > 0 ? 'block' : 'hidden'
+									} ml-1 text-lg`}
+								>
+									{userFavorites.length}
+								</p>
+							</span>
 						</Link>
 						<Link to='/user/dashboard'>
 							<FaRegUser
@@ -166,7 +172,7 @@ const Navbar = () => {
 								<p
 									className={` ${
 										totalItemsCount > 0 ? 'block' : 'hidden'
-									} ml-2 text-lg`}
+									} ml-1 text-lg`}
 								>
 									{totalItemsCount}
 								</p>
@@ -197,24 +203,30 @@ const Navbar = () => {
 						<div
 							className={`flex w-full items-center px-4 mb-4 mt-4 justify-evenly text-gray-800`}
 						>
-							<IoIosSearch
-								className='hover:border-2 hover:bg-gray-300 p-1 hover:border-gray-400 rounded-md hover:scale-125 transition-all duration-100 cursor-pointer'
-								size={33}
-							/>
-							<FaRegUser
-								className='hover:border-2 hover:bg-gray-300 p-1 hover:border-gray-400 rounded-md hover:scale-125 transition-all duration-100 cursor-pointer'
-								size={30}
-							/>
-							<span className='inline-flex items-center font-medium hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 transition-all duration-100 cursor-pointer'>
-								<MdOutlineShoppingCart className='' size={25} />
-								<p
-									className={` ${
-										totalItemsCount > 0 ? 'block' : 'hidden'
-									} ml-2 text-lg`}
-								>
-									{totalItemsCount}
-								</p>
-							</span>
+							<Link to='/user/dashboard#favorites'>
+								<FaRegHeart
+									className='hover:border-2 hover:bg-gray-300 p-1 hover:border-gray-400 rounded-md hover:scale-125 transition-all duration-100 cursor-pointer'
+									size={30}
+								/>
+							</Link>
+							<Link to='/user/dashboard'>
+								<FaRegUser
+									className='hover:border-2 hover:bg-gray-300 p-1 hover:border-gray-400 rounded-md hover:scale-125 transition-all duration-100 cursor-pointer'
+									size={30}
+								/>
+							</Link>
+							<Link to={'/cart'}>
+								<span className='-ml-2 inline-flex items-center justify-center font-medium hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 transition-all duration-100 cursor-pointer'>
+									<MdOutlineShoppingCart className='' size={25} />
+									<p
+										className={` ${
+											totalItemsCount > 0 ? 'block' : 'hidden'
+										} ml-1 text-lg`}
+									>
+										{totalItemsCount}
+									</p>
+								</span>
+							</Link>
 						</div>
 						<ul className='flex flex-col items-center text-xl'>
 							{/* Render your mobile menu links here */}
