@@ -76,7 +76,7 @@ const Navbar = () => {
 	const navAdminData = [
 		{ linkName: 'Admin Home', linkTo: '/admin' },
 		{ linkName: 'Orders', linkTo: '/admin' },
-		{ linkName: 'Site Settings', linkTo: '/admin/site_settings' },
+		//{ linkName: 'Site Settings', linkTo: '/admin/site_settings' },
 	];
 
 	const toggleMobileMenu = () => {
@@ -116,7 +116,7 @@ const Navbar = () => {
 						</div>
 					</div>
 					<div
-						className={`hidden lg:flex ${isAdmin() ? 'w-[75%]' : 'w-[40%]'}`}
+						className={`hidden lg:flex ${isAdmin() ? 'w-[60%]' : 'w-[40%]'}`}
 					>
 						<ul
 							className={`flex w-full items-center justify-evenly list-none ${
@@ -144,21 +144,22 @@ const Navbar = () => {
 						</ul>
 					</div>
 					<div
-						className={`flex items-center gap-x-4  ${
+						className={`flex items-center gap-x-2  ${
 							scrolled || pathName !== '/' ? 'text-gray-600' : 'text-white'
 						}`}
 					>
-						<Link to='/user/dashboard#favorites'>
-							<span className='inline-flex items-center font-medium hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 transition-all duration-100 cursor-pointer'>
-								<FaRegHeart className='' size={25} />
-								<p
-									className={` ${
-										userFavorites.length > 0 ? 'block' : 'hidden'
-									} ml-1 text-lg`}
-								>
-									{userFavorites.length}
-								</p>
-							</span>
+						<Link
+							to='/user/dashboard#favorites'
+							className='inline-flex items-center font-medium hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 transition-all duration-100 cursor-pointer'
+						>
+							<FaRegHeart className='' size={25} />
+							<p
+								className={` ${
+									userFavorites.length > 0 ? 'block' : 'hidden'
+								} ml-1 text-lg`}
+							>
+								{userFavorites.length}
+							</p>
 						</Link>
 						<Link to='/user/dashboard'>
 							<FaRegUser
@@ -166,17 +167,18 @@ const Navbar = () => {
 								size={30}
 							/>
 						</Link>
-						<Link to={'/cart'}>
-							<span className='inline-flex items-center font-medium hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 transition-all duration-100 cursor-pointer'>
-								<MdOutlineShoppingCart className='' size={25} />
-								<p
-									className={` ${
-										totalItemsCount > 0 ? 'block' : 'hidden'
-									} ml-1 text-lg`}
-								>
-									{totalItemsCount}
-								</p>
-							</span>
+						<Link
+							className='inline-flex items-center font-medium hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 transition-all duration-100 cursor-pointer'
+							to={'/cart'}
+						>
+							<MdOutlineShoppingCart className='' size={25} />
+							<p
+								className={` ${
+									totalItemsCount > 0 ? 'block' : 'hidden'
+								} ml-1 text-lg`}
+							>
+								{totalItemsCount}
+							</p>
 						</Link>
 					</div>
 				</div>

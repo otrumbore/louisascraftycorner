@@ -25,6 +25,7 @@ import SiteSettings from './admin/pages/SiteSettings';
 //user pages
 import Dashbord from './users/Dashbord';
 import Logout from './users/Logout';
+import AdminDashboard from './admin/AdminDashboard';
 
 const App = () => {
 	return (
@@ -41,6 +42,7 @@ const App = () => {
 
 					{/* Admin Product Routes */}
 					<Route path='/admin' element={<AdminHome />} />
+					<Route path='/admin2' element={<AdminDashboard />} />
 					<Route path='/admin/addproduct' element={<AddProduct />} />
 					<Route path='/admin/editproduct/:id' element={<EditProduct />} />
 					<Route path='/admin/site_settings' element={<SiteSettings />} />

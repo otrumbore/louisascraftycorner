@@ -18,7 +18,7 @@ const Favorites = () => {
 	const navigate = useNavigate();
 	const { userFavorites } = useUser();
 	const [favorites, setFavorites] = useState([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const { enqueueSnackbar } = useSnackbar();
 	const { cartItems, addToCart } = useCart();
 
@@ -38,12 +38,20 @@ const Favorites = () => {
 			//setLoading(false);
 		} catch (error) {
 			console.error('Error fetching user details or favorites:', error);
+			enqueueSnackbar('Could not load favorites...Try again later!', {
+				variant: 'error',
+				anchorOrigin: {
+					horizontal: 'center',
+					vertical: 'top',
+				},
+				autoHideDuration: 2000,
+			});
 			navigate('/user/dashboard#orders');
 		}
 	};
 
 	useEffect(() => {
-		getProducts();
+		favorites.length <= 0 && getProducts();
 	}, []);
 
 	useEffect(() => {

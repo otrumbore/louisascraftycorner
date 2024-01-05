@@ -11,7 +11,7 @@ const UserContext = createContext();
 export function UserProvider({ children }) {
 	const navigate = useNavigate();
 	const [userDetails, setUserDetails] = useState({});
-	const [userFavorites, setUserFavorites] = useState({});
+	const [userFavorites, setUserFavorites] = useState([]);
 	const { enqueueSnackbar } = useSnackbar();
 	const [loading, setLoading] = useState(false);
 	const [userIsActive, setUserIsActive] = useState(true);
