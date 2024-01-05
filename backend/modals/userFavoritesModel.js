@@ -22,7 +22,7 @@ const favoritesSchema = mongoose.Schema(
 		},
 		items: [
 			{
-				itemId: String,
+				itemId: Number,
 			},
 		],
 	},

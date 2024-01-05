@@ -101,15 +101,15 @@ router.get('/product/:id', async (request, response) => {
 });
 
 // Update a favorite by ID
-router.put('/:id', async (request, response) => {
+router.put('/:id', verifyToken, async (request, response) => {
 	try {
 		const { id } = request.params;
-		const updatedFavorite = await Favorites.findByIdAndUpdate(
-			id,
-			request.body,
-			{
-				new: true,
-			}
+		const { items } = request.body;
+
+		const updatedFavorite = await Favorites.findOneAndUpdate(
+			{ userId: id },
+			{ $set: { items } },
+			{ new: true }
 		);
 
 		if (!updatedFavorite) {

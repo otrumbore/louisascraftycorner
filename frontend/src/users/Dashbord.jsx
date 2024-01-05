@@ -35,7 +35,9 @@ const Dashboard = () => {
 			if (!token) {
 				navigate('/login');
 			}
-		} catch (error) {}
+		} catch (error) {
+			console.error(error);
+		}
 		window.scrollTo(0, 0);
 	}, []);
 

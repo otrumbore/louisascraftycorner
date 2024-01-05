@@ -67,7 +67,7 @@ const Orders = () => {
 									<div className='flex flex-wrap w-full items-center justify-between'>
 										<p>Order# {item.orderNum}</p>
 										<p>Total: ${item.total}</p>
-										<p
+										<button
 											className='cursor-pointer'
 											onClick={() => {
 												setViewOrder(item.orderNum);
@@ -77,7 +77,7 @@ const Orders = () => {
 												<span className='hidden lg:block'>View</span>
 												<GrOverview size={30} />
 											</p>
-										</p>
+										</button>
 									</div>
 								</div>
 							))}

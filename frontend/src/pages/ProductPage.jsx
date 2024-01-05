@@ -20,6 +20,7 @@ import { useSnackbar } from 'notistack';
 import ProductCard from '../components/ProductCard';
 import { LOCALIP } from '../config';
 import { useCart } from '../context/CartContext';
+import { useUser } from '../context/UserContext';
 
 const ProductPage = () => {
 	const [product, setProduct] = useState({});
@@ -27,6 +28,7 @@ const ProductPage = () => {
 	const [loading, setLoading] = useState(true);
 	const [qty, setQty] = useState(1);
 	const [productInCart, setProductInCart] = useState(false);
+	const [productInFavorites, setProductInFavorites] = useState(false);
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const { enqueueSnackbar } = useSnackbar();
@@ -41,7 +43,11 @@ const ProductPage = () => {
 		clearCart,
 		cartTotal,
 		updateCartItem,
+		userFavorites,
 	} = useCart();
+
+	//user Stuff
+	const { addToFavorites } = useUser();
 
 	useEffect(() => {
 		setLoading(true);
@@ -94,9 +100,19 @@ const ProductPage = () => {
 	}, [product, relatedProducts]);
 
 	useEffect(() => {
+		setLoading(true);
 		setProductInCart(
 			cartItems.some((cartItem) => cartItem._id === product._id)
 		);
+
+		console.log(userFavorites);
+
+		if (userFavorites) {
+			setProductInFavorites(
+				userFavorites.some((favoriteItem) => favoriteItem._id === product._id)
+			);
+		}
+
 		// Check if the product is in the cart and set the quantity accordingly
 		const cartItem = cartItems.find((cartItem) => cartItem._id === product._id);
 
@@ -111,7 +127,8 @@ const ProductPage = () => {
 		if (qty > 0) {
 			setSelectedProduct({ ...product, qty: qty });
 		}
-	}, [cartItems, product, productInCart]);
+		setLoading(false);
+	}, [cartItems, product, productInCart, userFavorites]);
 
 	const updateCartQty = () => {
 		if (productInCart) {
@@ -242,7 +259,23 @@ const ProductPage = () => {
 
 							<div className='mt-10 grid grid-cols-2 w-full items-center'>
 								<div className='mlg:mt-0 flex items-center justify-start'>
-									<button className='flex items-center border-4 px-4 py-2 border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-lg hover:shadow-slate-400 transition-all duration-100 rounded-md gap-x-2'>
+									<button
+										onClick={() => {
+											addToFavorites(product.storeId);
+											enqueueSnackbar(
+												'Added ' + product.name + ' to favorites',
+												{
+													variant: 'success',
+													anchorOrigin: {
+														horizontal: 'center',
+														vertical: 'top',
+													},
+													autoHideDuration: 2000,
+												}
+											);
+										}}
+										className='flex items-center border-4 px-4 py-2 border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-lg hover:shadow-slate-400 transition-all duration-100 rounded-md gap-x-2'
+									>
 										<FaRegHeart size={25} />
 										<span className='hidden lg:block'>Add to Favorites</span>
 									</button>
@@ -284,16 +317,6 @@ const ProductPage = () => {
 									className='flex items-center justify-center border-4 py-4 lg:py-3 text-xl border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-lg hover:shadow-slate-400 transition-all duration-100 rounded-md w-full'
 									onClick={updateCartQty}
 								>
-									<MdAddShoppingCart size={27} />
-									{productInCart ? (
-										<p className='ml-4 text-2xl'>Update QTY?</p>
-									) : (
-										<p className='ml-4 text-2xl'>Add to Cart</p>
-									)}
-								</button>
-							</div>
-							<div className='hidden w-full mt-4 flex justify-center'>
-								<button className='btn' onClick={updateCartQty}>
 									<MdAddShoppingCart size={27} />
 									{productInCart ? (
 										<p className='ml-4 text-2xl'>Update QTY?</p>
