@@ -1,10 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-//context
-import { CartProvider } from './context/CartContext';
-import { UserProvider } from './context/UserContext';
-
 //components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -16,6 +12,8 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Shop from './pages/Shop';
 import Contact from './pages/Contact';
+import Information from './pages/Information';
+import NotFound from './pages/errors/NotFound';
 
 //admin pages
 import AdminHome from './admin/AdminHome';
@@ -31,35 +29,37 @@ import AdminDashboard from './admin/AdminDashboard';
 
 const App = () => {
 	return (
-		<UserProvider>
-			<CartProvider>
-				<Navbar />
-				<Routes>
-					{/* Regular Website Routes */}
-					<Route path='/' element={<Home />} />
-					<Route path='/product/:id' element={<ProductPage />} />
-					<Route path='/cart' element={<Cart />} />
-					<Route path='/register' element={<Register />} />
-					<Route path='/login' element={<Login />} />
-					<Route path='/shop' element={<Shop />} />
-					<Route path='/contact' element={<Contact />} />
+		<>
+			<Navbar />
+			<Routes>
+				{/* Regular Website Routes */}
+				<Route path='/' element={<Home />} />
+				<Route path='/product/:id' element={<ProductPage />} />
+				<Route path='/cart' element={<Cart />} />
+				<Route path='/register' element={<Register />} />
+				<Route path='/login' element={<Login />} />
+				<Route path='/shop' element={<Shop />} />
+				<Route path='/contact' element={<Contact />} />
+				<Route path='/info/:section' element={<Information />} />
+				<Route path='/info/:section' element={<Information />} />
+				<Route path='/info/:section' element={<Information />} />
+				<Route path='*' element={<NotFound />} />
 
-					{/* Admin Product Routes */}
-					<Route path='/admin' element={<AdminHome />} />
-					<Route path='/admin2' element={<AdminDashboard />} />
-					<Route path='/admin/addproduct' element={<AddProduct />} />
-					<Route path='/admin/editproduct/:id' element={<EditProduct />} />
-					<Route path='/admin/site_settings' element={<SiteSettings />} />
+				{/* Admin Product Routes */}
+				<Route path='/admin' element={<AdminHome />} />
+				<Route path='/admin2' element={<AdminDashboard />} />
+				<Route path='/admin/addproduct' element={<AddProduct />} />
+				<Route path='/admin/editproduct/:id' element={<EditProduct />} />
+				<Route path='/admin/site_settings' element={<SiteSettings />} />
 
-					{/* Admin Users Routes */}
+				{/* Admin Users Routes */}
 
-					{/* Store User Routes */}
-					<Route path='/user/dashboard' element={<Dashbord />} />
-					<Route path='/user/logout' element={<Logout />} />
-				</Routes>
-				<Footer />
-			</CartProvider>
-		</UserProvider>
+				{/* Store User Routes */}
+				<Route path='/user/dashboard' element={<Dashbord />} />
+				<Route path='/user/logout' element={<Logout />} />
+			</Routes>
+			<Footer />
+		</>
 	);
 };
 export default App;

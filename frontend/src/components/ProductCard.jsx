@@ -61,7 +61,7 @@ const ProductCard = ({
 			}
 		}
 
-		userDetails._id ? setLoggedIn(true) : setLoggedIn(false);
+		userDetails._id !== undefined ? setLoggedIn(true) : setLoggedIn(false);
 
 		setShowProducts(filteredProducts);
 	}, [products, filterCategory, filterType, currProduct]);

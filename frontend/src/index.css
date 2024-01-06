@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-	@apply bg-slate-100 text-dark_primary;
+	@apply bg-slate-100 text-slate-800;
 }
 
 .tooltip {

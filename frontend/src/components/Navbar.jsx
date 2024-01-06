@@ -145,33 +145,37 @@ const Navbar = () => {
 						}`}
 					>
 						<Link
-							to='/user/dashboard#favorites'
-							className='inline-flex items-center font-medium hover:bg-opacity-90 p-2 btn-ghost cursor-pointer'
-						>
-							<FaRegHeart className='' size={25} />
-							<p
-								className={` ${
-									userFavorites.length > 0 ? 'block' : 'hidden'
-								} ml-1 text-lg`}
-							>
-								{userFavorites.length}
-							</p>
-						</Link>
-						<Link
 							to='/user/dashboard'
 							className='p-2 btn-ghost font-medium hover:bg-opacity-90 cursor-pointer'
 						>
 							<FaRegUser className='' size={23} />
 						</Link>
 						<Link
-							className='inline-flex items-center font-medium p-2 btn-ghost hover:bg-opacity-90 cursor-pointer'
+							to='/user/dashboard#favorites'
+							className={`font-medium hover:bg-opacity-90 p-2 ${
+								userFavorites.length > 0 ? 'btn-outline py-1' : 'btn-ghost'
+							} cursor-pointer`}
+						>
+							<FaRegHeart className='' size={25} />
+							<p
+								className={` ${
+									userFavorites.length > 0 ? 'block' : 'hidden'
+								} text-lg`}
+							>
+								{userFavorites.length}
+							</p>
+						</Link>
+						<Link
+							className={`font-medium hover:bg-opacity-90 p-2 ${
+								cartItemsCount() > 0 ? 'btn-outline py-1' : 'btn-ghost'
+							} cursor-pointer`}
 							to={'/cart'}
 						>
 							<MdOutlineShoppingCart className='' size={26} />
 							<p
 								className={` ${
 									totalItemsCount > 0 ? 'block' : 'hidden'
-								} ml-1 text-lg`}
+								} text-lg`}
 							>
 								{totalItemsCount}
 							</p>
@@ -182,10 +186,10 @@ const Navbar = () => {
 			{/* Mobile Menu */}
 			{isMobileMenuOpen && (
 				<div
-					className='fixed inset-0 z-50 bg-slate-800 bg-opacity-75 transition-all duration-300 ease-in-out'
+					className='fixed inset-0 z-50 bg-primary bg-opacity-75 transition-all duration-300 ease-in-out'
 					onClick={toggleMobileMenu}
 				>
-					<div className='absolute inset-y-0 left-0 top-0 w-64 bg-slate-200 rounded-r-md shadow-lg transition-transform duration-300 ease-in-out'>
+					<div className='absolute inset-y-0 left-0 top-0 w-64 bg-slate-50 bg-opacity-80 rounded-r-md shadow-lg transition-transform duration-300 ease-in-out'>
 						<div className='flex justify-between items-center p-4'>
 							<img
 								src={!isMobile ? logoImg : LogoBlack}
@@ -201,29 +205,42 @@ const Navbar = () => {
 						<div
 							className={`flex w-full items-center px-4 mb-4 mt-4 justify-evenly text-gray-800`}
 						>
-							<Link to='/user/dashboard#favorites'>
-								<FaRegHeart
-									className='hover:border-2 hover:bg-gray-300 p-1 hover:border-gray-400 rounded-md hover:scale-125 transition-all duration-100 cursor-pointer'
-									size={30}
-								/>
+							<Link
+								to='/user/dashboard'
+								className={`font-medium p-2 btn-ghost cursor-pointer`}
+							>
+								<FaRegUser className='' size={25} />
 							</Link>
-							<Link to='/user/dashboard'>
-								<FaRegUser
-									className='hover:border-2 hover:bg-gray-300 p-1 hover:border-gray-400 rounded-md hover:scale-125 transition-all duration-100 cursor-pointer'
-									size={30}
-								/>
+							<Link
+								to='/user/dashboard#favorites'
+								className={`font-medium p-2 ${
+									userFavorites.length > 0 ? 'btn-outline py-1' : 'btn-ghost'
+								} cursor-pointer`}
+							>
+								<FaRegHeart className='' size={27} />
+								<p
+									className={`${
+										userFavorites.length > 0 ? 'block text-xl' : 'hidden'
+									}`}
+								>
+									{userFavorites.length}
+								</p>
 							</Link>
-							<Link to={'/cart'}>
-								<span className='-ml-2 inline-flex items-center justify-center font-medium hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 transition-all duration-100 cursor-pointer'>
-									<MdOutlineShoppingCart className='' size={25} />
-									<p
-										className={` ${
-											totalItemsCount > 0 ? 'block' : 'hidden'
-										} ml-1 text-lg`}
-									>
-										{totalItemsCount}
-									</p>
-								</span>
+
+							<Link
+								to={'/cart'}
+								className={`font-medium p-2 ${
+									userFavorites.length > 0 ? 'btn-outline py-1' : 'btn-ghost'
+								} cursor-pointer`}
+							>
+								<MdOutlineShoppingCart className='' size={28} />
+								<p
+									className={` ${
+										totalItemsCount > 0 ? 'block' : 'hidden'
+									} text-xl`}
+								>
+									{totalItemsCount}
+								</p>
 							</Link>
 						</div>
 						<ul className='flex flex-col items-center text-xl'>

@@ -297,7 +297,7 @@ const ProductPage = () => {
 												enqueueSnackbar(
 													'Removed ' + product.name + ' frome favorites',
 													{
-														variant: 'success',
+														variant: 'warning',
 														anchorOrigin: {
 															horizontal: 'center',
 															vertical: 'top',

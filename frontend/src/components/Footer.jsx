@@ -1,5 +1,6 @@
 import React from 'react';
 import Logo500 from '../assets/logo500.png';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
 	return (
@@ -25,9 +26,15 @@ const Footer = () => {
 
 					<ul className='mt-4 flex flex-col items-center space-y-2'>
 						<li>Track a Package</li>
-						<li>Help</li>
-						<li>Terms of Use</li>
-						<li>Privacy Policy</li>
+						<li>
+							<Link to='/info/help'>Help</Link>
+						</li>
+						<li>
+							<Link to='/info/terms'>Terms of Use</Link>
+						</li>
+						<li>
+							<Link to='/info/privacy'>Privacy Policy</Link>
+						</li>
 					</ul>
 				</div>
 				<div className='flex flex-col items-center'>
