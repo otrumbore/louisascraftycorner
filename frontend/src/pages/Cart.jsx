@@ -61,7 +61,7 @@ const Cart = () => {
 						) : (
 							cartItems.map((item, i) => (
 								<div
-									className='border-2 border-slate-400 p-4 rounded-lg mb-4'
+									className='border-2 border-primary p-4 rounded-lg mb-4'
 									key={i}
 								>
 									<div className='flex items-center'>
@@ -161,10 +161,7 @@ const Cart = () => {
 									</p>
 								</div>
 								<div className='mt-4'>
-									<button
-										className='flex items-center justify-center border-4 py-2 text-xl border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-lg hover:shadow-slate-400 transition-all duration-100 rounded-md w-full'
-										onClick={checkout}
-									>
+									<button className='btn py-3 w-full' onClick={checkout}>
 										Checkout
 									</button>
 								</div>

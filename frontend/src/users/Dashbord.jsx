@@ -69,8 +69,8 @@ const Dashboard = () => {
 								}}
 								className={`cursor-pointer ${
 									dashView === 'orders'
-										? 'border-b-4 border-slate-400 border-dashed pb-2'
-										: 'border-b-4 border-opacity-0 border-dashed border-slate-400 hover:border-opacity-100 pb-2'
+										? 'border-b-4 border-primary border-dashed pb-2'
+										: 'border-b-4 border-opacity-0 border-dashed border-primary hover:border-opacity-100 pb-2'
 								}`}
 							>
 								<BiPurchaseTagAlt size={29} />
@@ -81,8 +81,8 @@ const Dashboard = () => {
 								}}
 								className={`cursor-pointer ${
 									dashView === 'favorites'
-										? 'border-b-4 border-slate-400 border-dashed pb-2'
-										: 'border-b-4 border-opacity-0 border-dashed border-slate-400 hover:border-opacity-100 pb-2'
+										? 'border-b-4 border-primary border-dashed pb-2'
+										: 'border-b-4 border-opacity-0 border-dashed border-primary hover:border-opacity-100 pb-2'
 								}`}
 							>
 								<FaRegHeart size={27} />
@@ -93,8 +93,8 @@ const Dashboard = () => {
 								}}
 								className={`hidden cursor-pointer ${
 									dashView === 'profile'
-										? 'border-b-4 border-slate-400 border-dashed pb-2'
-										: 'border-b-4 border-opacity-0 border-dashed border-slate-400 hover:border-opacity-100 pb-2'
+										? 'border-b-4 border-primary border-dashed pb-2'
+										: 'border-b-4 border-opacity-0 border-dashed border-primary hover:border-opacity-100 pb-2'
 								}`}
 							>
 								<FaRegUser size={27} />
@@ -105,13 +105,13 @@ const Dashboard = () => {
 								}}
 								className={`cursor-pointer ${
 									dashView === 'settings'
-										? 'border-b-4 border-slate-400 border-dashed pb-2'
-										: 'border-b-4 border-opacity-0 border-dashed border-slate-400 hover:border-opacity-100 pb-2'
+										? 'border-b-4 border-primary border-dashed pb-2'
+										: 'border-b-4 border-opacity-0 border-dashed border-primary hover:border-opacity-100 pb-2'
 								}`}
 							>
 								<MdOutlineSettings size={30} />
 							</li>
-							<li className='border-b-4 border-opacity-0 border-slate-400 border-dashed hover:border-opacity-100 pb-2 cursor-pointer'>
+							<li className='border-b-4 border-opacity-0 border-primary border-dashed hover:border-opacity-100 pb-2 cursor-pointer'>
 								<Link to='/user/logout'>
 									<MdLogout className='' size={27} />
 								</Link>
@@ -134,7 +134,7 @@ const Dashboard = () => {
 								<FaStar size={30} />
 							</div>
 							<div
-								className={`flex bg-slate-600 text-lg h-8 font-medium text-blue-100 items-center justify-center p-0.5 leading-none rounded-full relative`}
+								className={`flex bg-primary text-lg h-8 font-medium text-blue-100 items-center justify-center p-0.5 leading-none rounded-full relative`}
 								style={{ width: `${userRewards}%` }}
 							>
 								{userRewards + '%'}
@@ -150,7 +150,7 @@ const Dashboard = () => {
 					</div>
 				</div>
 
-				<div className='mt-8'>
+				<div className='mt-8 w-full'>
 					{dashView === 'orders' ? (
 						<Orders />
 					) : dashView === 'favorites' ? (

@@ -62,7 +62,6 @@ const Favorites = () => {
 	useEffect(() => {
 		if (userFavorites.length !== favorites.length) {
 			getProducts();
-			setLoading(false);
 		} else {
 			setLoading(false);
 		}
@@ -77,11 +76,11 @@ const Favorites = () => {
 				{userFavorites.length <= 0 ? (
 					<div className='mt-8 text-center'>No favorites added yet. </div>
 				) : (
-					<div className='mt-8 grid grid-cols-1 md:grid-cols-2 w-full gap-4'>
+					<div className='mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full gap-4'>
 						{favorites.length > 0 &&
 							favorites.map((item, i) => (
 								<div
-									className='border-2 border-slate-400 p-4 rounded-lg mb-4'
+									className='border-2 border-primary p-4 rounded-lg mb-4'
 									key={i}
 								>
 									<div className='flex items-center'>
@@ -98,8 +97,8 @@ const Favorites = () => {
 												/>
 											</div>
 										</Link>
-										<div className='flex flex-col w-full items-center justify-between lg:gap-y-4'>
-											<div className='pl-4 flex flex-col gap-y-2 lg:flex-row w-full justify-between'>
+										<div className='flex flex-col w-full items-center'>
+											<div className='pl-4 flex flex-col gap-y-1 w-full'>
 												<Link to={`/product/${item.data._id}`}>
 													<div className='flex flex-wrap font-bold text-lg'>
 														{item.data.name ? `${item.data.name} - ` : ''}
@@ -109,7 +108,7 @@ const Favorites = () => {
 															: ''}
 													</div>
 												</Link>
-												<div className='flex lg:text-xl'>
+												<div className='flex lg:text-lg'>
 													$
 													{item.data.sale > 0 ? (
 														<>
@@ -124,7 +123,7 @@ const Favorites = () => {
 												</div>
 											</div>
 
-											<div className='pl-4 mt-2 flex flex-row w-full items-center justify-between'>
+											<div className='mt-2 flex flex-row w-full items-center justify-end gap-2'>
 												<div className='flex gap-x-2 items-center'>
 													{/*<p className='lg:text-lg'>QTY: {item.qty}</p>
 												 <Link to={`/product/${item._id}`}>
@@ -153,7 +152,7 @@ const Favorites = () => {
 
 												<div className='flex gap-x-6 lg:gap-x-4 items-center justify-center'>
 													<button
-														className={`has-tooltip border-2 px-4 py-2 border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-slate-400 hover:shadow-lg rounded-md transition-all duration-300 ${
+														className={`has-tooltip px-4 py-2 btn ${
 															cartItems.some(
 																(cartItem) => cartItem._id === item.data._id
 															)

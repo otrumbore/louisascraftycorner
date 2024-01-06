@@ -285,6 +285,7 @@ export function UserProvider({ children }) {
 				isAdmin,
 				sendActivityStatus,
 				userFavorites,
+				setUserFavorites,
 				removeFromFavorites,
 				addToFavorites,
 			}}

@@ -7,7 +7,7 @@ import { useUser } from '../context/UserContext';
 const Logout = () => {
 	const navigate = useNavigate();
 	const { enqueueSnackbar } = useSnackbar();
-	const { addUserDetails, sendActivityStatus } = useUser();
+	const { addUserDetails, sendActivityStatus, setUserFavorites } = useUser();
 
 	useEffect(() => {
 		const handleLogout = async () => {
@@ -17,6 +17,7 @@ const Logout = () => {
 				Cookies.remove('token', { path: '/' });
 				//clear userDetails context
 				addUserDetails({});
+				setUserFavorites([]);
 				// Show a success notification
 				enqueueSnackbar('Logged out successfully', {
 					variant: 'success',

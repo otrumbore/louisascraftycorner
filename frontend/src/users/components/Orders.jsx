@@ -54,7 +54,7 @@ const Orders = () => {
 							{orders.map((item, i) => (
 								<div
 									key={i}
-									className='border-4 border-slate-300 p-4 rounded-md space-y-4'
+									className='border-2 border-primary p-4 rounded-md space-y-4'
 								>
 									<div className='flex flex-wrap w-full items-center justify-between'>
 										<p>Date: {item.date}</p>

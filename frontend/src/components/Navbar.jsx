@@ -34,7 +34,7 @@ const Navbar = () => {
 	const totalItemsCount = cartItemsCount();
 	//end cart stuff
 
-	const defaultNavStyle = 'bg-opacity-90 top-0 shadow shadow-gray-600';
+	const defaultNavStyle = 'bg-opacity-90 top-0 shadow shadow-primary';
 	const homePagePath = '/';
 
 	useEffect(() => {
@@ -52,7 +52,7 @@ const Navbar = () => {
 				setNavStyle(
 					isScrolled
 						? defaultNavStyle
-						: 'bg-opacity-90 top-10 shadow shadow-gray-600'
+						: 'bg-opacity-90 top-10 shadow shadow-primary'
 				);
 				setLogoImg(LogoBlack);
 			}
@@ -68,10 +68,10 @@ const Navbar = () => {
 
 	const navData = [
 		{ linkName: 'Home', linkTo: '/' },
-		{ linkName: 'Shop', linkTo: '/' },
+		{ linkName: 'Shop', linkTo: '/shop' },
 		{ linkName: 'Events', linkTo: '/' },
 		{ linkName: 'About', linkTo: '/' },
-		{ linkName: 'Contact', linkTo: '/' },
+		{ linkName: 'Contact', linkTo: '/contact' },
 	];
 	const navAdminData = [
 		{ linkName: 'Admin Home', linkTo: '/admin' },
@@ -87,18 +87,14 @@ const Navbar = () => {
 		<div>
 			<Banner
 				style={
-					scrolled
-						? 'hidden'
-						: pathName !== '/'
-						? 'bg-slate-400 fixed'
-						: 'fixed'
+					scrolled ? 'hidden' : pathName !== '/' ? 'bg-gray-300 fixed' : 'fixed'
 				}
 			/>
 			<nav
 				className={`fixed flex ${navStyle} left-0 p-2 px-4 w-full h-[4rem] bg-slate-200 justify-center items-center z-50 transition-all duration-200`}
 			>
 				<div className='flex w-full max-w-[1400px] h-fit items-center justify-between'>
-					<div className='flex text-gray-600 items-center'>
+					<div className='flex text-gray-900 items-center'>
 						<RxHamburgerMenu
 							className={`lg:hidden mr-4`}
 							size={30}
@@ -125,7 +121,7 @@ const Navbar = () => {
 						>
 							{navData.map((item, index) => (
 								<li
-									className={`px-3 py-1 rounded-md hover:border-2 hover:bg-slate-300 hover:border-slate-400 hover:text-gray-600 hover:bg-opacity-90 hover:scale-105 transition-all duration-100 cursor-pointer`}
+									className={`px-3 py-1 btn-ghost hover:bg-opacity-90 cursor-pointer`}
 									key={index}
 								>
 									<Link to={item.linkTo}>{item.linkName}</Link>
@@ -135,7 +131,7 @@ const Navbar = () => {
 							{isAdmin() &&
 								navAdminData.map((item, index) => (
 									<li
-										className={`px-3 py-1 rounded-md hover:border-2 hover:bg-slate-300 hover:border-slate-400 hover:text-gray-600 hover:bg-opacity-90 hover:scale-105 transition-all duration-100 cursor-pointer`}
+										className={`px-3 py-1 btn-ghost hover:bg-opacity-90 cursor-pointer`}
 										key={index}
 									>
 										<Link to={item.linkTo}>{item.linkName}</Link>
@@ -150,7 +146,7 @@ const Navbar = () => {
 					>
 						<Link
 							to='/user/dashboard#favorites'
-							className='inline-flex items-center font-medium hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 transition-all duration-100 cursor-pointer'
+							className='inline-flex items-center font-medium hover:bg-opacity-90 p-2 btn-ghost cursor-pointer'
 						>
 							<FaRegHeart className='' size={25} />
 							<p
@@ -161,17 +157,17 @@ const Navbar = () => {
 								{userFavorites.length}
 							</p>
 						</Link>
-						<Link to='/user/dashboard'>
-							<FaRegUser
-								className='hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 hover:scale-125 transition-all duration-100 cursor-pointer'
-								size={30}
-							/>
+						<Link
+							to='/user/dashboard'
+							className='p-2 btn-ghost font-medium hover:bg-opacity-90 cursor-pointer'
+						>
+							<FaRegUser className='' size={23} />
 						</Link>
 						<Link
-							className='inline-flex items-center font-medium hover:border-2 hover:bg-slate-300 p-1 hover:border-slate-400 hover:text-gray-600 rounded-md hover:bg-opacity-90 transition-all duration-100 cursor-pointer'
+							className='inline-flex items-center font-medium p-2 btn-ghost hover:bg-opacity-90 cursor-pointer'
 							to={'/cart'}
 						>
-							<MdOutlineShoppingCart className='' size={25} />
+							<MdOutlineShoppingCart className='' size={26} />
 							<p
 								className={` ${
 									totalItemsCount > 0 ? 'block' : 'hidden'

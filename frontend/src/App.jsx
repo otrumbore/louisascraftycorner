@@ -14,6 +14,8 @@ import Home from './pages/Home';
 import Cart from './pages/Cart';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Shop from './pages/Shop';
+import Contact from './pages/Contact';
 
 //admin pages
 import AdminHome from './admin/AdminHome';
@@ -39,6 +41,8 @@ const App = () => {
 					<Route path='/cart' element={<Cart />} />
 					<Route path='/register' element={<Register />} />
 					<Route path='/login' element={<Login />} />
+					<Route path='/shop' element={<Shop />} />
+					<Route path='/contact' element={<Contact />} />
 
 					{/* Admin Product Routes */}
 					<Route path='/admin' element={<AdminHome />} />

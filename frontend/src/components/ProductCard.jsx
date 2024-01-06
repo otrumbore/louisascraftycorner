@@ -12,6 +12,7 @@ import DefaultProductImg from '../assets/product-img/default.png';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { useCart } from '../context/CartContext';
+import { useUser } from '../context/UserContext';
 
 const ProductCard = ({
 	numProducts,
@@ -22,6 +23,7 @@ const ProductCard = ({
 }) => {
 	const [showProducts, setShowProducts] = useState([]);
 	const { enqueueSnackbar } = useSnackbar();
+	const [loggedIn, setLoggedIn] = useState(false);
 
 	const {
 		cartItems,
@@ -31,6 +33,8 @@ const ProductCard = ({
 		cartTotal,
 		cartItemsCount,
 	} = useCart();
+
+	const { userDetails, addToFavorites, userFavorites } = useUser();
 
 	useEffect(() => {
 		let filteredProducts = products;
@@ -57,6 +61,8 @@ const ProductCard = ({
 			}
 		}
 
+		userDetails._id ? setLoggedIn(true) : setLoggedIn(false);
+
 		setShowProducts(filteredProducts);
 	}, [products, filterCategory, filterType, currProduct]);
 
@@ -67,7 +73,7 @@ const ProductCard = ({
 			{showProducts.slice(0, numProducts).map((item) => (
 				<div
 					key={item._id}
-					className='flex flex-col items-center pb-4 border-4 border-gray-300 space-y-2 rounded-xl justify-between bg-gray-100 shadow-lg shadow-gray-600 lg:hover:scale-110'
+					className='flex flex-col items-center pb-4 border-4 border-primary space-y-2 rounded-xl justify-between bg-gray-100 shadow-lg shadow-gray-600 lg:hover:scale-110'
 				>
 					<div className='flex flex-col gap-y-4'>
 						{item.sale > 0 && (
@@ -118,7 +124,7 @@ const ProductCard = ({
 							{item.description.slice(0, 100) + '...'}
 						</p>
 					</Link>
-					<div className='flex pt-4 px-4 w-full justify-between items-center'>
+					<div className='flex px-4 w-full justify-between items-center'>
 						<Link to={`/product/${item._id}`}>
 							<div className='flex w-1/4 justify-start gap-x-2 text-xl'>
 								<p className={`${item.sale > 0 && 'line-through'}`}>
@@ -131,17 +137,58 @@ const ProductCard = ({
 						</Link>
 						<div className='flex w-3/4 items-center justify-end gap-x-1'>
 							{/* Will add a hover to change to filled star once card is in own component */}
-							<div className='has-tooltip p-2 hover:border-2 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-lg hover:shadow-slate-400 rounded-md transition-all duration-100'>
-								<span className='hidden tooltip lg:flex w-fit rounded shadow-lg p-2 bg-slate-200 text-gray-600 -mt-14 -mr-24'>
-									Add to Favorites
+							<button
+								onClick={() => {
+									if (
+										loggedIn &&
+										!userFavorites.some((item) => item.itemId === item.storeId)
+									) {
+										addToFavorites(item.storeId);
+										enqueueSnackbar('Added ' + item.name + ' to favorites', {
+											variant: 'success',
+											anchorOrigin: {
+												horizontal: 'center',
+												vertical: 'top',
+											},
+											autoHideDuration: 2000,
+										});
+									} else {
+										enqueueSnackbar('Login first to add to favorites!', {
+											variant: 'warning',
+											anchorOrigin: {
+												horizontal: 'center',
+												vertical: 'top',
+											},
+											autoHideDuration: 2000,
+										});
+									}
+								}}
+								disabled={userFavorites.some(
+									(faveItem) => faveItem.itemId === item.storeId
+								)}
+								className={`has-tooltip p-2 btn-ghost text-primary hover:text-secondary ${
+									userFavorites.some(
+										(faveItem) => faveItem.itemId === item.storeId
+									) && 'opacity-75 cursor-not-allowed'
+								}`}
+							>
+								<span className='hidden tooltip lg:flex w-fit rounded shadow-lg p-2 text-secondary bg-primary opacity-90 -mt-24 -mr-24'>
+									{!userFavorites.some(
+										(faveItem) => faveItem.itemId === item.storeId
+									) ? (
+										<p>Add to Favorites</p>
+									) : (
+										<p>Already in Favorites</p>
+									)}
 								</span>
-								<FaRegHeart size={25} />
-							</div>
+
+								<FaRegHeart className='' size={25} />
+							</button>
 
 							<button
-								className={`has-tooltip border-2 px-4 py-2 border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-slate-400 hover:shadow-lg rounded-md transition-all duration-300 ${
+								className={`has-tooltip px-4 py-2 btn ${
 									cartItems.some((cartItem) => cartItem._id === item._id)
-										? 'opacity-50 cursor-not-allowed'
+										? 'opacity-75 cursor-not-allowed'
 										: ''
 								}`}
 								onClick={() => {
@@ -166,7 +213,7 @@ const ProductCard = ({
 									(cartItem) => cartItem._id === item._id
 								)}
 							>
-								<span className='hidden tooltip lg:flex w-fit rounded shadow-lg p-2 bg-slate-200 text-gray-600 -mt-14 -mr-16'>
+								<span className='hidden tooltip lg:flex w-fit rounded shadow-lg p-2 text-secondary bg-primary opacity-90 -mt-24 -mr-12'>
 									{!cartItems.some((cartItem) => cartItem._id === item._id) ? (
 										<p>Add to Cart</p>
 									) : (

@@ -146,10 +146,10 @@ const Login = () => {
 						<div>
 							<input
 								type='text'
-								className={`p-4 w-[100%] border-4 rounded-md text-lg ${
+								className={`p-4 w-full text-lg bg-slate-50 border-4  focus:border-[6px] focus:border-[#0066b2] rounded-md shadow-md ${
 									!username.match(usernamePattern)
 										? 'border-red-500'
-										: 'border-slate-300'
+										: 'border-[#0066b2]'
 								}`}
 								placeholder='Username'
 								name='username'
@@ -164,10 +164,10 @@ const Login = () => {
 						<div className='relative'>
 							<input
 								type={showPassword ? 'text' : 'password'}
-								className={`p-4 w-[100%] border-4 rounded-md text-lg ${
+								className={`p-4 w-full text-lg bg-slate-50 border-4  focus:border-[6px] focus:border-[#0066b2] rounded-md shadow-md ${
 									!password.match(passwordPattern)
 										? 'border-red-500'
-										: 'border-slate-300'
+										: 'border-[#0066b2]'
 								}`}
 								placeholder='Password'
 								name='password'
@@ -192,10 +192,12 @@ const Login = () => {
 							</button>
 						</div>
 						<div className='flex flex-col-reverse lg:flex-row w-full justify-between items-center'>
-							<p className='mt-4 pl-1 text-sm'>Forgot username or password?</p>
+							<button className='mt-4 pl-1 text-sm'>
+								Forgot username or password?
+							</button>
 							<button
 								type='submit'
-								className='w-full lg:w-auto mt-4 border-2 px-12 py-2 border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-slate-400 hover:shadow-lg rounded-md transition-all duration-300'
+								className='btn px-14 py-2 w-full lg:w-auto mt-4'
 							>
 								Login
 							</button>
@@ -204,7 +206,7 @@ const Login = () => {
 					<div className='mt-12 mb-20 flex flex-col lg:flex-row w-full justify-center items-center'>
 						<h4 className='mt-4 lg:pr-4'>Need an account?</h4>
 						<Link className='w-full lg:w-auto' to='/register'>
-							<button className='w-full lg:w-auto mt-4 border-2 px-8 py-2 border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-slate-400 hover:shadow-lg rounded-md transition-all duration-300'>
+							<button className='w-full lg:w-auto mt-4 btn-outline'>
 								Sign Up
 							</button>
 						</Link>

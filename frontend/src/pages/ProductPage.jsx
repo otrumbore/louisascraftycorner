@@ -35,6 +35,8 @@ const ProductPage = () => {
 
 	const [selectedProduct, setSelectedProduct] = useState({});
 
+	const [loggedIn, setLoggedIn] = useState(false);
+
 	//cart stuff
 	const {
 		cartItems,
@@ -43,11 +45,11 @@ const ProductPage = () => {
 		clearCart,
 		cartTotal,
 		updateCartItem,
-		userFavorites,
 	} = useCart();
 
 	//user Stuff
-	const { addToFavorites } = useUser();
+	const { userDetails, addToFavorites, userFavorites, removeFromFavorites } =
+		useUser();
 
 	useEffect(() => {
 		setLoading(true);
@@ -88,7 +90,7 @@ const ProductPage = () => {
 				});
 				navigate('/');
 			});
-		//setRelatedProducts(allProducts.data.data);
+		userDetails._id ? setLoggedIn(true) : setLoggedIn(false);
 		window.scrollTo(0, 0);
 	}, [id]);
 
@@ -96,6 +98,7 @@ const ProductPage = () => {
 		if (product !== null && relatedProducts !== null) {
 			setLoading(false);
 		}
+
 		//console.log(product);
 	}, [product, relatedProducts]);
 
@@ -105,7 +108,7 @@ const ProductPage = () => {
 			cartItems.some((cartItem) => cartItem._id === product._id)
 		);
 
-		console.log(userFavorites);
+		//console.log(userFavorites);
 
 		if (userFavorites) {
 			setProductInFavorites(
@@ -180,7 +183,7 @@ const ProductPage = () => {
 				<LoadingModal loading={loading} />
 				<div className='flex justify-center'>
 					<div className='w-full grid grid-cols-1 lg:grid-cols-2 max-w-[1400px] items-start justify-start'>
-						<div className='h-[500px] flex'>
+						<div className='h-[500px] flex justify-center'>
 							<img
 								src={
 									product.img === '' || product.img === undefined
@@ -261,28 +264,66 @@ const ProductPage = () => {
 								<div className='mlg:mt-0 flex items-center justify-start'>
 									<button
 										onClick={() => {
-											addToFavorites(product.storeId);
-											enqueueSnackbar(
-												'Added ' + product.name + ' to favorites',
-												{
-													variant: 'success',
+											if (!loggedIn) {
+												enqueueSnackbar('Login first to add to favorites', {
+													variant: 'warning',
 													anchorOrigin: {
 														horizontal: 'center',
 														vertical: 'top',
 													},
 													autoHideDuration: 2000,
-												}
-											);
+												});
+												return;
+											}
+											if (
+												!userFavorites.some(
+													(faveItem) => faveItem.itemId === product.storeId
+												)
+											) {
+												addToFavorites(product.storeId);
+												enqueueSnackbar(
+													'Added ' + product.name + ' to favorites',
+													{
+														variant: 'success',
+														anchorOrigin: {
+															horizontal: 'center',
+															vertical: 'top',
+														},
+														autoHideDuration: 2000,
+													}
+												);
+											} else {
+												removeFromFavorites(product.storeId);
+												enqueueSnackbar(
+													'Removed ' + product.name + ' frome favorites',
+													{
+														variant: 'success',
+														anchorOrigin: {
+															horizontal: 'center',
+															vertical: 'top',
+														},
+														autoHideDuration: 2000,
+													}
+												);
+											}
 										}}
-										className='flex items-center border-4 px-4 py-2 border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-lg hover:shadow-slate-400 transition-all duration-100 rounded-md gap-x-2'
+										className='flex items-center px-4 py-2 btn-outline'
 									>
 										<FaRegHeart size={25} />
-										<span className='hidden lg:block'>Add to Favorites</span>
+										<span className='hidden lg:block'>
+											{!userFavorites.some(
+												(faveItem) => faveItem.itemId === product.storeId
+											) ? (
+												<p>Add to Favorites</p>
+											) : (
+												<p>Remove from Favorites</p>
+											)}
+										</span>
 									</button>
 								</div>
 								<div className='flex'>
 									<div className='flex w-full items-center justify-end'>
-										<div className='flex justify-between items-center gap-x-6 border-4 px-4 py-2 lg:h-12 rounded-md border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:shadow-lg hover:shadow-slate-400 hover:text-white'>
+										<div className='flex justify-between items-center gap-x-6 px-4 py-2 lg:h-12 btn-outline'>
 											<FaMinus
 												className='hover:cursor-pointer'
 												size={20}
@@ -314,7 +355,7 @@ const ProductPage = () => {
 							</div>
 							<div className='w-full mt-4 flex justify-center'>
 								<button
-									className='flex items-center justify-center border-4 py-4 lg:py-3 text-xl border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-lg hover:shadow-slate-400 transition-all duration-100 rounded-md w-full'
+									className='flex items-center justify-center py-4 lg:py-3 text-xl btn w-full'
 									onClick={updateCartQty}
 								>
 									<MdAddShoppingCart size={27} />
