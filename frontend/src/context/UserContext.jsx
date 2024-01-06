@@ -61,7 +61,6 @@ export function UserProvider({ children }) {
 				}
 			} else {
 				setLoading(false);
-				navigate('/');
 			}
 		} catch (error) {
 			const token = Cookies.get('token');
