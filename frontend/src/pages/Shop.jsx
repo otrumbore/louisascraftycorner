@@ -51,7 +51,7 @@ const Shop = () => {
 							</label>
 						</div>
 						<div className='flex w-full lg:w-[35%] justify-between lg:justify-end gap-2 items-center'>
-							<button className='btn-outline p-2'>Clear Filters</button>
+							<button className='btn-outline px-2 py-1.5'>Clear Filters</button>
 							<button className='btn'>Search</button>
 						</div>
 					</div>

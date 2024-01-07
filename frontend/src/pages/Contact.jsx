@@ -25,11 +25,11 @@ const ContactPage = () => {
 	};
 
 	return (
-		<div className='p-4 mt-[8rem] min-h-[65vh] w-full max-w-[1400px] flex justify-center'>
-			<div className='flex mt-[5%] w-full h-full justify-center items-center'>
-				<div className='w-full lg:w-[40%] flex flex-col justify-center items-center rounded-md'>
+		<div className='p-4 mt-[8rem] min-h-[65vh] w-full flex justify-center'>
+			<div className='flex w-full max-w-[1400px] h-full justify-center'>
+				<div className='w-full flex flex-col items-center rounded-md'>
 					<h3 className='text-3xl mb-8'>Contact Us</h3>
-					<form className='w-full' onSubmit={handleSubmit}>
+					<form className='w-full lg:w-[40%]' onSubmit={handleSubmit}>
 						<div className='mb-4 flex items-center gap-4'>
 							<input
 								type='text'

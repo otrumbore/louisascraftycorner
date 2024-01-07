@@ -13,7 +13,6 @@ const Home = () => {
 	const location = useLocation();
 
 	useEffect(() => {
-		console.log(location.pathname);
 		setLoading(true);
 		axios
 			.get(`http://${LOCALIP}:5555/products`)
@@ -25,6 +24,8 @@ const Home = () => {
 				console.log(error);
 				setLoading(false);
 			});
+
+		window.scroll(0, 0);
 	}, []);
 
 	useEffect(() => {

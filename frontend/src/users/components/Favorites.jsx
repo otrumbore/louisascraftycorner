@@ -145,8 +145,9 @@ const Favorites = () => {
 																}
 															);
 														}}
+														className='btn-outline p-1'
 													>
-														<MdOutlineDeleteForever className='text-red-600 text-2xl lg:text-3xl' />
+														<MdOutlineDeleteForever className='text-red-600 hover:text-white text-2xl lg:text-3xl' />
 													</button>
 												</div>
 
