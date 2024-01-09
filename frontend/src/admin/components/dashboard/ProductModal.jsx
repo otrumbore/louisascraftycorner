@@ -21,7 +21,7 @@ const ProductModal = ({ product, onClose }) => {
 
 	return (
 		<div
-			className='fixed inset-0 overflow-y-auto bg-gray-800 bg-opacity-25 top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center'
+			className='fixed inset-0 overflow-y-auto bg-gray-800 bg-opacity-25 top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center cursor-auto'
 			onClick={onClose}
 		>
 			<div
@@ -43,7 +43,9 @@ const ProductModal = ({ product, onClose }) => {
 					</div>
 				)}
 
-				<h4 className='my-2 text-lg text-gray-500'>Store ID: {product.id}</h4>
+				<h4 className='my-2 text-lg text-gray-500'>
+					Store ID: {product.storeId}
+				</h4>
 				<div className='grid grid-cols-2'>
 					<div className='flex justify-start items-center gap-x-2'>
 						<MdOutlineDescription className='text-purple-600 text-2xl' />
@@ -100,7 +102,7 @@ const ProductModal = ({ product, onClose }) => {
 				{/* Description */}
 				<div className='mt-4 p-2 max-h-[40vh] border border-gray-300 rounded-md overflow-y-auto'>
 					<p className='font-bold'>Description:</p>
-					<p>{product.description}</p>
+					<p className='whitespace-pre-line'>{product.description}</p>
 				</div>
 
 				{/* Tags */}

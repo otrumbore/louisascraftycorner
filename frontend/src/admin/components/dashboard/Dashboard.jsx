@@ -10,8 +10,15 @@ const Dashboard = () => {
 					<div>No Dats</div>
 				</div>
 				<div className='border-4 w-full border-primary p-4 rounded-md lg:w-[50%]'>
-					<h6 className='text-lg'>Recent Sales</h6>
-					<p className='text-xs'>you made 126 sales this month</p>
+					<div className='flex w-full justify-between items-center'>
+						<div>
+							<h5 className='text-lg'>Recent Sales</h5>
+							<p className='text-xs'>you made 126 sales this month</p>
+						</div>
+						<div>
+							<button className='btn-outline p-2'>View All</button>
+						</div>
+					</div>
 					<div className='border-2 my-2'></div>
 					<div className='flex justify-between font-bold mb-2'>
 						<p>Order # / Email</p>

@@ -7,7 +7,6 @@ import LoadingModal from '../../components/LoadingModal';
 import { LOCALIP } from '../../config';
 
 const AddProduct = () => {
-	const [storeId, setStoreId] = useState('');
 	const [name, setName] = useState('');
 	const [description, setDesciption] = useState('');
 	const [price, setPrice] = useState('');
@@ -17,7 +16,8 @@ const AddProduct = () => {
 	const [inventory, setInventory] = useState('');
 	const [img, setImg] = useState('');
 	const [sale, setSale] = useState(0);
-	const [rating, setRating] = useState('');
+	const [rating, setRating] = useState(0);
+	const active = false;
 
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
@@ -25,7 +25,6 @@ const AddProduct = () => {
 
 	const handleAddProduct = () => {
 		const data = {
-			storeId,
 			name,
 			description,
 			price,
@@ -36,6 +35,7 @@ const AddProduct = () => {
 			tags,
 			inventory,
 			img,
+			active,
 		};
 		setLoading(true);
 		axios
@@ -64,15 +64,6 @@ const AddProduct = () => {
 			<h1 className='text-3xl my-4'>Add Product</h1>
 			<LoadingModal loading={loading} />
 			<div className='flex flex-col border-2 border-sky-400 rounded-xl w-[600px] p-4 mx-auto'>
-				<div className='my-4'>
-					<label className='text-xl mr-4 text-gray-500'>Store ID</label>
-					<input
-						type='text'
-						value={storeId}
-						onChange={(e) => setStoreId(e.target.value)}
-						className='border-2 border-gray-500 px-4 py-2 w-full'
-					/>
-				</div>
 				<div className='my-4'>
 					<label className='text-xl mr-4 text-gray-500'>Name</label>
 					<input

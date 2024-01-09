@@ -7,7 +7,17 @@ const getProducts = async () => {
 		return response.data.data;
 	} catch (error) {
 		console.log(error);
-		return []; // Return an empty array or handle errors accordingly
+		return [];
+	}
+};
+
+export const getProduct = async (id) => {
+	try {
+		const response = await axios.get(`http://${LOCALIP}:5555/products/${id}`);
+		return response.data.data;
+	} catch (error) {
+		console.error(error);
+		return [];
 	}
 };
 

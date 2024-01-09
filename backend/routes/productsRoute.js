@@ -17,7 +17,6 @@ const router = express.Router();
 router.post('/', async (request, response) => {
 	try {
 		const {
-			storeId,
 			name,
 			description,
 			price,
@@ -28,10 +27,10 @@ router.post('/', async (request, response) => {
 			tags,
 			inventory,
 			img,
+			active,
 		} = request.body;
 
 		const newProduct = await Product.create({
-			storeId,
 			name,
 			description,
 			price,
@@ -42,12 +41,13 @@ router.post('/', async (request, response) => {
 			tags,
 			inventory,
 			img,
+			active,
 		});
 
 		return response.status(201).send(newProduct);
 	} catch (error) {
 		console.error(error.message);
-		response.status(500).send({ message: 'Server Error' });
+		response.status(500).send({ message: `Server Error, ${error.message}` });
 	}
 });
 

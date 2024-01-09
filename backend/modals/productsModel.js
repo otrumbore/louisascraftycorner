@@ -4,37 +4,23 @@ const productSchema = mongoose.Schema(
 	{
 		storeId: {
 			type: Number,
-			required: true,
-			validate: {
-				validator: function (value) {
-					// Validation for positive numbers with a maximum of 6 digits
-					return (
-						Number.isInteger(value) &&
-						value > 0 &&
-						value.toString().length === 6
-					);
-				},
-				message: 'ID must be a positive number with a maximum of 6 digits',
-			},
+			unique: true,
 		},
 		name: {
 			type: String,
 			required: true,
 			trim: true,
-			// Additional validation or sanitization for the name field, if needed
 		},
 		description: {
 			type: String,
 			required: true,
 			trim: true,
-			// Additional validation or sanitization for the description field, if needed
 		},
 		price: {
 			type: Number,
 			required: true,
 			validate: {
 				validator: function (value) {
-					// Validation for positive numbers with up to 2 decimal places
 					return value >= 0 && /^\d+(\.\d{1,2})?$/.test(value.toString());
 				},
 				message: 'Price must be a positive number with up to 2 decimal places',
@@ -45,7 +31,6 @@ const productSchema = mongoose.Schema(
 			required: true,
 			validate: {
 				validator: function (value) {
-					// Validation for positive numbers with up to 2 decimal places
 					return value >= 0 && /^\d+(\.\d{1,2})?$/.test(value.toString());
 				},
 				message:
@@ -56,36 +41,32 @@ const productSchema = mongoose.Schema(
 			type: String,
 			required: true,
 			trim: true,
-			// Additional validation or sanitization for the 'type' field, if needed
 		},
 		category: {
 			type: String,
 			required: true,
 			trim: true,
-			// Additional validation or sanitization for the 'category' field, if needed
 		},
 		rating: {
 			type: Number,
 			validate: {
 				validator: function (value) {
-					// Validation for rating within the range of 1 to 5
 					return value >= 0 && value <= 5;
 				},
-				message: 'Rating must be between 1 and 5',
+				message: 'Rating must be between 0 and 5',
 			},
+			default: 0,
 		},
 		tags: {
 			type: String,
 			required: true,
 			trim: true,
-			// Additional validation or sanitization for the 'tags' field, if needed
 		},
 		inventory: {
 			type: Number,
 			required: true,
 			validate: {
 				validator: function (value) {
-					// Validation for positive numbers for inventory
 					return value >= 0;
 				},
 				message: 'Inventory must be a positive number',
@@ -93,13 +74,30 @@ const productSchema = mongoose.Schema(
 		},
 		img: {
 			type: String,
-			default: 'default-product.png', // Default value for 'img'
-			// Additional validation or sanitization for the 'img' field, if needed
+			default: 'default-product.png',
+		},
+		active: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	{
 		timestamps: true,
 	}
 );
+
+// Pre-save middleware to generate 6-digit unique ID
+productSchema.pre('save', async function (next) {
+	try {
+		let generatedId;
+		do {
+			generatedId = Math.floor(100000 + Math.random() * 900000); // Generate a random 6-digit number
+		} while ((await this.constructor.findOne({ storeId: generatedId })) !== null); // Check if it already exists
+		this.storeId = generatedId; // Set the unique ID
+		next();
+	} catch (error) {
+		next(error);
+	}
+});
 
 export const Product = mongoose.model('products', productSchema);

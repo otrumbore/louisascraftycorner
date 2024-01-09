@@ -12,24 +12,28 @@ const Orders = () => {
 			itemCount: 6,
 			orderNum: 4728367,
 			total: '28.76',
+			status: 'shipped',
 		},
 		{
 			date: '12/23/23',
 			itemCount: 6,
 			orderNum: 4728332,
 			total: '104.06',
+			status: 'crafting',
 		},
 		{
 			date: '12/24/23',
 			itemCount: 6,
 			orderNum: 4728309,
 			total: '198.39',
+			status: 'placed',
 		},
 		{
 			date: '12/28/23',
 			itemCount: 6,
 			orderNum: 4728316,
 			total: '18.72',
+			status: 'shipped',
 		},
 		// Add more orders as needed...
 	]);
@@ -56,6 +60,23 @@ const Orders = () => {
 									key={i}
 									className='border-2 border-primary p-4 rounded-md space-y-4'
 								>
+									<div className='flex flex-wrap items-center justify-center'>
+										<div className='flex gap-2'>
+											Status:{' '}
+											<p
+												className={`${
+													item.status === 'shipped'
+														? 'text-green-400'
+														: item.status === 'crafting' ||
+														  item.status === 'placed'
+														? 'text-orange-400'
+														: ''
+												}`}
+											>
+												{item.status}
+											</p>
+										</div>
+									</div>
 									<div className='flex flex-wrap w-full items-center justify-between'>
 										<p>Date: {item.date}</p>
 										<p>Items: {item.itemCount}</p>

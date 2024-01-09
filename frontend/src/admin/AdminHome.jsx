@@ -70,7 +70,7 @@ const AdminHome = () => {
 			<div className='hidden lg:flex justify-end items-center gap-x-4'>
 				<span>Hello {userDetails.name}</span>
 			</div>
-			<div className='flex justify-between items-center'>
+			<div className='flex flex-col lg:flex-row justify-between items-center'>
 				<h1 className='text-2xl my-8'>Products List</h1>
 				<Link className='btn-outline' to='/beta_admin'>
 					Admin Dashboard (Beta)

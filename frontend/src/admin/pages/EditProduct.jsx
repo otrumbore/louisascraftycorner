@@ -18,6 +18,7 @@ const EditProduct = () => {
 	const [img, setImg] = useState('');
 	const [sale, setSale] = useState(0);
 	const [rating, setRating] = useState('');
+	const active = true;
 
 	const { id } = useParams();
 
@@ -69,6 +70,7 @@ const EditProduct = () => {
 			tags,
 			inventory,
 			img,
+			active,
 		};
 		setLoading(true);
 		console.log(id);
@@ -105,6 +107,7 @@ const EditProduct = () => {
 						value={storeId}
 						onChange={(e) => setStoreId(e.target.value)}
 						className='border-2 border-gray-500 px-4 py-2 w-full'
+						disabled
 					/>
 				</div>
 				<div className='my-4'>
