@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import LoadingModal from '../../components/LoadingModal';
 import { LOCALIP } from '../../config';
+import { addProduct } from '../../api/products.api';
 
 const AddProduct = () => {
 	const [name, setName] = useState('');
@@ -18,12 +19,13 @@ const AddProduct = () => {
 	const [sale, setSale] = useState(0);
 	const [rating, setRating] = useState(0);
 	const active = false;
+	const archived = false;
 
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const { enqueueSnackbar } = useSnackbar();
 
-	const handleAddProduct = () => {
+	const handleAddProduct = async () => {
 		const data = {
 			name,
 			description,
@@ -36,30 +38,42 @@ const AddProduct = () => {
 			inventory,
 			img,
 			active,
+			archived,
 		};
 		setLoading(true);
-		axios
-			.post(`http://${LOCALIP}:5555/products`, data)
-			.then(() => {
-				setLoading(false);
+		try {
+			const response = await addProduct(data); // Await the asynchronous function
+			console.log(response);
+			if (response.status === 201 || response.status === 200) {
+				setLoading(false); // Update loading state when data is fetched
 				enqueueSnackbar(`Product ${data.name} added`, {
 					variant: 'success',
 					anchorOrigin: { horizontal: 'right', vertical: 'top' },
 				});
-				navigate('/admin');
-			})
-			.catch((error) => {
+				navigate('/admin#products');
+			} else {
 				setLoading(false);
 				enqueueSnackbar('Could not add product', {
 					variant: 'error',
 					anchorOrigin: { horizontal: 'right', vertical: 'top' },
 				});
 				console.log(error);
-			});
+			}
+
+			//console.log(fetchedProducts);
+		} catch (error) {
+			console.error(error);
+			setLoading(false); // Update loading state in case of error
+			return (
+				<div className='mt-8 w-full justify-center text-xl'>
+					Could not load products refresh to try again.
+				</div>
+			);
+		}
 	};
 
 	return (
-		<div className='p-4'>
+		<div className='mt-[8rem] p-4'>
 			<BackButton />
 			<h1 className='text-3xl my-4'>Add Product</h1>
 			<LoadingModal loading={loading} />
@@ -102,7 +116,7 @@ const AddProduct = () => {
 					/>
 				</div>
 				<div className='my-4'>
-					<label className='text-xl mr-4 text-gray-500'>Category</label>
+					<label className='text-xl mr-4 text-gray-500'>Collection</label>
 					<input
 						type='text'
 						value={category}

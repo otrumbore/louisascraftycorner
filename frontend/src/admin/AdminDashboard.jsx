@@ -6,8 +6,9 @@ import {
 	MdOutlineSettings,
 	MdOutlineNotificationsNone,
 } from 'react-icons/md';
-import { TbBrandMinecraft } from 'react-icons/tb';
+import { TbBrandMinecraft, TbShipOff } from 'react-icons/tb';
 import { IoIosPricetag } from 'react-icons/io';
+import { FaUsers } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import Dashboard from './components/dashboard/Dashboard';
 import Orders from './components/dashboard/Orders';
@@ -19,21 +20,21 @@ const AdminDashboard = () => {
 	const { isAdmin } = useUser();
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		const checkUser = async () => {
-			try {
-				const token = Cookies.get('token');
-				if (token) {
-					!isAdmin() && navigate('/user/dashboard');
-					return;
-				}
-				navigate('/login');
-			} catch (error) {
-				console.error('Admin user: ', error.message);
-				navigate('/');
+	const checkUser = async () => {
+		try {
+			const token = Cookies.get('token');
+			if (token) {
+				!isAdmin() && navigate('/user/dashboard');
+				return;
 			}
-		};
+			navigate('/login');
+		} catch (error) {
+			console.error('Admin user: ', error.message);
+			navigate('/');
+		}
+	};
 
+	useEffect(() => {
 		checkUser();
 	}, []);
 
@@ -125,7 +126,7 @@ const AdminDashboard = () => {
 					<div className='flex flex-col border-4 border-primary p-4 rounded-md'>
 						<div className='flex items-center justify-between'>
 							<h5 className='text-lg'>Unfufilled Orders</h5>
-							<IoIosPricetag size={30} />
+							<TbShipOff size={30} />
 						</div>
 
 						<p className='text-2xl'>3</p>
@@ -134,7 +135,7 @@ const AdminDashboard = () => {
 					<div className='flex flex-col border-4 border-primary p-4 rounded-md'>
 						<div className='flex items-center justify-between'>
 							<h5 className='text-lg'>Active Users</h5>
-							<MdAttachMoney size={30} />
+							<FaUsers size={30} />
 						</div>
 
 						<p className='text-2xl'>36</p>

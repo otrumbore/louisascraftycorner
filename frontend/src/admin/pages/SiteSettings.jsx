@@ -7,9 +7,12 @@ import LoadingModal from '../../components/LoadingModal';
 import { LOCALIP } from '../../config';
 import Cookies from 'js-cookie';
 import { useUser } from '../../context/UserContext';
+import getSettings from '../../api/siteSettings.api';
 
 const SiteSettings = () => {
 	const [websiteBanner, setWebsiteBanner] = useState('');
+	const [collections, setCollections] = useState([]);
+	const [addCollection, setAddCollection] = useState('');
 
 	//const { id } = useParams();
 	const [id, setId] = useState('');
@@ -36,17 +39,21 @@ const SiteSettings = () => {
 			}
 		};
 
-		checkUser();
+		console.log(getSettings());
+
+		//checkUser();
 		axios
 			.get(`http://${LOCALIP}:5555/admin/site_settings/`)
 			.then((response) => {
 				setWebsiteBanner(response.data?.data[0]?.website_banner);
+				console.log(response.data);
+				setCollections(response.data?.data[0]?.collections);
 				setId(response.data.data[0]._id);
 				setLoading(false);
 			})
 			.catch((error) => {
 				setLoading(false);
-				enqueueSnackbar('Could not retrieve product', {
+				enqueueSnackbar('Could not retrieve settings', {
 					variant: 'error',
 					anchorOrigin: { horizontal: 'right', vertical: 'top' },
 				});
@@ -57,25 +64,34 @@ const SiteSettings = () => {
 
 	const handleEditWebsiteSettings = () => {
 		//const id = storeId;
+		// Define the new collection object to add
+		const newCollection = { name: addCollection };
+
+		// Update the 'collections' state using the state updater function and spread operator
+		setCollections((prevCollections) => [...prevCollections, newCollection]);
+		sendSettings();
+	};
+
+	const sendSettings = async () => {
 		const data = {
 			website_banner: websiteBanner,
+			collections: collections,
 		};
 		setLoading(true);
-		console.log(id);
-		console.log(data);
+		console.log('sending data: ', data);
 		axios
 			.put(`http://${LOCALIP}:5555/admin/site_settings/${id}`, data)
 			.then(() => {
 				setLoading(false);
-				enqueueSnackbar('Product updated', {
+				enqueueSnackbar('Settings updated', {
 					variant: 'success',
 					anchorOrigin: { horizontal: 'right', vertical: 'top' },
 				});
-				navigate('/admin');
+				//navigate('/admin');
 			})
 			.catch((error) => {
 				setLoading(false);
-				enqueueSnackbar('Could not update product', {
+				enqueueSnackbar('Could not update settings', {
 					variant: 'error',
 					anchorOrigin: { horizontal: 'right', vertical: 'top' },
 				});
@@ -95,6 +111,25 @@ const SiteSettings = () => {
 						type='text'
 						value={websiteBanner}
 						onChange={(e) => setWebsiteBanner(e.target.value)}
+						className='border-2 border-gray-500 px-4 py-2 w-full'
+					/>
+				</div>
+				<div className='my-4'>
+					<label className='text-xl mr-4 text-gray-500'>Collections:</label>
+					<select>
+						{collections.map((item, i) => (
+							<option key={i}>{item.name}</option>
+						))}
+					</select>
+				</div>
+				<div className='my-4'>
+					<label className='text-xl mr-4 text-gray-500'>
+						Add to Collections:
+					</label>
+					<input
+						type='text'
+						value={addCollection}
+						onChange={(e) => setAddCollection(e.target.value)}
 						className='border-2 border-gray-500 px-4 py-2 w-full'
 					/>
 				</div>

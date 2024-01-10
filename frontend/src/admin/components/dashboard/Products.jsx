@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import getProducts from '../../../api/getProducts.api';
+import getProducts from '../../../api/products.api';
 import LoadingModal from '../../../components/LoadingModal';
 import ProductModal from './ProductModal';
 import DeleteModal from '../DeleteModal';
 import { MdAdd } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 
 const Products = () => {
 	const [products, setProducts] = useState([]);
@@ -12,12 +13,33 @@ const Products = () => {
 	const [showModal, setShowModal] = useState(null);
 	const [showDeleteModal, setShowDeleteModal] = useState(null);
 
+	const fetchProducts = async () => {
+		try {
+			const fetchedProducts = await getProducts(); // Await the asynchronous function
+			const filteredProducts = fetchedProducts.filter(
+				(product) => product.archived === false
+			);
+			setProducts(filteredProducts);
+			setLoading(false); // Update loading state when data is fetched
+			//console.log(filteredProducts);
+		} catch (error) {
+			console.error(error);
+			setLoading(false); // Update loading state in case of error
+			return (
+				<div className='mt-8 w-full justify-center text-xl'>
+					Could not load products refresh to try again.
+				</div>
+			);
+		}
+	};
+
 	const openModal = (productId) => {
 		setShowModal(productId);
 	};
 
 	const closeModal = () => {
 		setShowModal(null);
+		fetchProducts();
 	};
 
 	const openDeleteModal = (productId) => {
@@ -29,30 +51,22 @@ const Products = () => {
 	};
 
 	useEffect(() => {
-		const fetchProducts = async () => {
-			try {
-				const fetchedProducts = await getProducts(); // Await the asynchronous function
-				setProducts(fetchedProducts);
-				setLoading(false); // Update loading state when data is fetched
-				console.log(fetchedProducts);
-			} catch (error) {
-				console.error(error);
-				setLoading(false); // Update loading state in case of error
-				return (
-					<div className='mt-8 w-full justify-center text-xl'>
-						Could not load products refresh to try again.
-					</div>
-				);
-			}
-		};
-
 		fetchProducts();
 	}, []);
 
 	const adminNotifications = [
 		{ text: '111111 - low inventory' },
 		{ text: '111112 - low inventory' },
+		{ text: '111111 - low inventory' },
+		{ text: '111112 - low inventory' },
 	];
+	// Calculate counts of active and inactive products
+	const activeCount = products.filter(
+		(product) => product.active === true
+	).length;
+	const inactiveCount = products.filter(
+		(product) => product.active === false
+	).length;
 
 	return (
 		<>
@@ -60,22 +74,20 @@ const Products = () => {
 
 			<div className='mt-4 w-full'>
 				<div className='flex flex-col lg:flex-row lg:gap-4 lg:mb-4'>
-					<div className='lg:w-[50%] bg-yellow-400 p-4 text-black flex flex-col flex-wrap justify-center rounded-md border-4 border-primary border-dashed'>
+					<div className='lg:w-[52%] bg-yellow-400 p-4 text-black grid grid-cols-1 lg:grid-cols-2 flex-wrap justify-center rounded-md border-4 border-primary border-dashed'>
 						{adminNotifications.map((item, i) => (
 							<p key={i}>{i + 1 + ': ' + item.text}</p>
 						))}
 					</div>
-					<div className='lg:w-[25%] lg:my-0 my-4 flex items-center justify-between lg:justify-center lg:gap-4 p-4 border-4 border-primary border-dashed'>
+					<div className='lg:w-[25%] lg:my-0 my-4 flex items-center justify-between p-4 border-4 border-primary border-dashed rounded-md'>
 						<p>Total: {products.length}</p>
-						<div className='flex flex-col lg:flex-row justify-center items-end lg:gap-4'>
-							<p>Active: 7</p>
-							<p>Inactive: 0</p>
-						</div>
+						<p>Active: {activeCount}</p>
+						<p>Inactive: {inactiveCount}</p>
 					</div>
-					<div className='hidden lg:flex lg:w-[25%] p-4 border-4 border-primary border-dashed items-center justify-end'>
-						<button className='btn-outline px-0 py-0'>
+					<div className='hidden lg:flex lg:w-[25%] p-4 border-4 border-primary border-dashed items-center justify-end rounded-md'>
+						<Link to={'/admin/addproduct'} className='btn-outline px-0 py-0'>
 							<MdAdd className='text-5xl' />
-						</button>
+						</Link>
 					</div>
 				</div>
 				<div className='w-full grid grid-cols-1 lg:grid-cols-2 gap-4'>
@@ -90,7 +102,7 @@ const Products = () => {
 									<strong>Store ID:</strong> {product.storeId}
 								</p>
 								{product.sale > 0 && (
-									<p className='text-red-600 text-sm'>Active Sale</p>
+									<p className='text-red-600 text-sm'>On Sale</p>
 								)}
 
 								<p className='hidden lg:block text-xs'>

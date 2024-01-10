@@ -34,6 +34,9 @@ const Dashboard = () => {
 			const token = Cookies.get('token');
 			if (!token) {
 				navigate('/login');
+			} else {
+				!userDetails && Cookies.remove('token');
+				//navigate('/login');
 			}
 		} catch (error) {
 			console.error(error);

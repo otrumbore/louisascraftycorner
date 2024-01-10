@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import LoadingModal from '../../components/LoadingModal';
 import { LOCALIP } from '../../config';
+import { getProduct, updateProduct } from '../../api/products.api';
 
 const EditProduct = () => {
 	const [storeId, setStoreId] = useState('');
@@ -18,7 +19,8 @@ const EditProduct = () => {
 	const [img, setImg] = useState('');
 	const [sale, setSale] = useState(0);
 	const [rating, setRating] = useState('');
-	const active = true;
+	const [active, setActive] = useState(false);
+	const archived = false;
 
 	const { id } = useParams();
 
@@ -26,37 +28,42 @@ const EditProduct = () => {
 	const navigate = useNavigate();
 	const { enqueueSnackbar } = useSnackbar();
 
-	useEffect(() => {
+	const fetchProducts = async () => {
 		setLoading(true);
-		axios
-			.get(`http://${LOCALIP}:5555/products/${id}`)
-			.then((response) => {
-				setStoreId(response.data.data.storeId);
-				setName(response.data.data.name);
-				setDescription(response.data.data.description);
-				setPrice(response.data.data.price);
-				setSale(response.data.data.sale);
-				setType(response.data.data.type);
-				setCategory(response.data.data.category);
-				setRating(response.data.data.rating);
-				setTags(response.data.data.tags);
-				setInventory(response.data.data.inventory);
-				setImg(response.data.data.img);
+		const response = await getProduct(id);
+		//console.log(response);
+		if (response) {
+			setStoreId(response.storeId);
+			setName(response.name);
+			setDescription(response.description);
+			setPrice(response.price);
+			setSale(response.sale);
+			setType(response.type);
+			setCategory(response.category);
+			setRating(response.rating);
+			setTags(response.tags);
+			setInventory(response.inventory);
+			setImg(response.img);
+			setActive(response.active);
 
-				setLoading(false);
-			})
-			.catch((error) => {
-				setLoading(false);
-				enqueueSnackbar('Could not retrieve product', {
-					variant: 'error',
-					anchorOrigin: { horizontal: 'right', vertical: 'top' },
-				});
-				console.log(error);
-				navigate('/admin');
+			setLoading(false);
+		} else {
+			setLoading(false);
+			enqueueSnackbar('Could not retrieve product', {
+				variant: 'error',
+				anchorOrigin: { horizontal: 'right', vertical: 'top' },
 			});
+			console.log('Could not get product');
+			navigate('/admin');
+		}
+	};
+
+	useEffect(() => {
+		fetchProducts();
+		window.scroll(0, 0);
 	}, []);
 
-	const handleEditProduct = () => {
+	const handleEditProduct = async () => {
 		//const id = storeId;
 		const data = {
 			storeId,
@@ -71,27 +78,25 @@ const EditProduct = () => {
 			inventory,
 			img,
 			active,
+			archived,
 		};
 		setLoading(true);
-		console.log(id);
-		axios
-			.put(`http://${LOCALIP}:5555/products/${id}`, data)
-			.then(() => {
-				setLoading(false);
-				enqueueSnackbar('Product updated', {
-					variant: 'success',
-					anchorOrigin: { horizontal: 'right', vertical: 'top' },
-				});
-				navigate('/admin');
-			})
-			.catch((error) => {
-				setLoading(false);
-				enqueueSnackbar('Could not update product', {
-					variant: 'error',
-					anchorOrigin: { horizontal: 'right', vertical: 'top' },
-				});
-				console.log(error);
+		//console.log(id);
+		const response = await updateProduct(id, data);
+		if (response.status === 201 || response.status === 200) {
+			enqueueSnackbar('Product updated', {
+				variant: 'success',
+				anchorOrigin: { horizontal: 'right', vertical: 'top' },
 			});
+			navigate('/admin');
+		} else {
+			setLoading(false);
+			enqueueSnackbar('Could not update product', {
+				variant: 'error',
+				anchorOrigin: { horizontal: 'right', vertical: 'top' },
+			});
+			console.log(error);
+		}
 	};
 
 	return (
@@ -194,6 +199,15 @@ const EditProduct = () => {
 						className='border-2 border-gray-500 px-4 py-2 w-full'
 					/>
 				</div>
+				<label className='flex ml-1 items-center'>
+					<input
+						type='checkbox'
+						checked={active}
+						onChange={(e) => setActive(e.target.checked)}
+						className='mr-2'
+					/>
+					Make Active?
+				</label>
 				<button className='p-2 bg-sky-300 m-8' onClick={handleEditProduct}>
 					Save
 				</button>

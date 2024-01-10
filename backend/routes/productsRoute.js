@@ -28,6 +28,7 @@ router.post('/', async (request, response) => {
 			inventory,
 			img,
 			active,
+			archived,
 		} = request.body;
 
 		const newProduct = await Product.create({
@@ -42,6 +43,7 @@ router.post('/', async (request, response) => {
 			inventory,
 			img,
 			active,
+			archived,
 		});
 
 		return response.status(201).send(newProduct);

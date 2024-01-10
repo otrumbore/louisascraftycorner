@@ -1,22 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
-import getProducts from '../api/getProducts.api.js';
+import getProducts from '../api/products.api.js';
 import { MdCheckBox } from 'react-icons/md';
+import getSettings from '../api/siteSettings.api.js';
 
 const Shop = () => {
 	const [products, setProducts] = useState([]);
+	const [collections, setCollections] = useState([]);
+
+	const fetchData = async () => {
+		try {
+			const fetchedProducts = await getProducts();
+			const filteredProducts = fetchedProducts.filter(
+				(product) => product.archived === false && product.active === true
+			);
+			setProducts(filteredProducts);
+		} catch (error) {
+			console.error('Error fetching products:', error);
+		}
+	};
+	const fetchSettings = async () => {
+		try {
+			const fetchedSettings = await getSettings();
+			setCollections(fetchedSettings.collections);
+			//console.log(fetchedSettings);
+		} catch (error) {
+			console.error('Error fetching products:', error);
+		}
+	};
 
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const fetchedProducts = await getProducts();
-				setProducts(fetchedProducts);
-			} catch (error) {
-				console.error('Error fetching products:', error);
-			}
-		};
-
 		fetchData();
+		fetchSettings();
 	}, []);
 
 	return (
@@ -32,9 +47,9 @@ const Shop = () => {
 								placeholder='Search...'
 							/>
 							<select className='p-[.80rem] lg:w-1/3 input-ghost'>
-								<option>Testing</option>
-								<option>Testing</option>
-								<option>Testing</option>
+								{collections.map((item, i) => (
+									<option key={i}>{item.name}</option>
+								))}
 							</select>
 							<select className='p-[.80rem] w-full lg:w-1/3 input-ghost'>
 								<option>Testing</option>

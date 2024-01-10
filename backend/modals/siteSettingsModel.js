@@ -5,6 +5,7 @@ const siteSettingsSchema = mongoose.Schema(
 		website_banner: {
 			type: String,
 		},
+		collections: [{ name: String }],
 	},
 	{
 		timestamps: true,
