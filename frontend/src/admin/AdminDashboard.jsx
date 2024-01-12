@@ -37,6 +37,7 @@ const AdminDashboard = () => {
 
 	useEffect(() => {
 		checkUser();
+		window.scroll(0, 0);
 	}, []);
 
 	const [dashView, setDashView] = useState('home');

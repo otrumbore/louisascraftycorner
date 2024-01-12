@@ -19,7 +19,12 @@ const Login = () => {
 	// Pattern for password: At least 8 characters with at least one uppercase, one lowercase, one number, and one special character
 	const [passwordPattern, setPasswordPattern] = useState('');
 
-	const { addUserDetails, sendActivityStatus } = useUser();
+	const {
+		addUserDetails,
+		sendActivityStatus,
+		setUserFavorites,
+		getUserDetails,
+	} = useUser();
 	const { enqueueSnackbar } = useSnackbar();
 	const navigate = useNavigate();
 	const [loginError, setLoginError] = useState('');
@@ -41,9 +46,8 @@ const Login = () => {
 			const res = await axios.post(`http://${LOCALIP}:5555/user/login`, {
 				username,
 				password,
+				lastActivity: new Date(),
 			});
-
-			//console.log('Login successful:', res.data);
 
 			// Set token in a cookie with expiration time (adjust the expiry as needed)
 			const now = new Date();
@@ -52,6 +56,8 @@ const Login = () => {
 				expires: expirationTime,
 				path: '/',
 			});
+
+			//console.log(res.data.token);
 
 			// Fetch user data after successful login
 			fetchUserData();
@@ -71,27 +77,47 @@ const Login = () => {
 					},
 				});
 
-				addUserDetails(res.data);
+				if (!res.data.enabled || !res.data.emailValidated) {
+					sendActivityStatus(false);
+					// Clear the token cookie using js-cookie
+					if (token) {
+						Cookies.remove('token');
+					}
+
+					//clear userDetails context
+					addUserDetails({});
+					setUserFavorites([]);
+
+					if (!res.data.enabled) {
+						enqueueSnackbar('Username ' + res.data.username + ' is disbaled.', {
+							variant: 'info',
+						});
+					}
+
+					if (!res.data.emailValidated) {
+						enqueueSnackbar(res.data.username + ' has not validated email', {
+							variant: 'info',
+						});
+					}
+
+					return;
+				}
+
+				getUserDetails();
 				sendActivityStatus(true);
 				enqueueSnackbar('Logged in as ' + res.data.username, {
 					variant: 'success',
-					anchorOrigin: {
-						horizontal: 'center',
-						vertical: 'top',
-					},
-					autoHideDuration: 2000,
 				});
 				navigate('/user/dashboard');
+			} else {
+				enqueueSnackbar('No token', {
+					variant: 'error',
+				});
 			}
 		} catch (error) {
 			console.error('User data fetch error:', error.message);
 			enqueueSnackbar('Failed to fetch user data', {
 				variant: 'error',
-				anchorOrigin: {
-					horizontal: 'center',
-					vertical: 'top',
-				},
-				autoHideDuration: 3000,
 			});
 		}
 	};

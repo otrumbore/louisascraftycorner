@@ -31,8 +31,10 @@ router.post('/register', async (request, response) => {
 			phoneNumber,
 			role,
 			emailMarketing,
+			emailValidated,
 			lastActivity,
 			isActive,
+			enabled,
 			profilePicture,
 			dateOfBirth,
 			address,
@@ -49,8 +51,10 @@ router.post('/register', async (request, response) => {
 			phoneNumber,
 			role,
 			emailMarketing,
+			emailValidated,
 			lastActivity,
 			isActive,
+			enabled,
 			profilePicture,
 			dateOfBirth,
 			address: address || {},
@@ -66,7 +70,7 @@ router.post('/register', async (request, response) => {
 // Login route
 router.post('/login', async (request, response) => {
 	try {
-		const { username, password } = request.body;
+		const { username, password, lastActivity } = request.body;
 
 		// Find user by username
 		const user = await User.findOne({ username });
@@ -82,10 +86,15 @@ router.post('/login', async (request, response) => {
 			return response.status(401).json({ message: 'Invalid credentials' });
 		}
 
+		const userRole = user.role;
+
 		// Create JWT token
-		const token = jwt.sign({ userId: user._id }, JWTToken, {
+		const token = jwt.sign({ userId: user._id, role: userRole }, JWTToken, {
 			expiresIn: '24h',
 		});
+
+		user.lastActivity = lastActivity;
+		await user.save();
 
 		// Send the token in the response
 		response.status(200).json({ token });

@@ -57,10 +57,18 @@ const userSchema = mongoose.Schema(
 			type: Boolean,
 			default: true,
 		},
+		emailValidated: {
+			type: Boolean,
+			default: false,
+		},
 		lastActivity: {
 			type: Date,
 		},
 		isActive: {
+			type: Boolean,
+			default: false,
+		},
+		enabled: {
 			type: Boolean,
 			default: false,
 		},

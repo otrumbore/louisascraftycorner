@@ -51,9 +51,11 @@ export function UserProvider({ children }) {
 
 						// Assuming addUserDetails is a function to set userDetails in your state
 						addUserDetails(userDetailsWithoutPassword);
+						console.log('password found still not remvoed!');
 					} else {
 						// If 'password' field doesn't exist, set userDetails directly
 						addUserDetails(userDetailsResponse.data);
+						console.log('password not found so not remvoed!');
 					}
 				} catch (error) {
 					console.error('Error fetching user details or favorites:', error);
@@ -67,6 +69,7 @@ export function UserProvider({ children }) {
 			if (token) {
 				Cookies.remove('token');
 				setUserDetails({});
+				setUserFavorites([]);
 				navigate('/login');
 			}
 			console.error('User data fetch error:', error.message);
@@ -203,8 +206,8 @@ export function UserProvider({ children }) {
 	};
 
 	const removeFromFavorites = async (storeId) => {
-		console.log(userFavorites);
-		console.log('storeId: ' + storeId);
+		// console.log(userFavorites);
+		// console.log('storeId: ' + storeId);
 		try {
 			const token = Cookies.get('token');
 			// Find the index of the item to remove from userFavorites
@@ -212,7 +215,7 @@ export function UserProvider({ children }) {
 				(item) => item.itemId !== storeId
 			);
 
-			console.log('updated: ', updatedFavorites);
+			//console.log('updated: ', updatedFavorites);
 
 			setUserFavorites(updatedFavorites);
 
@@ -234,7 +237,7 @@ export function UserProvider({ children }) {
 			);
 
 			getUserFavorites();
-			console.log(favoritesResponse);
+			//console.log(favoritesResponse);
 
 			// Update the local state with the updated favorites received from the server
 			// setUserFavorites(favoritesResponse.data.data.items);
@@ -255,7 +258,7 @@ export function UserProvider({ children }) {
 			// For example:
 			const updatedFavorites = [...userFavorites, { itemId: storeId }];
 
-			console.log(updatedFavorites);
+			//console.log(updatedFavorites);
 
 			// Update userFavorites with the updated array
 			setUserFavorites(updatedFavorites);
@@ -298,6 +301,7 @@ export function UserProvider({ children }) {
 				setUserFavorites,
 				removeFromFavorites,
 				addToFavorites,
+				getUserDetails,
 			}}
 		>
 			<LoadingModal loading={loading} />
