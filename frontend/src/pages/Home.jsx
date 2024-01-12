@@ -16,7 +16,7 @@ const Home = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${API_URL}/products`)
+			.get(`${API_URL}/api/products`)
 			.then((response) => {
 				setNewArrivals(response.data.data);
 				//setLoading(false);
