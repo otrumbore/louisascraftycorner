@@ -6,8 +6,8 @@ import ProductCard from '../components/ProductCard';
 import { useLocation } from 'react-router-dom';
 
 const Home = () => {
-	//const API_URL = import.meta.env.VITE_SERVER_API_URL;
-	const API_URL = process.env.VITE_SERVER_API_URL;
+	const API_URL = import.meta.env.VITE_SERVER_API_URL;
+	//const API_URL = process.env.VITE_SERVER_API_URL;
 
 	const [newArrivals, setNewArrivals] = useState([]);
 	const [loading, setLoading] = useState(false);
