@@ -33,6 +33,8 @@ const ProductPage = () => {
 	const navigate = useNavigate();
 	const { enqueueSnackbar } = useSnackbar();
 
+	const API_URL = import.meta.env.VITE_SERVER_API_URL;
+
 	const [selectedProduct, setSelectedProduct] = useState({});
 
 	const [loggedIn, setLoggedIn] = useState(false);
@@ -55,7 +57,7 @@ const ProductPage = () => {
 		setLoading(true);
 		//const allProducts = useContext(ShopContext);
 		axios
-			.get(`http://${LOCALIP}:5555/products/${id}`)
+			.get(`${API_URL}/api/products/${id}`)
 			.then((response) => {
 				setProduct(response.data.data);
 			})
@@ -64,16 +66,11 @@ const ProductPage = () => {
 				//setLoading(false);
 				enqueueSnackbar('Product does not exist!', {
 					variant: 'error',
-					anchorOrigin: {
-						horizontal: 'center',
-						vertical: 'top',
-					},
-					autoHideDuration: 5000,
 				});
 				navigate('/');
 			});
 		axios
-			.get(`http://${LOCALIP}:5555/products`)
+			.get(`${API_URL}/api/products`)
 			.then((response) => {
 				setRelatedProducts(response.data.data);
 			})
@@ -82,11 +79,6 @@ const ProductPage = () => {
 				setLoading(false);
 				enqueueSnackbar('Could not load products', {
 					variant: 'error',
-					anchorOrigin: {
-						horizontal: 'center',
-						vertical: 'top',
-					},
-					autoHideDuration: 2000,
 				});
 				navigate('/');
 			});
@@ -144,11 +136,6 @@ const ProductPage = () => {
 					product.name + ' is already quantity ' + qty + '. Nothing updated!',
 					{
 						variant: 'info',
-						anchorOrigin: {
-							horizontal: 'center',
-							vertical: 'top',
-						},
-						autoHideDuration: 3000,
 					}
 				);
 				return;
@@ -156,11 +143,6 @@ const ProductPage = () => {
 			updateCartItem(product._id, qty);
 			enqueueSnackbar('Updated ' + product.name + ' to quantity ' + qty, {
 				variant: 'success',
-				anchorOrigin: {
-					horizontal: 'center',
-					vertical: 'top',
-				},
-				autoHideDuration: 2000,
 			});
 			return;
 		}
@@ -169,11 +151,6 @@ const ProductPage = () => {
 		addToCart(selectedProduct, qty);
 		enqueueSnackbar('Added ' + product.name + ' to cart with quantity ' + qty, {
 			variant: 'success',
-			anchorOrigin: {
-				horizontal: 'center',
-				vertical: 'top',
-			},
-			autoHideDuration: 2000,
 		});
 	};
 
