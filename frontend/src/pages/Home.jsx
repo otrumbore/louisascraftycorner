@@ -6,7 +6,7 @@ import ProductCard from '../components/ProductCard';
 import { useLocation } from 'react-router-dom';
 
 const Home = () => {
-	const API_URL = import.meta.env.VITE_SERVER_API_URL;
+	//const API_URL = import.meta.env.VITE_SERVER_API_URL;
 	//const API_URL = process.env.VITE_SERVER_API_URL;
 
 	const [newArrivals, setNewArrivals] = useState([]);
@@ -17,7 +17,7 @@ const Home = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`${API_URL}/api/products`)
+			.get(`https://api-louisascrafts.up.railway.app/api/products`)
 			.then((response) => {
 				setNewArrivals(response.data.data);
 				//setLoading(false);
