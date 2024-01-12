@@ -99,6 +99,8 @@ const Login = () => {
 	const onSubmit = (e) => {
 		e.preventDefault();
 
+		setShowPassword(false);
+
 		setUsernamePattern('^[a-zA-Z0-9._!-]{4,30}$');
 		setPasswordPattern(
 			'^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()]).{8,}$'

@@ -19,7 +19,7 @@ const Navbar = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const pathName = location.pathname;
-	const { userDetails, isAdmin, userFavorites } = useUser();
+	const { userDetails, userRole, userFavorites } = useUser();
 
 	//cart stuff
 	const {
@@ -112,7 +112,7 @@ const Navbar = () => {
 						</div>
 					</div>
 					<div
-						className={`hidden lg:flex ${isAdmin() ? 'w-[60%]' : 'w-[40%]'}`}
+						className={`hidden lg:flex ${userRole() ? 'w-[60%]' : 'w-[40%]'}`}
 					>
 						<ul
 							className={`flex w-full items-center justify-evenly list-none ${
@@ -127,8 +127,8 @@ const Navbar = () => {
 									<Link to={item.linkTo}>{item.linkName}</Link>
 								</li>
 							))}
-							{isAdmin() && <span className='text-2xl'>|</span>}
-							{isAdmin() &&
+							{userRole() && <span className='text-2xl'>|</span>}
+							{userRole() &&
 								navAdminData.map((item, index) => (
 									<li
 										className={`px-3 py-1 btn-ghost hover:bg-opacity-90 cursor-pointer`}
@@ -230,8 +230,8 @@ const Navbar = () => {
 							<Link
 								to={'/cart'}
 								className={`font-medium p-2 ${
-									userFavorites.length > 0 ? 'btn-outline py-1' : 'btn-ghost'
-								} cursor-pointer`}
+									totalItemsCount > 0 ? 'btn-outline py-1' : 'btn-ghost'
+								}`}
 							>
 								<MdOutlineShoppingCart className='' size={28} />
 								<p
@@ -253,8 +253,8 @@ const Navbar = () => {
 									</Link>
 								</li>
 							))}
-							{isAdmin() && <div>------</div>}
-							{isAdmin() &&
+							{userRole() && <div>------</div>}
+							{userRole() &&
 								navAdminData.map((item, index) => (
 									<li className='py-2' key={index}>
 										<Link to={item.linkTo} className='text-black'>
@@ -266,9 +266,15 @@ const Navbar = () => {
 						</ul>
 						<div className='absolute w-full bottom-4 px-4'>
 							<ul className='flex w-full items-center justify-between'>
-								<li>Help</li>
-								<li>Terms</li>
-								<li>Privacy</li>
+								<li>
+									<Link to='/info/help'>Help</Link>
+								</li>
+								<li>
+									<Link to='/info/terms'>Terms</Link>
+								</li>
+								<li>
+									<Link to='/info/privacy'>Privacy</Link>
+								</li>
 							</ul>
 						</div>
 					</div>

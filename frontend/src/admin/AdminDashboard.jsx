@@ -15,6 +15,7 @@ import Orders from './components/dashboard/Orders';
 import Cookies from 'js-cookie';
 import { useUser } from '../context/UserContext';
 import Products from './components/dashboard/Products';
+import Users from './components/dashboard/Users';
 
 const AdminDashboard = () => {
 	const { isAdmin } = useUser();
@@ -69,6 +70,14 @@ const AdminDashboard = () => {
 						} px-2`}
 					>
 						<TbBrandMinecraft size={30} />
+					</button>
+					<button
+						onClick={() => {
+							setDashView('users');
+						}}
+						className={`${dashView === 'users' ? 'btn' : 'btn-outline'} px-2`}
+					>
+						<FaUsers size={30} />
 					</button>
 					<button
 						onClick={() => {
@@ -150,6 +159,8 @@ const AdminDashboard = () => {
 				<Orders />
 			) : dashView === 'products' ? (
 				<Products />
+			) : dashView === 'users' ? (
+				<Users />
 			) : dashView === 'settings' ? (
 				<Dashboard />
 			) : (

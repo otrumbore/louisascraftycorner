@@ -185,6 +185,16 @@ export function UserProvider({ children }) {
 		//console.log('userContext: ', userDetails);
 	};
 
+	const userRole = () => {
+		if (
+			userDetails &&
+			(userDetails.role === 'admin' || userDetails.role === 'moderator')
+		) {
+			return true;
+		}
+		return false;
+	};
+
 	const isAdmin = () => {
 		if (userDetails && userDetails.role === 'admin') {
 			return true;
@@ -281,6 +291,7 @@ export function UserProvider({ children }) {
 			value={{
 				userDetails,
 				addUserDetails,
+				userRole,
 				isAdmin,
 				sendActivityStatus,
 				userFavorites,

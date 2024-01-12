@@ -12,7 +12,7 @@ import Profile from './components/Profile';
 import Settings from './components/Settings';
 
 const Dashboard = () => {
-	const { userDetails, isAdmin } = useUser();
+	const { userDetails, userRole } = useUser();
 	const navigate = useNavigate();
 	const [dashView, setDashView] = useState('');
 
@@ -59,7 +59,9 @@ const Dashboard = () => {
 						{userDetails.name
 							? ' ' + userDetails.name.split(' ')[0] || userDetails.name
 							: ''}
-						{isAdmin() && <FaStar size={30} className='text-yellow-400 ml-2' />}
+						{userRole() && (
+							<FaStar size={30} className='text-yellow-400 ml-2' />
+						)}
 					</h2>
 					<h2 className='hidden lg:block text-xl font-bold'>Dashboard</h2>
 					<div className='lg:mt-4 w-full lg:w-auto'>

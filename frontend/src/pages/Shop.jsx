@@ -11,10 +11,7 @@ const Shop = () => {
 	const fetchData = async () => {
 		try {
 			const fetchedProducts = await getProducts();
-			const filteredProducts = fetchedProducts.filter(
-				(product) => product.archived === false && product.active === true
-			);
-			setProducts(filteredProducts);
+			setProducts(fetchedProducts);
 		} catch (error) {
 			console.error('Error fetching products:', error);
 		}
@@ -32,6 +29,7 @@ const Shop = () => {
 	useEffect(() => {
 		fetchData();
 		fetchSettings();
+		window.scroll(0, 0);
 	}, []);
 
 	return (

@@ -34,10 +34,20 @@ const ProductCard = ({
 		cartItemsCount,
 	} = useCart();
 
-	const { userDetails, addToFavorites, userFavorites } = useUser();
+	const { userDetails, addToFavorites, userFavorites, userRole } = useUser();
 
 	useEffect(() => {
 		let filteredProducts = products;
+
+		if (filteredProducts && !userRole()) {
+			filteredProducts = filteredProducts.filter(
+				(item) => item.type !== 'test'
+			);
+		}
+
+		filteredProducts = filteredProducts.filter(
+			(product) => product.archived === false && product.active === true
+		);
 
 		if (filterCategory && filterType) {
 			filteredProducts = products
@@ -75,19 +85,18 @@ const ProductCard = ({
 					key={item._id}
 					className='flex flex-col items-center pb-4 border-4 border-primary space-y-2 rounded-xl justify-between bg-gray-100 shadow-lg shadow-gray-600 lg:hover:scale-105'
 				>
-					<div className='flex flex-col gap-y-4'>
+					<Link to={`/product/${item._id}`} className='flex flex-col gap-y-4'>
 						{item.sale > 0 && (
 							<span className='absolute ml-4 mt-4 inline-flex items-center rounded-md bg-red-500 px-4 py-2 text-xs font-medium text-white ring-1 ring-inset ring-red-600/10'>
 								SALE
 							</span>
 						)}
-						<Link
-							to={`/product/${item._id}`}
-							className='w-full h-[250px] flex items-center justify-center overflow-hidden rounded-t-lg'
+						<div
+							//to={`/product/${item._id}`}
+							className='w-full h-[250px] flex justify-center items-center overflow-hidden rounded-t-lg'
 						>
 							<img
 								alt={item.name + ' image'}
-								//src='https://c.pxhere.com/images/6f/bb/bb0b8bd8365deffc9cdcda034a02-1634123.jpg!d'
 								src={
 									item.img === '' || item.img === undefined
 										? DefaultProductImg
@@ -97,33 +106,33 @@ const ProductCard = ({
 								}
 								className='object-cover min-h-full min-w-full'
 							/>
-						</Link>
-						<Link to={`/product/${item._id}`}>
-							<div className='flex w-full px-4 items-center justify-between'>
-								<h4 className='text-3xl w-[50%]'>{item.name}</h4>
+						</div>
+						<div
+							className='flex w-full px-4 items-center justify-between'
+							//to={`/product/${item._id}`}
+						>
+							<h4 className='text-3xl w-[50%]'>{item.name}</h4>
 
-								{item.rating > 0 ? (
-									<div className='flex'>
-										{[...Array(Math.floor(item.rating))].map((_, index) => (
-											<FaStar key={index} />
-										))}
-										{item.rating % 1 !== 0 && <FaStarHalfAlt />}
-										{[...Array(5 - Math.ceil(item.rating))].map((_, index) => (
-											<FaRegStar key={index} />
-										))}
-									</div>
-								) : (
-									<div>No Rating</div>
-								)}
-							</div>
-						</Link>
-					</div>
-
-					<Link to={`/product/${item._id}`}>
-						<p className='px-4 text-lg'>
-							{item.description.slice(0, 100) + '...'}
-						</p>
+							{item.rating > 0 ? (
+								<div className='flex'>
+									{[...Array(Math.floor(item.rating))].map((_, index) => (
+										<FaStar key={index} />
+									))}
+									{item.rating % 1 !== 0 && <FaStarHalfAlt />}
+									{[...Array(5 - Math.ceil(item.rating))].map((_, index) => (
+										<FaRegStar key={index} />
+									))}
+								</div>
+							) : (
+								<div>No Rating</div>
+							)}
+						</div>
 					</Link>
+
+					<Link to={`/product/${item._id}`} className='px-4 text-lg'>
+						{item.description.slice(0, 75) + '...'}
+					</Link>
+
 					<div className='flex px-4 w-full justify-between items-center'>
 						<Link to={`/product/${item._id}`}>
 							<div className='flex w-1/4 justify-start gap-x-2 text-xl'>
@@ -146,20 +155,10 @@ const ProductCard = ({
 										addToFavorites(item.storeId);
 										enqueueSnackbar('Added ' + item.name + ' to favorites', {
 											variant: 'success',
-											anchorOrigin: {
-												horizontal: 'center',
-												vertical: 'top',
-											},
-											autoHideDuration: 2000,
 										});
 									} else {
 										enqueueSnackbar('Login first to add to favorites!', {
 											variant: 'warning',
-											anchorOrigin: {
-												horizontal: 'center',
-												vertical: 'top',
-											},
-											autoHideDuration: 2000,
 										});
 									}
 								}}
@@ -200,11 +199,6 @@ const ProductCard = ({
 											'Added ' + item.name + ' to cart with quantity 1',
 											{
 												variant: 'success',
-												anchorOrigin: {
-													horizontal: 'center',
-													vertical: 'top',
-												},
-												autoHideDuration: 2000,
 											}
 										);
 									}

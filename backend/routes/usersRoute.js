@@ -20,7 +20,7 @@ const JWTToken = process.env.JWT_SECRET_TOKEN;
 // 	}
 //   };
 
-// Creating a product
+// Creating user
 router.post('/register', async (request, response) => {
 	try {
 		const {
@@ -131,6 +131,19 @@ router.get('/getUser', verifyToken, async (req, res) => {
 	} catch (error) {
 		console.error('User data retrieval error:', error.message);
 		res.status(500).json({ message: 'Server Error' });
+	}
+});
+
+router.get('/getUsers', async (req, res) => {
+	try {
+		const users = await User.find({});
+		return res.status(200).json({
+			count: users.length,
+			data: users,
+		});
+	} catch (error) {
+		console.error(error.message);
+		res.status(500).send({ message: 'Server Error' });
 	}
 });
 

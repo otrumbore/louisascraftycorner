@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import LoadingModal from '../components/LoadingModal';
 import { useCart } from '../context/CartContext';
+import { useUser } from '../context/UserContext';
 import DefaultProductImg from '../assets/product-img/default.png';
 import SantaHat from '../assets/product-img/santa-hat-ordiment.png';
 import { MdOutlineDeleteForever, MdEdit } from 'react-icons/md';
+import { FaRegHeart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { LOCALIP } from '../config';
@@ -22,12 +24,20 @@ const Cart = () => {
 		cartSubTotal,
 	} = useCart();
 
+	const { addToFavorites, userFavorites, userDetails } = useUser();
+
+	const [loggedIn, setLoggedIn] = useState(false);
+
 	const cartItemsCount = cartItems.length;
 
 	useEffect(() => {
 		console.log(cartItems);
 		window.scrollTo(0, 0);
 	}, [cartItems]);
+
+	useEffect(() => {
+		userDetails._id ? setLoggedIn(true) : setLoggedIn(false);
+	}, [userDetails, loggedIn]);
 
 	const checkout = async () => {
 		await fetch(`http://${LOCALIP}:5555/checkout`, {
@@ -82,7 +92,7 @@ const Cart = () => {
 											<div className='pl-4 flex flex-col gap-y-2 lg:flex-row w-full justify-between'>
 												<Link to={`/product/${item._id}`}>
 													<div className='font-bold text-lg'>
-														{item.name} -{' '}
+														{item.name + ' - '}
 														{item.type &&
 															item.type.charAt(0).toUpperCase() +
 																item.type.slice(1)}
@@ -112,7 +122,7 @@ const Cart = () => {
 													</Link>
 												</div>
 
-												<div className='flex gap-x-6 lg:gap-x-4 items-center justify-center'>
+												<div className='flex justify-end gap-2'>
 													<button
 														onClick={() => {
 															removeFromCart(item._id);
@@ -120,16 +130,51 @@ const Cart = () => {
 																'Deleted ' + item.name + ' from cart',
 																{
 																	variant: 'success',
-																	anchorOrigin: {
-																		horizontal: 'center',
-																		vertical: 'top',
-																	},
-																	autoHideDuration: 2000,
 																}
 															);
 														}}
+														className='btn-ghost text-red-600 hover:text-white p-2'
 													>
-														<MdOutlineDeleteForever className='text-red-600 text-2xl lg:text-3xl' />
+														<MdOutlineDeleteForever className=' text-2xl lg:text-3xl' />
+													</button>
+													<button
+														onClick={() => {
+															if (!loggedIn) {
+																enqueueSnackbar(
+																	'Login first to add to favorites',
+																	{
+																		variant: 'warning',
+																	}
+																);
+																return;
+															}
+															if (
+																!userFavorites.some(
+																	(faveItem) => faveItem.itemId === item.storeId
+																)
+															) {
+																addToFavorites(item.storeId);
+																removeFromCart(item._id);
+																enqueueSnackbar(
+																	'Moved ' + item.name + ' to favorites',
+																	{
+																		variant: 'sucess',
+																	}
+																);
+															} else {
+																//removeFromFavorites(product.storeId);
+
+																enqueueSnackbar(
+																	'Already have ' + item.name + ' in favorites',
+																	{
+																		variant: 'info',
+																	}
+																);
+															}
+														}}
+														className='flex items-center px-2 py-1 btn-outline '
+													>
+														<FaRegHeart className='text-xl lg:text-2xl' />
 													</button>
 												</div>
 											</div>

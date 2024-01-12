@@ -45,11 +45,6 @@ const Favorites = () => {
 			console.error('Error fetching user details or favorites:', error);
 			enqueueSnackbar('Could not load favorites...Try again later!', {
 				variant: 'error',
-				anchorOrigin: {
-					horizontal: 'center',
-					vertical: 'top',
-				},
-				autoHideDuration: 2000,
 			});
 			navigate('/user/dashboard#orders');
 		}
@@ -137,17 +132,12 @@ const Favorites = () => {
 																'Deleted ' + item.data.name + ' from favorites',
 																{
 																	variant: 'success',
-																	anchorOrigin: {
-																		horizontal: 'center',
-																		vertical: 'top',
-																	},
-																	autoHideDuration: 2000,
 																}
 															);
 														}}
-														className='btn-outline p-1'
+														className='btn-ghost text-red-600 hover:text-white p-2'
 													>
-														<MdOutlineDeleteForever className='text-red-600 hover:text-white text-2xl lg:text-3xl' />
+														<MdOutlineDeleteForever className='text-2xl lg:text-3xl' />
 													</button>
 												</div>
 
@@ -173,11 +163,6 @@ const Favorites = () => {
 																		' to cart with quantity 1',
 																	{
 																		variant: 'success',
-																		anchorOrigin: {
-																			horizontal: 'center',
-																			vertical: 'top',
-																		},
-																		autoHideDuration: 2000,
 																	}
 																);
 															}

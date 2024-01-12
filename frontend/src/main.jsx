@@ -12,7 +12,17 @@ import { UserProvider } from './context/UserContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<BrowserRouter>
-		<SnackbarProvider>
+		<SnackbarProvider
+			maxSnack={3}
+			anchorOrigin={{
+				horizontal: 'center',
+				vertical: 'top',
+			}}
+			autoHideDuration={2000}
+			dense={true}
+			disableWindowBlurListener={true}
+			preventDuplicate={true}
+		>
 			<UserProvider>
 				<CartProvider>
 					<App />
