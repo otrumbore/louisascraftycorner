@@ -89,6 +89,10 @@ const userSchema = mongoose.Schema(
 			},
 			postalCode: String,
 		},
+		failedAttempts: {
+			type: Number,
+			default: 0,
+		},
 	},
 	{
 		timestamps: true,

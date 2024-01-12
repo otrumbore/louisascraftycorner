@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import getUsers from '../../../api/admin/users.api';
 import LoadingModal from '../../../components/LoadingModal';
-import ProductModal from './ProductModal';
+import productModal from './ProductModal';
 import DeleteModal from '../DeleteModal';
 import { MdAdd } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
-const Products = () => {
+const users = () => {
 	const [users, setUsers] = useState([]);
 	const [loading, setLoading] = useState(true);
 
@@ -15,15 +15,15 @@ const Products = () => {
 
 	const fetchUsers = async () => {
 		try {
-			const fetchedProducts = await getUsers(); // Await the asynchronous function
-			const filteredProducts = fetchedProducts.filter(
-				(product) => product.archived === false
+			const fetchedusers = await getUsers(); // Await the asynchronous function
+			const filteredusers = fetchedusers.filter(
+				(user) => user.archived === false
 			);
-			setUsers(fetchedProducts);
+			setUsers(fetchedusers);
 
-			console.log(fetchedProducts);
+			console.log(fetchedusers);
 			setLoading(false); // Update loading state when data is fetched
-			//console.log(filteredProducts);
+			//console.log(filteredusers);
 		} catch (error) {
 			console.error(error);
 			setLoading(false); // Update loading state in case of error
@@ -45,11 +45,9 @@ const Products = () => {
 		{ text: '111111 - low inventory' },
 		{ text: '111112 - low inventory' },
 	];
-	// Calculate counts of active and inactive products
-	const activeCount = users.filter((product) => product.active === true).length;
-	const inactiveCount = users.filter(
-		(product) => product.active === false
-	).length;
+	// Calculate counts of active and inactive users
+	const activeCount = users.filter((user) => user.isActive === true).length;
+	const disabledCount = users.filter((user) => user.enabled === false).length;
 
 	return (
 		<>
@@ -57,76 +55,81 @@ const Products = () => {
 
 			<div className='mt-4 w-full'>
 				<div className='flex flex-col lg:flex-row lg:gap-4 lg:mb-4'>
-					<div className='lg:w-[52%] bg-yellow-400 p-4 text-black grid grid-cols-1 lg:grid-cols-2 flex-wrap justify-center rounded-md border-4 border-primary border-dashed'>
+					<div className='lg:w-[50%] bg-yellow-400 p-4 text-black grid grid-cols-1 lg:grid-cols-2 flex-wrap justify-center rounded-md border-4 border-primary border-dashed'>
 						{adminNotifications.map((item, i) => (
 							<p key={i}>{i + 1 + ': ' + item.text}</p>
 						))}
 					</div>
-					<div className='lg:w-[25%] lg:my-0 my-4 flex items-center justify-between p-4 border-4 border-primary border-dashed rounded-md'>
+					<div className='lg:w-[50%] lg:my-0 my-4 flex items-center justify-between p-4 border-4 border-primary border-dashed rounded-md'>
 						<p>Total: {users.length}</p>
 						<p>Active: {activeCount}</p>
-						<p>Inactive: {inactiveCount}</p>
-					</div>
-					<div className='hidden lg:flex lg:w-[25%] p-4 border-4 border-primary border-dashed items-center justify-end rounded-md'>
-						<Link to={'/admin/addproduct'} className='btn-outline px-0 py-0'>
-							<MdAdd className='text-5xl' />
-						</Link>
+						<p>Disabled: {disabledCount}</p>
 					</div>
 				</div>
 				<div className='w-full grid grid-cols-1 lg:grid-cols-2 gap-4'>
-					{users.map((product) => (
+					{users.map((user) => (
 						<div
-							key={product._id}
+							key={user._id}
 							className='w-full p-4 border-4 border-primary rounded-md space-y-2 cursor-pointer'
-							//onClick={}//openModal(product._id)}
+							//onClick={}//openModal(user._id)}
 						>
 							<div className='w-full flex items-center justify-between'>
 								<p className='text-xs'>
-									<strong>Store ID:</strong> {product._id}
+									<strong>System ID:</strong> {user._id}
 								</p>
-								{product.sale > 0 && (
-									<p className='text-red-600 text-sm'>On Sale</p>
-								)}
 
 								<p className='hidden lg:block text-xs'>
-									<strong>System ID:</strong> {product._id}
+									<strong>Enabled: </strong>
+									{user.enabled ? 'Yes' : 'No'}
 								</p>
 							</div>
-							<div className='flex flex-row lg:items-center justify-between'>
+							<div className='flex flex-col gap-2'>
 								<p
 									className='flex-wrap'
 									onClick={() => {
-										//ProductModal(product);
+										//userModal(user);
 									}}
 								>
-									{product.name} - {product.type}
+									<strong>Name: </strong>
+									{user.name}
 								</p>
-								<div className='flex flex-wrap lg:items-center gap-2'>
-									<p className={`${product.sale > 0 && 'line-through'}`}>
-										${product.price}
-									</p>
-									{product.sale > 0 && (
-										<p className='text-red-600'>${product.sale}</p>
-									)}
-								</div>
+								<p>
+									<strong>Username: </strong>
+									{user.username}
+								</p>
+								<p>
+									<strong>Email: </strong>
+									{user.email}
+								</p>
 							</div>
 							<div className='flex justify-between items-center'>
-								<p>Inventory: {product.inventory}</p>
-								<p>{product.rating}/5</p>
+								<p>
+									<strong>Email Validated: </strong>
+									{user.emailValidated ? 'Yes' : 'No'}
+								</p>
+								<p>
+									<strong>Email Marketing: </strong>
+									{user.emailMarketing ? 'Yes' : 'No'}
+								</p>
 							</div>
 							<div className='flex items-center justify-between'>
-								<p className='text-xs'>
-									<strong>Last Update:</strong> {product.updatedAt}
+								<p>
+									<strong>Role: </strong>
+									{user.role}
 								</p>
-								{product.active ? (
-									<p className='text-green-600'>Active</p>
+								{user.isActive ? (
+									<p className='text-green-600'>Online</p>
 								) : (
-									<p className='text-orange-500'>Inactive</p>
+									<p className='text-orange-500'>Offline</p>
 								)}
 							</div>
-							{/* {showModal === product._id && (
-								<ProductModal product={product} onClose={closeModal} />
+							{/* {showModal === user._id && (
+								<userModal user={user} onClose={closeModal} />
 							)} */}
+							<p className='text-xs'>
+								<strong>Last Activity: </strong>
+								{user.lastActivity}
+							</p>
 						</div>
 					))}
 				</div>
@@ -135,4 +138,4 @@ const Products = () => {
 	);
 };
 
-export default Products;
+export default users;

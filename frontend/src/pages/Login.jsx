@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack';
 import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie'; // Import the js-cookie library
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
+import { MdClose } from 'react-icons/md';
 import { LOCALIP } from '../config';
 
 const Login = () => {
@@ -70,56 +71,80 @@ const Login = () => {
 	const fetchUserData = async () => {
 		try {
 			const token = Cookies.get('token');
-			if (token) {
-				const res = await axios.get(`http://${LOCALIP}:5555/user/getUser`, {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				});
+			if (!token) {
+				enqueueSnackbar('No token', { variant: 'error' });
+				return;
+			}
 
-				if (!res.data.enabled || !res.data.emailValidated) {
-					sendActivityStatus(false);
-					// Clear the token cookie using js-cookie
-					if (token) {
-						Cookies.remove('token');
-					}
+			const res = await axios.get(`http://${LOCALIP}:5555/user/getUser`, {
+				headers: { Authorization: `Bearer ${token}` },
+			});
 
-					//clear userDetails context
-					addUserDetails({});
-					setUserFavorites([]);
+			if (!res.data.enabled || !res.data.emailValidated) {
+				sendActivityStatus(false);
 
-					if (!res.data.enabled) {
-						enqueueSnackbar('Username ' + res.data.username + ' is disbaled.', {
-							variant: 'info',
-						});
-					}
+				// Clear the token cookie using js-cookie
+				Cookies.remove('token');
 
-					if (!res.data.emailValidated) {
-						enqueueSnackbar(res.data.username + ' has not validated email', {
-							variant: 'info',
-						});
-					}
+				// Clear userDetails context
+				addUserDetails({});
+				setUserFavorites([]);
 
+				if (res.data.failedAttempts >= 3) {
+					enqueueSnackbar(
+						`${res.data.username} has been locked. Too many failed attempts.`,
+						{
+							variant: 'warning',
+						}
+					);
 					return;
 				}
 
-				getUserDetails();
-				sendActivityStatus(true);
-				enqueueSnackbar('Logged in as ' + res.data.username, {
-					variant: 'success',
-				});
-				navigate('/user/dashboard');
-			} else {
-				enqueueSnackbar('No token', {
-					variant: 'error',
-				});
+				if (!res.data.enabled) {
+					enqueueSnackbar(`Username ${res.data.username} is disabled.`, {
+						variant: 'info',
+					});
+					return;
+				}
+
+				if (!res.data.emailValidated) {
+					enqueueSnackbar(`${res.data.username} has not validated email`, {
+						variant: 'info',
+					});
+					return;
+				}
+
+				return;
 			}
+
+			getUserDetails();
+			sendActivityStatus(true);
+			enqueueSnackbar(`Logged in as ${res.data.username}`, {
+				variant: 'success',
+			});
+			navigate('/user/dashboard');
 		} catch (error) {
 			console.error('User data fetch error:', error.message);
-			enqueueSnackbar('Failed to fetch user data', {
-				variant: 'error',
-			});
+			enqueueSnackbar('Failed to fetch user data', { variant: 'error' });
 		}
+	};
+
+	const validateInputs = () => {
+		if (
+			!new RegExp(usernamePattern).test(username) ||
+			!new RegExp(passwordPattern).test(password)
+		) {
+			!username.match(new RegExp(usernamePattern)) &&
+				setLoginError(
+					'Username must be alphanumeric with optional period, underscore, hyphen, and exclamation mark.'
+				);
+			!password.match(new RegExp(passwordPattern)) &&
+				setLoginError(
+					'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character, and be at least 8 characters long.'
+				);
+			return false;
+		}
+		return true;
 	};
 
 	const onSubmit = (e) => {
@@ -132,21 +157,8 @@ const Login = () => {
 			'^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()]).{8,}$'
 		);
 
-		if (
-			!username.match(new RegExp(usernamePattern)) ||
-			!password.match(new RegExp(passwordPattern))
-		) {
-			!username.match(new RegExp(usernamePattern)) &&
-				setLoginError(
-					'Username must be alphanumeric with optional period, underscore, hyphen, and exclamation mark.'
-				);
-			!password.match(new RegExp(passwordPattern)) &&
-				setLoginError(
-					'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character, and be at least 8 characters long.'
-				);
-		} else {
+		if (validateInputs()) {
 			setLoginError(''); // Clear the login error message if both fields meet the pattern requirements
-
 			// Proceed with login if validation passes
 			loginUser();
 		}
@@ -171,7 +183,7 @@ const Login = () => {
 						</div>
 					)}
 					<form onSubmit={onSubmit} className='mt-2 space-y-2'>
-						<div>
+						<div className='relative'>
 							<input
 								type='text'
 								className={`p-4 w-full text-lg bg-slate-50 border-4  focus:border-[6px] focus:border-[#0066b2] rounded-md shadow-md ${
@@ -186,8 +198,19 @@ const Login = () => {
 								required
 								minLength={4} // Example: Minimum length validation
 								maxLength={30} // Example: Maximum length validation
-								pattern='[a-zA-Z0-9._!-]+' // Example: Pattern validation
+								pattern='^[a-zA-Z0-9._!-]{4,30}$' // Example: Pattern validation
 							/>
+							{username && (
+								<button
+									type='button'
+									onClick={() => {
+										setFormData({ ...formData, username: '' });
+									}}
+									className='absolute right-4 top-1/2 transform -translate-y-1/2 focus:outline-none text-gray-500 z-[100]'
+								>
+									<MdClose size={25} />
+								</button>
+							)}
 						</div>
 						<div className='relative'>
 							<input
@@ -203,21 +226,33 @@ const Login = () => {
 								onChange={onChange}
 								required
 								minLength={8}
-								pattern='(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,}'
+								pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()]).{8,}$'
 								title='Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character, and be at least 8 characters long.'
 							/>
-							<button
-								type='button'
-								onClick={togglePasswordVisibility}
-								className='absolute right-6 top-1/2 transform -translate-y-1/2 focus:outline-none text-gray-500'
-							>
-								{password &&
-									(showPassword ? (
+							{password && (
+								<button
+									type='button'
+									onClick={togglePasswordVisibility}
+									className='absolute right-12 top-1/2 transform -translate-y-1/2 focus:outline-none text-gray-500'
+								>
+									{showPassword ? (
 										<FaRegEyeSlash size={22} />
 									) : (
 										<FaRegEye size={22} />
-									))}
-							</button>
+									)}
+								</button>
+							)}
+							{password && (
+								<button
+									type='button'
+									onClick={() => {
+										setFormData({ ...formData, password: '' });
+									}}
+									className='absolute right-4 top-1/2 transform -translate-y-1/2 focus:outline-none text-gray-500 z-[100]'
+								>
+									<MdClose size={25} />
+								</button>
+							)}
 						</div>
 						<div className='flex flex-col-reverse lg:flex-row w-full justify-between items-center'>
 							<button className='mt-4 pl-1 text-sm'>
