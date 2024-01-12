@@ -5,8 +5,11 @@ import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import { useLocation } from 'react-router-dom';
 import { LOCALIP } from '../config';
+import dotenv from 'dotenv';
 
 const Home = () => {
+	dotenv.config();
+	const API_URL = process.env.SERVER_API_URL;
 	const [newArrivals, setNewArrivals] = useState([]);
 	const [loading, setLoading] = useState(false);
 
@@ -15,7 +18,7 @@ const Home = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`http://${LOCALIP}:5555/products`)
+			.get(`${API_URL}/products`)
 			.then((response) => {
 				setNewArrivals(response.data.data);
 				//setLoading(false);
