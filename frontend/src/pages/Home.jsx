@@ -4,12 +4,10 @@ import LoadingModal from '../components/LoadingModal';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import { useLocation } from 'react-router-dom';
-import { LOCALIP } from '../config';
-import dotenv from 'dotenv';
 
 const Home = () => {
-	dotenv.config();
-	const API_URL = process.env.SERVER_API_URL;
+	const API_URL = import.meta.env.VITE_SERVER_API_URL;
+
 	const [newArrivals, setNewArrivals] = useState([]);
 	const [loading, setLoading] = useState(false);
 
@@ -22,6 +20,7 @@ const Home = () => {
 			.then((response) => {
 				setNewArrivals(response.data.data);
 				//setLoading(false);
+				//console.log(response.data.data);
 			})
 			.catch((error) => {
 				console.log(error);

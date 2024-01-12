@@ -58,7 +58,7 @@ const Shop = () => {
 								<input
 									className='w-6 h-6 lg:w-5 lg:h-5 text-secondary'
 									type='checkbox'
-									onChange=''
+									//onChange=''
 								/>
 								On Sale Only
 							</label>

@@ -1,9 +1,10 @@
 import axios from 'axios';
-import { LOCALIP } from '../config';
+
+const API_URL = import.meta.env.VITE_SERVER_API_URL;
 
 const getProducts = async () => {
 	try {
-		const response = await axios.get(`http://${LOCALIP}:5555/products`);
+		const response = await axios.get(`${API_URL}/api/products`);
 		return response.data.data;
 	} catch (error) {
 		console.log(error);
@@ -13,7 +14,7 @@ const getProducts = async () => {
 
 export const getProduct = async (id) => {
 	try {
-		const response = await axios.get(`http://${LOCALIP}:5555/products/${id}`);
+		const response = await axios.get(`${API_URL}/api/products/${id}`);
 		return response.data.data;
 	} catch (error) {
 		console.error(error);
@@ -23,7 +24,7 @@ export const getProduct = async (id) => {
 
 export const addProduct = async (data) => {
 	try {
-		const response = await axios.post(`http://${LOCALIP}:5555/products/`, data);
+		const response = await axios.post(`${API_URL}/api/products/`, data);
 		return response;
 	} catch (error) {
 		console.error(error);
@@ -33,10 +34,7 @@ export const addProduct = async (data) => {
 
 export const updateProduct = async (id, data) => {
 	try {
-		const response = await axios.put(
-			`http://${LOCALIP}:5555/products/${id}`,
-			data
-		);
+		const response = await axios.put(`${API_URL}/api/products/${id}`, data);
 		console.log(response);
 		return response;
 	} catch (error) {

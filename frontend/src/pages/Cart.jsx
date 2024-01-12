@@ -13,6 +13,7 @@ import { LOCALIP } from '../config';
 const Cart = () => {
 	const [loading, setLoading] = useState(false);
 	const { enqueueSnackbar } = useSnackbar();
+	const API_URL = import.meta.env.VITE_SERVER_API_URL;
 	//cart stuff
 	const {
 		cartItems,
@@ -40,7 +41,7 @@ const Cart = () => {
 	}, [userDetails, loggedIn]);
 
 	const checkout = async () => {
-		await fetch(`http://${LOCALIP}:5555/checkout`, {
+		await fetch(`${API_URL}/checkout`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

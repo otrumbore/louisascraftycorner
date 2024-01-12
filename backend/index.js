@@ -62,9 +62,9 @@ app.post('/checkout', async (req, res) => {
 app.get('/', (req, res) => {
 	res.status(234).send('Hello');
 });
-app.use('/products', productsRoute);
-app.use('/admin/site_settings', siteSettingsRoute);
-app.use('/user', usersRoute);
+app.use('/api/products', productsRoute);
+app.use('/api/admin/site_settings', siteSettingsRoute);
+app.use('/api/user', usersRoute);
 app.use('/api/user/favorites', userFavoritesRoute);
 
 mongoose

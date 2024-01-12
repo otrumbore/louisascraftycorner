@@ -9,12 +9,13 @@ import {
 import { useUser } from '../../context/UserContext';
 import axios from 'axios';
 import LoadingModal from '../../components/LoadingModal';
-import { LOCALIP } from '../../config';
+
 import SantaHat from '../../assets/product-img/santa-hat-ordiment.png';
 import { useSnackbar } from 'notistack';
 import { useCart } from '../../context/CartContext';
 
 const Favorites = () => {
+	const API_URL = import.meta.env.VITE_SERVER_API_URL;
 	const navigate = useNavigate();
 	const { userFavorites, userDetails, removeFromFavorites } = useUser();
 	const [favorites, setFavorites] = useState([]);
@@ -28,7 +29,7 @@ const Favorites = () => {
 			if (userDetails) {
 				const favoriteProductsPromises = userFavorites.map(async (item) => {
 					const favoriteProducts = await axios.get(
-						`http://${LOCALIP}:5555/api/user/favorites/product/${item.itemId}`
+						`${API_URL}/api/user/favorites/product/${item.itemId}`
 					);
 					return favoriteProducts.data;
 				});

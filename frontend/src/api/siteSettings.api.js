@@ -1,11 +1,10 @@
 import axios from 'axios';
-import { LOCALIP } from '../config';
+
+const API_URL = import.meta.env.VITE_SERVER_API_URL;
 
 const getSettings = async () => {
 	try {
-		const response = await axios.get(
-			`http://${LOCALIP}:5555/admin/site_settings`
-		);
+		const response = await axios.get(`${API_URL}/api/admin/site_settings`);
 		console.log(response.data.data[0]);
 		return response.data.data[0];
 	} catch (error) {
@@ -17,7 +16,7 @@ const getSettings = async () => {
 export const getSetting = async (id) => {
 	try {
 		const response = await axios.get(
-			`http://${LOCALIP}:5555/admin/site_settings/${id}`
+			`${API_URL}/api/admin/site_settings/${id}`
 		);
 		return response.data.data;
 	} catch (error) {
@@ -29,7 +28,7 @@ export const getSetting = async (id) => {
 export const updateSetting = async (id, data) => {
 	try {
 		const response = await axios.put(
-			`http://${LOCALIP}:5555/admin/site_settings/${id}`,
+			`${API_URL}/api/admin/site_settings/${id}`,
 			data
 		);
 		console.log(response);

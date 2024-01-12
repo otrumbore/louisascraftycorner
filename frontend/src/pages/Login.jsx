@@ -9,6 +9,8 @@ import { MdClose } from 'react-icons/md';
 import { LOCALIP } from '../config';
 
 const Login = () => {
+	const API_URL = import.meta.env.VITE_SERVER_API_URL;
+
 	const [formData, setFormData] = useState({
 		username: '',
 		password: '',
@@ -44,7 +46,7 @@ const Login = () => {
 
 	const loginUser = async () => {
 		try {
-			const res = await axios.post(`http://${LOCALIP}:5555/user/login`, {
+			const res = await axios.post(`${API_URL}/api/user/login`, {
 				username,
 				password,
 				lastActivity: new Date(),
@@ -76,7 +78,7 @@ const Login = () => {
 				return;
 			}
 
-			const res = await axios.get(`http://${LOCALIP}:5555/user/getUser`, {
+			const res = await axios.get(`${API_URL}/api/user/getUser`, {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 

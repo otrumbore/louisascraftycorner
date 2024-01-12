@@ -3,7 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useSnackbar } from 'notistack';
 import LoadingModal from '../components/LoadingModal';
-import { LOCALIP } from '../config';
+
 import { useNavigate } from 'react-router-dom';
 
 const UserContext = createContext();
@@ -15,6 +15,8 @@ export function UserProvider({ children }) {
 	const { enqueueSnackbar } = useSnackbar();
 	const [loading, setLoading] = useState(false);
 	const [userIsActive, setUserIsActive] = useState(true);
+
+	const API_URL = import.meta.env.VITE_SERVER_API_URL;
 
 	let inactivityTimer;
 
@@ -36,7 +38,7 @@ export function UserProvider({ children }) {
 			if (token) {
 				try {
 					const userDetailsResponse = await axios.get(
-						`http://${LOCALIP}:5555/user/getUser`,
+						`${API_URL}/api/user/getUser`,
 						{
 							headers: {
 								Authorization: `Bearer ${token}`,
@@ -89,7 +91,7 @@ export function UserProvider({ children }) {
 			const token = Cookies.get('token');
 			if (token) {
 				const favoritesResponse = await axios.get(
-					`http://${LOCALIP}:5555/api/user/favorites/${userDetails._id}`,
+					`${API_URL}/api/user/favorites/${userDetails._id}`,
 					{
 						headers: {
 							Authorization: `Bearer ${token}`,
@@ -124,7 +126,7 @@ export function UserProvider({ children }) {
 			};
 			axios
 				.put(
-					`http://${LOCALIP}:5555/user/updateUser/${userDetails._id}`,
+					`${API_URL}/api/user/updateUser/${userDetails._id}`,
 					activityData,
 					config
 				)
@@ -227,7 +229,7 @@ export function UserProvider({ children }) {
 
 			// Send the updated userFavorites to the server by userId
 			const favoritesResponse = await axios.put(
-				`http://${LOCALIP}:5555/api/user/favorites/${userDetails._id}`,
+				`${API_URL}/api/user/favorites/${userDetails._id}`,
 				dataToSend,
 				{
 					headers: {
@@ -269,7 +271,7 @@ export function UserProvider({ children }) {
 			// Send the updated userFavorites to the server by userId
 			// For example:
 			const favoritesResponse = await axios.put(
-				`http://${LOCALIP}:5555/api/user/favorites/${userDetails._id}`,
+				`${API_URL}/api/user/favorites/${userDetails._id}`,
 				dataToSend,
 				{
 					headers: {

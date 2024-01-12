@@ -1,10 +1,11 @@
 import axios from 'axios';
-import { LOCALIP } from '../../config';
+
+const API_URL = import.meta.env.VITE_SERVER_API_URL;
 
 //sending error logs to the db for error handling and debugging
 const sendErrorLog = async () => {
 	try {
-		const response = await axios.get(`http://${LOCALIP}:5555/user/getUsers`);
+		const response = await axios.get(`${API_URL}/api/user/getUsers`);
 		return response.data.data;
 	} catch (error) {
 		console.log(error);
