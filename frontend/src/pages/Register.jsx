@@ -44,8 +44,13 @@ const Register = () => {
 				return;
 			}
 
+			const passwordPattern =
+				/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()]).{8,}$/;
 			if (confirmPassword !== password) {
-				setRegisterError('Passwords do not match!');
+				if (!passwordPattern.test(password)) {
+					setRegisterError('Passwords do not match!');
+				}
+
 				window.scroll(0, 0);
 				return;
 			}
