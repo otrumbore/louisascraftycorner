@@ -33,7 +33,8 @@ const Home = () => {
 
 	useEffect(() => {
 		console.log(newArrivals);
-		newArrivals.length > 0 && setLoading(false);
+		//newArrivals.length > 0 && setLoading(false);
+		setLoading(false);
 	}, [newArrivals]);
 
 	return (
@@ -49,7 +50,7 @@ const Home = () => {
 						</h3>
 						{/* <p>Newest Christmas Products:</p> */}
 						<div className='mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8 w-[90%]'>
-							{/* <ProductCard numProducts={3} products={newArrivals} /> */}
+							<ProductCard numProducts={3} products={newArrivals} />
 						</div>
 					</div>
 				</div>
