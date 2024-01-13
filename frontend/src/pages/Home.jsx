@@ -38,7 +38,7 @@ const Home = () => {
 
 	return (
 		<div>
-			{loading && <LoadingModal loading={loading} />}
+			<LoadingModal loading={loading} />
 			<Hero />
 			<div className='w-full p-4 flex justify-center'>
 				<div className='w-full max-w-[1400px] flex'>

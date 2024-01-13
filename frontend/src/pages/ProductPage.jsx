@@ -64,9 +64,12 @@ const ProductPage = () => {
 			.get(`${API_URL}/api/products/${id}`)
 			.then((response) => {
 				setProduct(response.data.data);
-				const imageArrayBuffer = response.data.data.image.data;
-				const base64ImageData = arrayBufferToBase64(imageArrayBuffer);
-				setBase64ImageData(base64ImageData);
+				//console.log(response.data.data);
+				if (response.data.data.image?.data !== undefined) {
+					const imageArrayBuffer = response.data.data.image.data;
+					const base64ImageData = arrayBufferToBase64(imageArrayBuffer);
+					setBase64ImageData(base64ImageData);
+				}
 			})
 			.catch((error) => {
 				console.log(error);
