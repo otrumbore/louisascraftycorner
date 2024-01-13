@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import LoadingModal from '../../components/LoadingModal';
-import { LOCALIP } from '../../config';
 import Cookies from 'js-cookie';
 import { useUser } from '../../context/UserContext';
 import getSettings from '../../api/siteSettings.api';
@@ -43,7 +42,7 @@ const SiteSettings = () => {
 
 		//checkUser();
 		axios
-			.get(`http://${LOCALIP}:5555/admin/site_settings/`)
+			.get(`http://10.0.0.85:5555/admin/site_settings/`)
 			.then((response) => {
 				setWebsiteBanner(response.data?.data[0]?.website_banner);
 				console.log(response.data);
@@ -80,7 +79,7 @@ const SiteSettings = () => {
 		setLoading(true);
 		console.log('sending data: ', data);
 		axios
-			.put(`http://${LOCALIP}:5555/admin/site_settings/${id}`, data)
+			.put(`http://10.0.0.85:5555/admin/site_settings/${id}`, data)
 			.then(() => {
 				setLoading(false);
 				enqueueSnackbar('Settings updated', {

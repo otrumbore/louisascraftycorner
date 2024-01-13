@@ -36,6 +36,14 @@ router.post('/', upload.single('image'), async (request, response) => {
 			active,
 			archived,
 		} = request.body;
+
+		// Compress the uploaded image using sharp
+		const compressedImage = await sharp(request.file.buffer)
+			.rotate() // Automatically rotate based on EXIF orientation
+			.resize({ width: 1200 }) // Set the desired width
+			.jpeg({ quality: 80 }) // Set the desired JPEG quality (0-100)
+			.toBuffer();
+
 		const newProduct = await Product.create({
 			name,
 			description,
@@ -46,7 +54,7 @@ router.post('/', upload.single('image'), async (request, response) => {
 			rating,
 			tags,
 			inventory,
-			image: request.file.buffer,
+			image: compressedImage,
 			active,
 			archived,
 		});
@@ -61,11 +69,27 @@ router.post('/', upload.single('image'), async (request, response) => {
 
 // Get all products
 router.get('/', async (request, response) => {
+	// try {
+	// 	const products = await Product.find({});
+	// 	return response.status(200).json({
+	// 		count: products.length,
+	// 		data: products,
+	// 	});
+	// } catch (error) {
+	// 	console.error(error.message);
+	// 	response.status(500).send({ message: 'Server Error' });
+	// }
 	try {
 		const products = await Product.find({});
+
 		return response.status(200).json({
 			count: products.length,
-			data: products,
+			data: products.map((product) => ({
+				...product._doc,
+				image: product.image
+					? Buffer.from(product.image).toString('base64')
+					: null, // Convert binary to base64
+			})),
 		});
 	} catch (error) {
 		console.error(error.message);
@@ -75,6 +99,21 @@ router.get('/', async (request, response) => {
 
 // Get product by ID
 router.get('/:id', async (request, response) => {
+	// try {
+	// 	const { id } = request.params;
+	// 	const product = await Product.findById(id);
+
+	// 	if (!product) {
+	// 		return response.status(404).send({ message: 'Product not found' });
+	// 	}
+
+	// 	return response.status(200).json({
+	// 		data: product,
+	// 	});
+	// } catch (error) {
+	// 	console.error(error.message);
+	// 	response.status(500).send({ message: 'Server Error' });
+	// }
 	try {
 		const { id } = request.params;
 		const product = await Product.findById(id);
@@ -83,8 +122,19 @@ router.get('/:id', async (request, response) => {
 			return response.status(404).send({ message: 'Product not found' });
 		}
 
+		// Assuming 'image' is a Buffer field in your database
+		const imageBuffer = product.image;
+
+		// Check if imageBuffer is defined before converting to base64
+		const base64Image = imageBuffer
+			? Buffer.from(imageBuffer).toString('base64')
+			: null;
+
 		return response.status(200).json({
-			data: product,
+			data: {
+				...product._doc,
+				image: base64Image,
+			},
 		});
 	} catch (error) {
 		console.error(error.message);

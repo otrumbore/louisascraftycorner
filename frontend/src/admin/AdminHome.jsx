@@ -6,7 +6,7 @@ import { AiOutlineEdit } from 'react-icons/ai';
 import { BsInfoCircle } from 'react-icons/bs';
 import { MdOutlineAddBox, MdOutlineDelete } from 'react-icons/md';
 import ProductsTable from './components/dashboard/ProductsTable';
-import { LOCALIP } from '../config';
+//import { LOCALIP } from '../config';
 import { useUser } from '../context/UserContext';
 import Cookies from 'js-cookie';
 
@@ -16,6 +16,8 @@ const AdminHome = () => {
 	const [showType, setShowType] = useState('table');
 	const navigate = useNavigate();
 	const { userDetails, isAdmin } = useUser();
+
+	const LOCALIP = '10.0.0.85';
 
 	useEffect(() => {
 		const checkUser = async () => {

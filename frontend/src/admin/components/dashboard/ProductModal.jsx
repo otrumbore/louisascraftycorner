@@ -154,7 +154,7 @@ const ProductModal = ({ product, onClose }) => {
 				<div className='flex w-full mt-4 justify-between items-center'>
 					<button
 						onClick={() => {
-							const data = { archived: !product.archived };
+							const data = { archived: !product.archived, active: false };
 							toggleArchived(data);
 						}} // Wrap the function call in an arrow function
 						className='btn bg-red-600 hover:bg-red-700 text-white'

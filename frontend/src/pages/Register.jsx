@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios'; // Import Axios
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { LOCALIP } from '../config';
 
 const Register = () => {
+	const API_URL = import.meta.env.VITE_SERVER_API_URL;
+
 	const [formData, setFormData] = useState({
 		name: '',
 		username: '',
@@ -54,10 +55,7 @@ const Register = () => {
 			};
 
 			// Make a POST request to your backend API
-			const res = await axios.post(
-				`http://${LOCALIP}:5555/user/register`,
-				newUser
-			);
+			const res = await axios.post(`http://${API_URL}/user/register`, newUser);
 
 			enqueueSnackbar(
 				'Welcome ' + name + ', Please confirm your email to login!',

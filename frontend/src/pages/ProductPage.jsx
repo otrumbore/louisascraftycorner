@@ -18,7 +18,6 @@ import {
 import { MdAddShoppingCart } from 'react-icons/md';
 import { useSnackbar } from 'notistack';
 import ProductCard from '../components/ProductCard';
-import { LOCALIP } from '../config';
 import { useCart } from '../context/CartContext';
 import { useUser } from '../context/UserContext';
 
@@ -65,10 +64,11 @@ const ProductPage = () => {
 			.then((response) => {
 				setProduct(response.data.data);
 				//console.log(response.data.data);
-				if (response.data.data.image?.data !== undefined) {
-					const imageArrayBuffer = response.data.data.image.data;
-					const base64ImageData = arrayBufferToBase64(imageArrayBuffer);
-					setBase64ImageData(base64ImageData);
+				if (response.data.data.image !== undefined) {
+					// const imageArrayBuffer = response.data.data.image.data;
+					// const base64ImageData = arrayBufferToBase64(imageArrayBuffer);
+					setBase64ImageData(response.data.data.image);
+					//console.log(response.data.data.image);
 				}
 			})
 			.catch((error) => {

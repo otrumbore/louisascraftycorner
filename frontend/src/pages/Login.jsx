@@ -6,7 +6,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie'; // Import the js-cookie library
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
-import { LOCALIP } from '../config';
 
 const Login = () => {
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;

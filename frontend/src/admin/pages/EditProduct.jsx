@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import LoadingModal from '../../components/LoadingModal';
-import { LOCALIP } from '../../config';
 import { getProduct, updateProduct } from '../../api/products.api';
 
 const EditProduct = () => {

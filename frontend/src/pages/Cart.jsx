@@ -8,7 +8,6 @@ import { MdOutlineDeleteForever, MdEdit } from 'react-icons/md';
 import { FaRegHeart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { LOCALIP } from '../config';
 
 const Cart = () => {
 	const [loading, setLoading] = useState(false);
