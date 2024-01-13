@@ -31,6 +31,7 @@ const Register = () => {
 			if (!name || !username || !email || !password || !confirmPassword) {
 				// Handle empty field(s) - you can show an error message to the user
 				setRegisterError('Please fill in all fields!');
+				window.scroll(0, 0);
 				console.error('Please fill in all fields');
 				return;
 			}
@@ -39,11 +40,13 @@ const Register = () => {
 			const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 			if (!emailPattern.test(email)) {
 				setRegisterError('Please enter a valid email address!');
+				window.scroll(0, 0);
 				return;
 			}
 
 			if (confirmPassword !== password) {
 				setRegisterError('Passwords do not match!');
+				window.scroll(0, 0);
 				return;
 			}
 
@@ -55,7 +58,7 @@ const Register = () => {
 			};
 
 			// Make a POST request to your backend API
-			const res = await axios.post(`http://${API_URL}/user/register`, newUser);
+			const res = await axios.post(`${API_URL}/api/user/register`, newUser);
 
 			enqueueSnackbar(
 				'Welcome ' + name + ', Please confirm your email to login!',

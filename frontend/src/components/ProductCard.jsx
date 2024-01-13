@@ -100,12 +100,17 @@ const ProductCard = ({
 						>
 							<img
 								alt={item.name + ' image'}
+								// src={
+								// 	item.img === '' || item.img === undefined
+								// 		? DefaultProductImg
+								// 		: item.img === 'santaHat'
+								// 		? SantaHat
+								// 		: item.img
+								// }
 								src={
-									item.img === '' || item.img === undefined
-										? DefaultProductImg
-										: item.img === 'santaHat'
-										? SantaHat
-										: item.img
+									item.image
+										? 'data:image/jpeg;base64,' + item.image
+										: DefaultProductImg
 								}
 								className='object-cover min-h-full min-w-full'
 							/>

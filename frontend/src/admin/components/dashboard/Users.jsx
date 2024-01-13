@@ -102,7 +102,7 @@ const users = () => {
 									{user.email}
 								</p>
 							</div>
-							<div className='flex justify-between items-center'>
+							<div className='flex flex-col lg:flex-row lg:justify-between lg:tems-center'>
 								<p>
 									<strong>Email Validated: </strong>
 									{user.emailValidated ? 'Yes' : 'No'}
@@ -117,11 +117,14 @@ const users = () => {
 									<strong>Role: </strong>
 									{user.role}
 								</p>
-								{user.isActive ? (
-									<p className='text-green-600'>Online</p>
-								) : (
-									<p className='text-orange-500'>Offline</p>
-								)}
+								<div className='flex'>
+									{user.isActive ? (
+										<p className='text-green-600'>Online</p>
+									) : (
+										<p className='text-orange-500'>Offline</p>
+									)}
+									<p> (Maybe 😉)</p>
+								</div>
 							</div>
 							{/* {showModal === user._id && (
 								<userModal user={user} onClose={closeModal} />
@@ -130,6 +133,19 @@ const users = () => {
 								<strong>Last Activity: </strong>
 								{user.lastActivity}
 							</p>
+							<div className='flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-center'>
+								<button
+									className={`btn ${
+										user.enabled
+											? 'bg-red-600 hover:bg-red-700'
+											: 'bg-green-600 hover:bg-green-700'
+									} `}
+								>
+									Disable
+								</button>
+								<button className='btn'>Testing</button>
+								<button className='btn-outline'>Lock Account</button>
+							</div>
 						</div>
 					))}
 				</div>

@@ -120,7 +120,7 @@ const Login = () => {
 
 			getUserDetails();
 			sendActivityStatus(true);
-			enqueueSnackbar(`Logged in as ${res.data.username}`, {
+			enqueueSnackbar(`Welcome back, ${res.data.username}`, {
 				variant: 'success',
 			});
 			navigate('/user/dashboard');

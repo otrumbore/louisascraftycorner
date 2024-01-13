@@ -83,6 +83,21 @@ router.get('/:id', verifyToken, async (request, response) => {
 //Get favorite products
 // Get product by ID
 router.get('/product/:id', async (request, response) => {
+	// try {
+	// 	const { id } = request.params;
+	// 	const product = await Product.findOne({ storeId: id });
+
+	// 	if (!product) {
+	// 		return response.status(404).send({ message: 'Product not found' });
+	// 	}
+
+	// 	return response.status(200).json({
+	// 		data: product,
+	// 	});
+	// } catch (error) {
+	// 	console.error(error.message);
+	// 	response.status(500).send({ message: 'Server Error' });
+	// }
 	try {
 		const { id } = request.params;
 		const product = await Product.findOne({ storeId: id });
@@ -91,8 +106,19 @@ router.get('/product/:id', async (request, response) => {
 			return response.status(404).send({ message: 'Product not found' });
 		}
 
+		// Assuming 'image' is a Buffer field in your database
+		const imageBuffer = product.image;
+
+		// Check if imageBuffer is defined before converting to base64
+		const base64Image = imageBuffer
+			? Buffer.from(imageBuffer).toString('base64')
+			: null;
+
 		return response.status(200).json({
-			data: product,
+			data: {
+				...product._doc,
+				image: base64Image,
+			},
 		});
 	} catch (error) {
 		console.error(error.message);

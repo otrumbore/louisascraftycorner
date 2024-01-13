@@ -151,7 +151,7 @@ const ProductModal = ({ product, onClose }) => {
 					<p>{product.tags}</p>
 				</div>
 
-				<div className='flex w-full mt-4 justify-between items-center'>
+				<div className='flex flex-col gap-4 lg:flex-row w-full mt-4 justify-between items-center'>
 					<button
 						onClick={() => {
 							const data = { archived: !product.archived, active: false };
@@ -159,7 +159,7 @@ const ProductModal = ({ product, onClose }) => {
 						}} // Wrap the function call in an arrow function
 						className='btn bg-red-600 hover:bg-red-700 text-white'
 					>
-						Archive Product?
+						Delete Product?
 					</button>
 					<button
 						onClick={() => {

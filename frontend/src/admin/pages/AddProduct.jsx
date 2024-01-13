@@ -128,32 +128,50 @@ const AddProduct = () => {
 					/>
 				</div>
 				<div className='my-4'>
-					<label className='text-xl mr-4 text-gray-500'>Price</label>
-					<input
-						type='text'
-						value={price}
-						onChange={(e) => setPrice(e.target.value)}
-						className='border-2 border-gray-500 px-4 py-2 w-full'
-					/>
+					<div className='flex'>
+						<label className='w-full text-xl text-gray-500'>Price</label>
+						<label className='ml-4 w-full text-xl text-gray-500'>
+							Stock Available
+						</label>
+					</div>
+					<div className='flex gap-4'>
+						<input
+							type='text'
+							value={price}
+							onChange={(e) => setPrice(e.target.value)}
+							className='border-2 border-gray-500 px-4 py-2 w-full'
+						/>
+						<input
+							type='text'
+							value={inventory}
+							onChange={(e) => setInventory(e.target.value)}
+							className='border-2 border-gray-500 px-4 py-2 w-full'
+						/>
+					</div>
 				</div>
 				<div className='my-4'>
-					<label className='text-xl mr-4 text-gray-500'>Type</label>
-					<input
-						type='text'
-						value={type}
-						onChange={(e) => setType(e.target.value)}
-						className='border-2 border-gray-500 px-4 py-2 w-full'
-					/>
+					<div className='flex'>
+						<label className='text-xl w-full text-gray-500'>Type</label>
+						<label className='ml-4 text-xl w-full text-gray-500'>
+							Collection
+						</label>
+					</div>
+					<div className='flex gap-4'>
+						<input
+							type='text'
+							value={type}
+							onChange={(e) => setType(e.target.value)}
+							className='border-2 border-gray-500 px-4 py-2 w-full'
+						/>
+						<input
+							type='text'
+							value={category}
+							onChange={(e) => setCategory(e.target.value)}
+							className='border-2 border-gray-500 px-4 py-2 w-full'
+						/>
+					</div>
 				</div>
-				<div className='my-4'>
-					<label className='text-xl mr-4 text-gray-500'>Collection</label>
-					<input
-						type='text'
-						value={category}
-						onChange={(e) => setCategory(e.target.value)}
-						className='border-2 border-gray-500 px-4 py-2 w-full'
-					/>
-				</div>
+
 				<div className='my-4'>
 					<label className='text-xl mr-4 text-gray-500'>
 						Tags (separate with commas)
@@ -166,15 +184,6 @@ const AddProduct = () => {
 					/>
 				</div>
 				<div className='my-4'>
-					<label className='text-xl mr-4 text-gray-500'>Stock Available</label>
-					<input
-						type='text'
-						value={inventory}
-						onChange={(e) => setInventory(e.target.value)}
-						className='border-2 border-gray-500 px-4 py-2 w-full'
-					/>
-				</div>
-				<div className='my-4'>
 					<label className='text-xl mr-4 text-gray-500'>Image</label>
 					<input
 						type='file'
@@ -183,13 +192,15 @@ const AddProduct = () => {
 						onChange={handleImageChange}
 						className='border-2 border-gray-500 px-4 py-2 w-full'
 					/>
-					{image && (
-						<img
-							src={URL.createObjectURL(image)}
-							alt='Selected Preview'
-							style={{ maxWidth: '100%', marginTop: '8px' }}
-						/>
-					)}
+					<div className='flex justify-center'>
+						{image && (
+							<img
+								src={URL.createObjectURL(image)}
+								alt='Selected Preview'
+								style={{ maxWidth: '50%', marginTop: '8px' }}
+							/>
+						)}
+					</div>
 				</div>
 				<button className='p-2 bg-sky-300 m-8' onClick={handleAddProduct}>
 					Save
