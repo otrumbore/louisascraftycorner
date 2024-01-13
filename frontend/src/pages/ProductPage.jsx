@@ -192,7 +192,11 @@ const ProductPage = () => {
 								// 		? SantaHat
 								// 		: product.img
 								// }
-								src={'data:image/jpeg;base64,' + base64ImageData}
+								src={
+									base64ImageData
+										? 'data:image/jpeg;base64,' + base64ImageData
+										: DefaultProductImg
+								}
 								alt={product.name + ' image'}
 								className='h-full w-fit object-cover rounded-2xl shadow-2xl shadow-gray-400 lg:hover:scale-110'
 							/>
