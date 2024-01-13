@@ -3,17 +3,23 @@ import ProductCard from '../components/ProductCard';
 import getProducts from '../api/products.api.js';
 import { MdCheckBox } from 'react-icons/md';
 import getSettings from '../api/siteSettings.api.js';
+import LoadingModal from '../components/LoadingModal.jsx';
 
 const Shop = () => {
 	const [products, setProducts] = useState([]);
 	const [collections, setCollections] = useState([]);
+	const [loading, setLoading] = useState(false);
 
 	const fetchData = async () => {
+		setLoading(true);
 		try {
 			const fetchedProducts = await getProducts();
 			setProducts(fetchedProducts);
 		} catch (error) {
 			console.error('Error fetching products:', error);
+			setLoading(false);
+		} finally {
+			setLoading(false);
 		}
 	};
 	const fetchSettings = async () => {
@@ -23,6 +29,7 @@ const Shop = () => {
 			//console.log(fetchedSettings);
 		} catch (error) {
 			console.error('Error fetching products:', error);
+			setLoading(false);
 		}
 	};
 
@@ -34,6 +41,7 @@ const Shop = () => {
 
 	return (
 		<div className='p-4 mt-[8rem] w-full flex justify-center'>
+			<LoadingModal loading={loading} />
 			<div className='w-full max-w-[1800px]'>
 				<div className='flex flex-col justify-center items-center'>
 					<h3 className='text-3xl lg:text-4xl'>Our Products</h3>
@@ -69,7 +77,7 @@ const Shop = () => {
 						</div>
 					</div>
 					<div className='mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-[90%]'>
-						<ProductCard products={products} numProducts={10} />
+						<ProductCard products={products} numProducts={20} />
 					</div>
 				</div>
 			</div>

@@ -72,9 +72,8 @@ const productSchema = mongoose.Schema(
 				message: 'Inventory must be a positive number',
 			},
 		},
-		img: {
-			type: String,
-			default: 'default-product.png',
+		image: {
+			type: Buffer,
 		},
 		active: {
 			type: Boolean,

@@ -33,7 +33,11 @@ const ProductPage = () => {
 	const navigate = useNavigate();
 	const { enqueueSnackbar } = useSnackbar();
 
+	let imgArray = '';
+
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
+
+	const [base64ImageData, setBase64ImageData] = useState('');
 
 	const [selectedProduct, setSelectedProduct] = useState({});
 
@@ -60,6 +64,9 @@ const ProductPage = () => {
 			.get(`${API_URL}/api/products/${id}`)
 			.then((response) => {
 				setProduct(response.data.data);
+				const imageArrayBuffer = response.data.data.image.data;
+				const base64ImageData = arrayBufferToBase64(imageArrayBuffer);
+				setBase64ImageData(base64ImageData);
 			})
 			.catch((error) => {
 				console.log(error);
@@ -69,6 +76,7 @@ const ProductPage = () => {
 				});
 				navigate('/');
 			});
+
 		axios
 			.get(`${API_URL}/api/products`)
 			.then((response) => {
@@ -87,12 +95,24 @@ const ProductPage = () => {
 	}, [id]);
 
 	useEffect(() => {
+		//console.log(product.image.data);
 		if (product !== null && relatedProducts !== null) {
 			setLoading(false);
 		}
 
 		//console.log(product);
 	}, [product, relatedProducts]);
+
+	// Function to convert ArrayBuffer to base64
+	function arrayBufferToBase64(buffer) {
+		let binary = '';
+		const bytes = new Uint8Array(buffer);
+		const len = bytes.byteLength;
+		for (let i = 0; i < len; i++) {
+			binary += String.fromCharCode(bytes[i]);
+		}
+		return btoa(binary);
+	}
 
 	useEffect(() => {
 		setLoading(true);
@@ -162,13 +182,14 @@ const ProductPage = () => {
 					<div className='w-full grid grid-cols-1 lg:grid-cols-2 max-w-[1400px] items-start justify-start'>
 						<div className='h-[500px] flex justify-center'>
 							<img
-								src={
-									product.img === '' || product.img === undefined
-										? DefaultProductImg
-										: product.img === 'santaHat'
-										? SantaHat
-										: product.img
-								}
+								// src={
+								// 	product.img === '' || product.img === undefined
+								// 		? DefaultProductImg
+								// 		: product.img === 'santaHat'
+								// 		? SantaHat
+								// 		: product.img
+								// }
+								src={'data:image/jpeg;base64,' + base64ImageData}
 								alt={product.name + ' image'}
 								className='h-full w-fit object-cover rounded-2xl shadow-2xl shadow-gray-400 lg:hover:scale-110'
 							/>

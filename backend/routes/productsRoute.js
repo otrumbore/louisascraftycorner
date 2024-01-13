@@ -1,5 +1,8 @@
 import express from 'express';
 import { Product } from '../modals/productsModel.js';
+import multer from 'multer';
+import fs from 'fs';
+import sharp from 'sharp';
 
 const router = express.Router();
 
@@ -13,8 +16,11 @@ const router = express.Router();
 // 	}
 //   };
 
-// Creating a product
-router.post('/', async (request, response) => {
+// Set up Multer storage
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+router.post('/', upload.single('image'), async (request, response) => {
 	try {
 		const {
 			name,
@@ -26,11 +32,10 @@ router.post('/', async (request, response) => {
 			rating,
 			tags,
 			inventory,
-			img,
+			//image,
 			active,
 			archived,
 		} = request.body;
-
 		const newProduct = await Product.create({
 			name,
 			description,
@@ -41,11 +46,12 @@ router.post('/', async (request, response) => {
 			rating,
 			tags,
 			inventory,
-			img,
+			image: request.file.buffer,
 			active,
 			archived,
 		});
 
+		// Return the newly created product in the response
 		return response.status(201).send(newProduct);
 	} catch (error) {
 		console.error(error.message);

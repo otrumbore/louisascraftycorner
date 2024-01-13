@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BackButton from '../components/BackButton';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -9,13 +9,13 @@ import { addProduct } from '../../api/products.api';
 
 const AddProduct = () => {
 	const [name, setName] = useState('');
-	const [description, setDesciption] = useState('');
+	const [description, setDescription] = useState('');
 	const [price, setPrice] = useState('');
 	const [type, setType] = useState('');
 	const [category, setCategory] = useState('');
 	const [tags, setTags] = useState('handmade');
 	const [inventory, setInventory] = useState('');
-	const [img, setImg] = useState('');
+	const [image, setImage] = useState(null);
 	const [sale, setSale] = useState(0);
 	const [rating, setRating] = useState(0);
 	const active = false;
@@ -24,6 +24,30 @@ const AddProduct = () => {
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const { enqueueSnackbar } = useSnackbar();
+
+	const handleImageChange = (e) => {
+		const selectedImage = e.target.files[0];
+
+		// Check if an image is selected
+		if (selectedImage) {
+			// Check image type (optional)
+			if (selectedImage.type.startsWith('image/')) {
+				// Update the image state
+				setImage(selectedImage);
+			} else {
+				// Show an error message or provide feedback to the user
+				console.error('Invalid file type. Please choose an image file.');
+			}
+		}
+	};
+
+	useEffect(() => {
+		console.log(image);
+	}, [image]);
+
+	useEffect(() => {
+		window.scroll(0, 0);
+	}, []);
 
 	const handleAddProduct = async () => {
 		const data = {
@@ -36,20 +60,27 @@ const AddProduct = () => {
 			rating,
 			tags,
 			inventory,
-			img,
+			image: image,
 			active,
 			archived,
 		};
+
+		const formData = new FormData();
+		for (const key in data) {
+			formData.append(key, data[key]);
+		}
+
+		console.log('image log 2: ', image);
 		setLoading(true);
 		try {
-			const response = await addProduct(data); // Await the asynchronous function
-			console.log(response);
+			const response = await addProduct(formData); // Await the asynchronous function
 			if (response.status === 201 || response.status === 200) {
 				setLoading(false); // Update loading state when data is fetched
 				enqueueSnackbar(`Product ${data.name} added`, {
 					variant: 'success',
 					anchorOrigin: { horizontal: 'right', vertical: 'top' },
 				});
+				console.log(response);
 				navigate('/admin#products');
 			} else {
 				setLoading(false);
@@ -57,7 +88,7 @@ const AddProduct = () => {
 					variant: 'error',
 					anchorOrigin: { horizontal: 'right', vertical: 'top' },
 				});
-				console.log(error);
+				//console.log(error);
 			}
 
 			//console.log(fetchedProducts);
@@ -92,7 +123,7 @@ const AddProduct = () => {
 					<textarea
 						type='text'
 						value={description}
-						onChange={(e) => setDesciption(e.target.value)}
+						onChange={(e) => setDescription(e.target.value)}
 						className='border-2 border-gray-500 px-4 py-2 w-full resize-none'
 						rows={6}
 					/>
@@ -143,6 +174,23 @@ const AddProduct = () => {
 						onChange={(e) => setInventory(e.target.value)}
 						className='border-2 border-gray-500 px-4 py-2 w-full'
 					/>
+				</div>
+				<div className='my-4'>
+					<label className='text-xl mr-4 text-gray-500'>Image</label>
+					<input
+						type='file'
+						name='image'
+						accept='image/*'
+						onChange={handleImageChange}
+						className='border-2 border-gray-500 px-4 py-2 w-full'
+					/>
+					{image && (
+						<img
+							src={URL.createObjectURL(image)}
+							alt='Selected Preview'
+							style={{ maxWidth: '100%', marginTop: '8px' }}
+						/>
+					)}
 				</div>
 				<button className='p-2 bg-sky-300 m-8' onClick={handleAddProduct}>
 					Save
