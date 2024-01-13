@@ -39,41 +39,44 @@ const ProductCard = ({
 	useEffect(() => {
 		let filteredProducts = products;
 
-		if (filteredProducts && !userRole()) {
+		if (products && products.length > 0) {
+			if (filteredProducts && !userRole()) {
+				filteredProducts = filteredProducts.filter(
+					(item) => item.type !== 'test'
+				);
+			}
+
 			filteredProducts = filteredProducts.filter(
-				(item) => item.type !== 'test'
+				(product) => product.archived === false && product.active === true
 			);
-		}
 
-		filteredProducts = filteredProducts.filter(
-			(product) => product.archived === false && product.active === true
-		);
+			if (filterCategory && filterType) {
+				filteredProducts = products
+					.filter(
+						(item) =>
+							(filterCategory && item.category === filterCategory) ||
+							(filterType && item.type === filterType)
+					)
+					.filter((item) => item._id !== currProduct);
+			} else {
+				if (filterCategory) {
+					filteredProducts = filteredProducts.filter(
+						(item) =>
+							item.category === filterCategory && item._id !== currProduct
+					);
+				}
 
-		if (filterCategory && filterType) {
-			filteredProducts = products
-				.filter(
-					(item) =>
-						(filterCategory && item.category === filterCategory) ||
-						(filterType && item.type === filterType)
-				)
-				.filter((item) => item._id !== currProduct);
-		} else {
-			if (filterCategory) {
-				filteredProducts = filteredProducts.filter(
-					(item) => item.category === filterCategory && item._id !== currProduct
-				);
+				if (filterType) {
+					filteredProducts = filteredProducts.filter(
+						(item) => item.type === filterType && item._id !== currProduct
+					);
+				}
 			}
 
-			if (filterType) {
-				filteredProducts = filteredProducts.filter(
-					(item) => item.type === filterType && item._id !== currProduct
-				);
-			}
+			userDetails._id !== undefined ? setLoggedIn(true) : setLoggedIn(false);
+
+			setShowProducts(filteredProducts);
 		}
-
-		userDetails._id !== undefined ? setLoggedIn(true) : setLoggedIn(false);
-
-		setShowProducts(filteredProducts);
 	}, [products, filterCategory, filterType, currProduct]);
 
 	numProducts === undefined || numProducts === null ? (numProducts = 0) : '';

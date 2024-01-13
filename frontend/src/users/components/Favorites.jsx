@@ -27,6 +27,7 @@ const Favorites = () => {
 		setLoading(true);
 		try {
 			if (userDetails) {
+				console.log(userFavorites);
 				const favoriteProductsPromises = userFavorites.map(async (item) => {
 					const favoriteProducts = await axios.get(
 						`${API_URL}/api/user/favorites/product/${item.itemId}`
