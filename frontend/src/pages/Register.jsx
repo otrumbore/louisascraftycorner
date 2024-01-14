@@ -15,6 +15,8 @@ const Register = () => {
 		confirmPassword: '',
 	});
 
+	const [agreeTerms, setAgreeTerms] = useState(false);
+
 	const { name, username, email, password, confirmPassword } = formData;
 
 	const [registerError, setRegisterError] = useState('');
@@ -22,6 +24,10 @@ const Register = () => {
 
 	const onChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
+	};
+
+	const handleCheckboxChange = () => {
+		setAgreeTerms(!agreeTerms);
 	};
 
 	const onSubmit = async (e) => {
@@ -34,6 +40,12 @@ const Register = () => {
 				setRegisterError('Please fill in all fields!');
 				window.scroll(0, 0);
 				console.error('Please fill in all fields');
+				return;
+			}
+
+			if (!agreeTerms) {
+				setRegisterError('Must agree to Terms and Privacy Policy!');
+				window.scroll(0, 0);
 				return;
 			}
 
@@ -77,13 +89,14 @@ const Register = () => {
 				username: username.trim(),
 				email: email.trim(),
 				password: password.trim(),
+				enabled: true,
 			};
 
 			// Make a POST request to your backend API
 			const res = await axios.post(`${API_URL}/api/user/register`, newUser);
 
 			enqueueSnackbar(
-				'Welcome ' + name + ', Please confirm your email to login!',
+				'Welcome ' + name + ', please confirm your email to login!',
 				{
 					variant: 'success',
 				}
@@ -104,11 +117,6 @@ const Register = () => {
 			console.error('Registration error:', error.message);
 			enqueueSnackbar('Error: ' + error.message, {
 				variant: 'error',
-				anchorOrigin: {
-					horizontal: 'center',
-					vertical: 'top',
-				},
-				autoHideDuration: 10000,
 			});
 			// Handle error responses (show error message to the user, etc.)
 		}
@@ -124,7 +132,7 @@ const Register = () => {
 							{registerError}
 						</div>
 					)}
-					<form onSubmit={onSubmit} className='mt-2 space-y-2'>
+					<form onSubmit={onSubmit} className='flex flex-col gap-4 mt-2'>
 						<div>
 							<input
 								type='text'
@@ -183,10 +191,34 @@ const Register = () => {
 								minLength='6' // Set minimum length for the password
 							/>
 						</div>
+						<div className='flex w-full justify-center items-center'>
+							<input
+								type='checkbox'
+								id='agreeTerms'
+								name='agreeTerms'
+								checked={agreeTerms}
+								onChange={handleCheckboxChange}
+								className='mr-2'
+							/>
+							<label htmlFor='agreeTerms'>
+								I agree to the{' '}
+								<Link to='/info/terms' className='text-primary'>
+									Terms of Use
+								</Link>{' '}
+								and{' '}
+								<Link to='/info/privacy' className='text-primary'>
+									Privacy Policy
+								</Link>
+							</label>
+						</div>
+
 						<div className='flex justify-end'>
 							<button
 								type='submit'
-								className='mt-1 px-10 py-3 w-full lg:w-auto btn'
+								className={`${
+									!agreeTerms && 'opacity-50 cursor-not-allowed'
+								} mt-1 px-10 py-3 w-full lg:w-auto btn`}
+								disabled={!agreeTerms}
 							>
 								Register
 							</button>
@@ -194,8 +226,8 @@ const Register = () => {
 					</form>
 					<div className='mt-12 mb-20 flex flex-col lg:flex-row w-full justify-center items-center'>
 						<h4 className='mt-4 lg:pr-4 lg:mt-0'>Already have an account?</h4>
-						<Link className='w-full lg:w-auto' to='/login'>
-							<button className='w-full btn-outline'>Login</button>
+						<Link className='w-full lg:w-auto btn-outline' to='/login'>
+							Login
 						</Link>
 					</div>
 				</div>

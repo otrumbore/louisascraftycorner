@@ -13,7 +13,8 @@ const Products = ({ archived }) => {
 	const [showModal, setShowModal] = useState(null);
 	const [showDeleteModal, setShowDeleteModal] = useState(null);
 
-	const fetchProducts = async () => {
+	const fetchProducts = async (archived) => {
+		setLoading(true);
 		try {
 			const fetchedProducts = await getProducts(); // Await the asynchronous function
 			let filteredProducts = '';
@@ -40,6 +41,7 @@ const Products = ({ archived }) => {
 				</div>
 			);
 		}
+		setLoading(false);
 	};
 
 	const openModal = (productId) => {
@@ -47,8 +49,8 @@ const Products = ({ archived }) => {
 	};
 
 	const closeModal = () => {
+		fetchProducts(archived);
 		setShowModal(null);
-		fetchProducts();
 	};
 
 	const openDeleteModal = (productId) => {
@@ -60,8 +62,8 @@ const Products = ({ archived }) => {
 	};
 
 	useEffect(() => {
-		fetchProducts();
-	}, []);
+		fetchProducts(archived);
+	}, [archived, showModal]);
 
 	const adminNotifications = [
 		{ text: '111111 - low inventory' },
@@ -82,7 +84,11 @@ const Products = ({ archived }) => {
 			<LoadingModal loading={loading} />
 
 			<div className='mt-4 w-full'>
-				<div className='flex flex-col lg:flex-row lg:gap-4 lg:mb-4'>
+				<div
+					className={`${
+						archived && 'hidden'
+					} flex flex-col lg:flex-row lg:gap-4 lg:mb-4`}
+				>
 					<div className='lg:w-[52%] bg-yellow-400 p-4 text-black grid grid-cols-1 lg:grid-cols-2 flex-wrap justify-center rounded-md border-4 border-primary border-dashed'>
 						{adminNotifications.map((item, i) => (
 							<p key={i}>{i + 1 + ': ' + item.text}</p>
@@ -99,6 +105,11 @@ const Products = ({ archived }) => {
 						</Link>
 					</div>
 				</div>
+				{archived && (
+					<p className='w-full text-center text-xl'>
+						No products have been archived
+					</p>
+				)}
 				<div className='w-full grid grid-cols-1 lg:grid-cols-2 gap-4'>
 					{products.map((product) => (
 						<div

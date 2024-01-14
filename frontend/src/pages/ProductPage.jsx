@@ -341,7 +341,7 @@ const ProductPage = () => {
 							<span className=''>Related Products</span>
 						</h3>
 						{/* <p>Newest Christmas Products:</p> */}
-						<div className='mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8 w-[90%]'>
+						<div className='mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8 w-[100%]'>
 							<ProductCard
 								numProducts={3}
 								products={relatedProducts}

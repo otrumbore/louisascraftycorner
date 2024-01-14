@@ -30,22 +30,22 @@ const ProductModal = ({ product, onClose }) => {
 		product.active
 			? enqueueSnackbar(`${product.storeId} no longer active`, {
 					variant: 'success',
-					anchorOrigin: { horizontal: 'right', vertical: 'top' },
 			  })
 			: enqueueSnackbar(`${product.storeId} is now active`, {
 					variant: 'success',
-					anchorOrigin: { horizontal: 'right', vertical: 'top' },
 			  });
 		onClose();
 	};
 
 	const toggleArchived = (data) => {
 		updateProduct(product._id, data);
-		data.archived &&
-			enqueueSnackbar(`${product.storeId} is archived`, {
-				variant: 'success',
-				anchorOrigin: { horizontal: 'right', vertical: 'top' },
-			});
+		data.archived
+			? enqueueSnackbar(`${product.storeId} is deleted`, {
+					variant: 'success',
+			  })
+			: enqueueSnackbar(`${product.storeId} is recovered`, {
+					variant: 'success',
+			  });
 
 		onClose();
 	};
@@ -159,14 +159,14 @@ const ProductModal = ({ product, onClose }) => {
 						}} // Wrap the function call in an arrow function
 						className='btn bg-red-600 hover:bg-red-700 text-white'
 					>
-						Delete Product?
+						{product.archived ? 'Recover Product?' : 'Delete Product?'}
 					</button>
 					<button
 						onClick={() => {
 							const data = { active: !product.active };
 							toggleActive(data);
 						}} // Wrap the function call in an arrow function
-						className='btn-outline'
+						className={`${product.archived && 'hidden'} btn-outline`}
 					>
 						{product.active ? 'Make Inactive' : 'Make Active'}
 					</button>

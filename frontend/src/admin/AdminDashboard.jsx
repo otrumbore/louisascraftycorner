@@ -18,10 +18,12 @@ import Cookies from 'js-cookie';
 import { useUser } from '../context/UserContext';
 import Products from './components/dashboard/Products';
 import Users from './components/dashboard/Users';
+import LoadingModal from '../components/LoadingModal';
 
 const AdminDashboard = () => {
 	const { userRole } = useUser();
 	const navigate = useNavigate();
+	const [loading, setLoading] = useState(false);
 
 	const checkUser = () => {
 		try {
@@ -45,6 +47,7 @@ const AdminDashboard = () => {
 	const [dashView, setDashView] = useState('home');
 	return (
 		<div className='p-8 mt-[8rem] w-full'>
+			<LoadingModal loading={loading} />
 			<div className='flex flex-col lg:flex-row w-full items-center justify-between'>
 				<h2 className='text-2xl font-bold'>Admin Home</h2>
 				<div className='flex mt-8 lg:mt-0 gap-4 flex-wrap items-center justify-center'>
