@@ -4,9 +4,9 @@ import ProductModal from './ProductModal';
 import DeleteModal from '../DeleteModal';
 import { MdAdd } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import getProducts from '../../../api/Products.api';
+import { getProducts } from '../../../api/Products.api';
 
-const Products = () => {
+const Products = ({ archived }) => {
 	const [products, setProducts] = useState([]);
 	const [loading, setLoading] = useState(true);
 
@@ -16,9 +16,17 @@ const Products = () => {
 	const fetchProducts = async () => {
 		try {
 			const fetchedProducts = await getProducts(); // Await the asynchronous function
-			const filteredProducts = fetchedProducts.filter(
-				(product) => product.archived === false
-			);
+			let filteredProducts = '';
+			if (archived === false || !archived) {
+				filteredProducts = fetchedProducts.filter(
+					(product) => product.archived === false
+				);
+			} else {
+				filteredProducts = fetchedProducts.filter(
+					(product) => product.archived === true
+				);
+			}
+
 			setProducts(filteredProducts);
 			setLoading(false); // Update loading state when data is fetched
 			//console.log(filteredProducts);

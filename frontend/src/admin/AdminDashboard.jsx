@@ -94,7 +94,7 @@ const AdminDashboard = () => {
 					</button>
 					<button
 						onClick={() => {
-							setDashView('home');
+							setDashView('archived');
 						}}
 						className={`${userRole() > 2 ? 'block' : 'hidden'} ${
 							dashView === 'errorLogs' ? 'btn' : 'btn-outline'
@@ -187,6 +187,8 @@ const AdminDashboard = () => {
 				<Products />
 			) : dashView === 'users' ? (
 				<Users />
+			) : dashView === 'archived' ? (
+				<Products archived={true} />
 			) : dashView === 'settings' ? (
 				<Dashboard />
 			) : (
