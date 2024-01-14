@@ -143,6 +143,11 @@ router.get('/getUser', verifyToken, async (req, res) => {
 	}
 });
 
+router.get('/getUser/:username', async (req, res) => {
+	try {
+	} catch (error) {}
+});
+
 router.get('/getUsers', async (req, res) => {
 	try {
 		const users = await User.find({});

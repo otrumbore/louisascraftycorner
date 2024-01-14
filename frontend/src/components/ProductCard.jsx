@@ -116,10 +116,13 @@ const ProductCard = ({
 							/>
 						</div>
 						<div
-							className='flex w-full px-4 items-center justify-between'
+							className='flex px-4 w-full items-center justify-between'
 							//to={`/product/${item._id}`}
 						>
-							<h4 className='text-3xl w-[50%]'>{item.name}</h4>
+							<div className='flex w-[60%] items-center gap-2'>
+								<h4 className='text-3xl flex'>{item.name}</h4>
+								<p className='hidden lg:block text-sm'> - {item.type}</p>
+							</div>
 
 							{item.rating > 0 ? (
 								<div className='flex'>

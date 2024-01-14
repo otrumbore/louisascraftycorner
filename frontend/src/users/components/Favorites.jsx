@@ -88,7 +88,6 @@ const Favorites = () => {
 								>
 									{item.data.name === 'deleted' ? (
 										<div className='flex h-full items-center p-4'>
-											{console.log(item.data)}
 											<h4 className='text-2xl'>Item no longer for sale</h4>
 											<button
 												onClick={() => {
@@ -151,6 +150,8 @@ const Favorites = () => {
 												</div>
 
 												<div className='mt-2 flex flex-row w-full items-center justify-end gap-2'>
+													{!item.data.active && <p>No longer available</p>}
+
 													<div className='flex gap-x-2 items-center'>
 														{/*<p className='lg:text-lg'>QTY: {item.qty}</p>
 												 <Link to={`/product/${item._id}`}>

@@ -11,4 +11,14 @@ const getUsers = async () => {
 	}
 };
 
+export const getUserByUsername = async (username) => {
+	try {
+		const response = await axios.get(`${API_URL}/api/user/getUser/:username`);
+		return true;
+	} catch (error) {
+		console.log(error);
+		return [];
+	}
+};
+
 export default getUsers;

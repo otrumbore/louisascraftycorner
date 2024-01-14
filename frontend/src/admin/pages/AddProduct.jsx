@@ -8,7 +8,9 @@ import { addProduct } from '../../api/products.api';
 
 const AddProduct = () => {
 	const [name, setName] = useState('');
-	const [description, setDescription] = useState('');
+	const [description, setDescription] = useState(
+		'Note: Please note that variations in wood grain and finish may occur due to its handmade nature, adding unique character to each ornament.'
+	);
 	const [price, setPrice] = useState('');
 	const [type, setType] = useState('');
 	const [category, setCategory] = useState('');
