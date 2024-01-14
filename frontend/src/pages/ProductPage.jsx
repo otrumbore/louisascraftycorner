@@ -20,9 +20,10 @@ import { useSnackbar } from 'notistack';
 import ProductCard from '../components/ProductCard';
 import { useCart } from '../context/CartContext';
 import { useUser } from '../context/UserContext';
+import { getProduct, getProducts } from '../api/Products.api';
 
 const ProductPage = () => {
-	const [product, setProduct] = useState({});
+	const [product, setProduct] = useState([]);
 	const [relatedProducts, setRelatedProducts] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [qty, setQty] = useState(1);
@@ -31,8 +32,6 @@ const ProductPage = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const { enqueueSnackbar } = useSnackbar();
-
-	let imgArray = '';
 
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
 
@@ -56,66 +55,65 @@ const ProductPage = () => {
 	const { userDetails, addToFavorites, userFavorites, removeFromFavorites } =
 		useUser();
 
+	const fetchProduct = async () => {
+		try {
+			const response = await getProduct(id);
+			if (response.image !== undefined) {
+				setBase64ImageData(response.image);
+				//console.log(response.data.data.image);
+			}
+			setProduct(response);
+		} catch (error) {
+			console.error(error);
+			enqueueSnackbar('Product does not exist!', {
+				variant: 'error',
+			});
+			navigate('/');
+		}
+	};
+
+	const fetchRelatedProducts = async () => {
+		try {
+			const response = await getProducts();
+			if (response) {
+				setRelatedProducts(response.data.data);
+			}
+		} catch (error) {}
+	};
+
 	useEffect(() => {
 		setLoading(true);
-		//const allProducts = useContext(ShopContext);
-		axios
-			.get(`${API_URL}/api/products/${id}`)
-			.then((response) => {
-				setProduct(response.data.data);
-				//console.log(response.data.data);
-				if (response.data.data.image !== undefined) {
-					// const imageArrayBuffer = response.data.data.image.data;
-					// const base64ImageData = arrayBufferToBase64(imageArrayBuffer);
-					setBase64ImageData(response.data.data.image);
-					//console.log(response.data.data.image);
-				}
-			})
-			.catch((error) => {
-				console.log(error);
-				//setLoading(false);
-				enqueueSnackbar('Product does not exist!', {
-					variant: 'error',
-				});
-				navigate('/');
-			});
-
-		axios
-			.get(`${API_URL}/api/products`)
-			.then((response) => {
-				setRelatedProducts(response.data.data);
-			})
-			.catch((error) => {
-				console.log(error);
-				setLoading(false);
-				enqueueSnackbar('Could not load products', {
-					variant: 'error',
-				});
-				navigate('/');
-			});
+		fetchProduct();
+		fetchRelatedProducts();
+		// axios
+		// 	.get(`${API_URL}/api/products`)
+		// 	.then((response) => {
+		// 		setRelatedProducts(response.data.data);
+		// 	})
+		// 	.catch((error) => {
+		// 		console.log(error);
+		// 		setLoading(false);
+		// 		enqueueSnackbar('Could not load products', {
+		// 			variant: 'error',
+		// 		});
+		// 		navigate('/');
+		// 	});
 		userDetails._id ? setLoggedIn(true) : setLoggedIn(false);
 		window.scrollTo(0, 0);
 	}, [id]);
 
 	useEffect(() => {
-		//console.log(product.image.data);
-		if (product !== null && relatedProducts !== null) {
+		if (
+			product &&
+			Array.isArray(product) &&
+			product.length === 0 &&
+			relatedProducts &&
+			Array.isArray(relatedProducts) &&
+			relatedProducts.length === 0
+		) {
 			setLoading(false);
 		}
-
-		//console.log(product);
 	}, [product, relatedProducts]);
-
-	// Function to convert ArrayBuffer to base64
-	function arrayBufferToBase64(buffer) {
-		let binary = '';
-		const bytes = new Uint8Array(buffer);
-		const len = bytes.byteLength;
-		for (let i = 0; i < len; i++) {
-			binary += String.fromCharCode(bytes[i]);
-		}
-		return btoa(binary);
-	}
 
 	useEffect(() => {
 		setLoading(true);
@@ -185,13 +183,6 @@ const ProductPage = () => {
 					<div className='w-full grid grid-cols-1 lg:grid-cols-2 max-w-[1400px] items-start justify-start'>
 						<div className='h-[500px] flex justify-center'>
 							<img
-								// src={
-								// 	product.img === '' || product.img === undefined
-								// 		? DefaultProductImg
-								// 		: product.img === 'santaHat'
-								// 		? SantaHat
-								// 		: product.img
-								// }
 								src={
 									base64ImageData
 										? 'data:image/jpeg;base64,' + base64ImageData
@@ -206,7 +197,7 @@ const ProductPage = () => {
 								<div className='text-sm'>Store ID: {product.storeId}</div>
 
 								<div className='hidden lg:flex text-sm space-x-1'>
-									<p>Category:</p>
+									<p>Collection:</p>
 									<p>
 										{
 											product.category
@@ -262,9 +253,6 @@ const ProductPage = () => {
 									{product.description}
 								</p>
 							</div>
-							{/* Spacer for LG screens */}
-							{/* <div className='hidden lg:block h-24'></div> */}
-
 							<div className='mt-10 grid grid-cols-2 w-full items-center'>
 								<div className='mlg:mt-0 flex items-center justify-start'>
 									<button
@@ -272,11 +260,6 @@ const ProductPage = () => {
 											if (!loggedIn) {
 												enqueueSnackbar('Login first to add to favorites', {
 													variant: 'warning',
-													anchorOrigin: {
-														horizontal: 'center',
-														vertical: 'top',
-													},
-													autoHideDuration: 2000,
 												});
 												return;
 											}
@@ -290,11 +273,6 @@ const ProductPage = () => {
 													'Added ' + product.name + ' to favorites',
 													{
 														variant: 'success',
-														anchorOrigin: {
-															horizontal: 'center',
-															vertical: 'top',
-														},
-														autoHideDuration: 2000,
 													}
 												);
 											} else {
@@ -303,11 +281,6 @@ const ProductPage = () => {
 													'Removed ' + product.name + ' frome favorites',
 													{
 														variant: 'warning',
-														anchorOrigin: {
-															horizontal: 'center',
-															vertical: 'top',
-														},
-														autoHideDuration: 2000,
 													}
 												);
 											}
@@ -345,11 +318,6 @@ const ProductPage = () => {
 																'Max quantity reached. Please contact us for custom order if more needed!',
 																{
 																	variant: 'info',
-																	anchorOrigin: {
-																		horizontal: 'center',
-																		vertical: 'top',
-																	},
-																	autoHideDuration: 2000,
 																}
 														  )
 												}

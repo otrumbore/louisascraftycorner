@@ -143,9 +143,22 @@ router.get('/getUser', verifyToken, async (req, res) => {
 	}
 });
 
-router.get('/getUser/:username', async (req, res) => {
+// Get user by username or email
+router.get('/getUser/:usernameEmail', async (req, res) => {
 	try {
-	} catch (error) {}
+		const { usernameEmail } = req.params;
+
+		// Check if a user with the provided username or email exists
+		const user = await User.findOne({
+			$or: [{ username: usernameEmail }, { email: usernameEmail }],
+		});
+
+		// Send response indicating whether the username or email exists
+		res.json({ exists: !!user });
+	} catch (error) {
+		console.error(error.message);
+		res.status(500).send({ message: 'Server Error' });
+	}
 });
 
 router.get('/getUsers', async (req, res) => {

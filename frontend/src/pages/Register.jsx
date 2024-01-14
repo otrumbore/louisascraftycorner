@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios'; // Import Axios
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { getUserByUsernameAndEmail } from '../api/admin/users.api';
 
 const Register = () => {
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
@@ -55,6 +56,22 @@ const Register = () => {
 				return;
 			}
 
+			//validate if username already exists return and send an error
+			const usernameExists = await getUserByUsernameAndEmail(username);
+			const emailExists = await getUserByUsernameAndEmail(email);
+
+			if (usernameExists) {
+				setRegisterError('Username is already taken. Please choose another.');
+				window.scroll(0, 0);
+				return;
+			}
+
+			if (emailExists) {
+				setRegisterError('Email is already in use.');
+				window.scroll(0, 0);
+				return;
+			}
+
 			const newUser = {
 				name: name.trim(),
 				username: username.trim(),
@@ -69,11 +86,6 @@ const Register = () => {
 				'Welcome ' + name + ', Please confirm your email to login!',
 				{
 					variant: 'success',
-					anchorOrigin: {
-						horizontal: 'center',
-						vertical: 'top',
-					},
-					autoHideDuration: 10000,
 				}
 			);
 			//console.log('User registered:', res.data); // Log the response data (for verification, remove in production)
@@ -116,7 +128,7 @@ const Register = () => {
 						<div>
 							<input
 								type='text'
-								className='p-4 w-[100%] border-4 rounded-md text-lg border-slate-300'
+								className='input'
 								placeholder='Name'
 								name='name'
 								value={name}
@@ -127,7 +139,7 @@ const Register = () => {
 						<div>
 							<input
 								type='text'
-								className='p-4 w-[100%] border-4 rounded-md text-lg border-slate-300'
+								className='input'
 								placeholder='Username'
 								name='username'
 								value={username}
@@ -139,7 +151,7 @@ const Register = () => {
 						<div>
 							<input
 								type='email'
-								className='p-4 w-[100%] border-4 rounded-md text-lg border-slate-300'
+								className='input'
 								placeholder='Email Address'
 								name='email'
 								value={email}
@@ -150,7 +162,7 @@ const Register = () => {
 						<div>
 							<input
 								type='password'
-								className='p-4 w-[100%] border-4 rounded-md text-lg border-slate-300'
+								className='input'
 								placeholder='Password'
 								name='password'
 								value={password}
@@ -162,7 +174,7 @@ const Register = () => {
 						<div>
 							<input
 								type='password'
-								className='p-4 w-[100%] border-4 rounded-md text-lg border-slate-300'
+								className='input'
 								placeholder='Confirm Password'
 								name='confirmPassword'
 								value={confirmPassword}
@@ -174,18 +186,16 @@ const Register = () => {
 						<div className='flex justify-end'>
 							<button
 								type='submit'
-								className='w-full lg:w-auto mt-4 border-2 px-8 py-2 border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-slate-400 hover:shadow-lg rounded-md transition-all duration-300'
+								className='mt-1 px-10 py-3 w-full lg:w-auto btn'
 							>
 								Register
 							</button>
 						</div>
 					</form>
 					<div className='mt-12 mb-20 flex flex-col lg:flex-row w-full justify-center items-center'>
-						<h4 className='mt-4 lg:pr-4'>Already have an account?</h4>
+						<h4 className='mt-4 lg:pr-4 lg:mt-0'>Already have an account?</h4>
 						<Link className='w-full lg:w-auto' to='/login'>
-							<button className='w-full lg:w-auto mt-4 border-2 px-8 py-2 border-slate-400 bg-slate-300 hover:bg-slate-400 hover:border-slate-500 hover:text-white hover:shadow-slate-400 hover:shadow-lg rounded-md transition-all duration-300'>
-								Login
-							</button>
+							<button className='w-full btn-outline'>Login</button>
 						</Link>
 					</div>
 				</div>

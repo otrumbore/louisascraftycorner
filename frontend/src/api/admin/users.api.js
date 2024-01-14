@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_SERVER_API_URL;
+
 const getUsers = async () => {
-	const API_URL = import.meta.env.VITE_SERVER_API_URL;
 	try {
 		const response = await axios.get(`${API_URL}/api/user/getUsers`);
 		return response.data.data;
@@ -11,14 +12,31 @@ const getUsers = async () => {
 	}
 };
 
-export const getUserByUsername = async (username) => {
+export const getUserByUsernameAndEmail = async (usernameEmail) => {
 	try {
-		const response = await axios.get(`${API_URL}/api/user/getUser/:username`);
-		return true;
+		const response = await axios.get(
+			`${API_URL}/api/user/getUser/${usernameEmail}`
+		);
+		return response.data.exists || false;
+	} catch (error) {
+		console.log(error);
+		return false;
+	}
+};
+
+export const updateUser = async (id) => {
+	try {
+		const respone = await axios.get(`${API_URL}/api/user/updateUser/${id}`);
+		return respone;
 	} catch (error) {
 		console.log(error);
 		return [];
 	}
+};
+
+export const createNewUser = async (data) => {
+	try {
+	} catch (error) {}
 };
 
 export default getUsers;

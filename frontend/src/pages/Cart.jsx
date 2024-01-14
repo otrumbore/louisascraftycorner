@@ -79,9 +79,9 @@ const Cart = () => {
 											<div className='flex h-[100px] w-[100px] items-center justify-center'>
 												<img
 													src={
-														item.img === '' || item.img === undefined
-															? DefaultProductImg
-															: item.img === 'santaHat' && SantaHat
+														item.image
+															? 'data:image/jpeg;base64,' + item.image
+															: DefaultProductImg
 													}
 													alt={item.name + ' image'}
 													className='object-cover border-2 border-slate-300 h-full w-full rounded-md'
