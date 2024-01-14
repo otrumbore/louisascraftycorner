@@ -77,11 +77,6 @@ export function UserProvider({ children }) {
 			console.error('User data fetch error:', error.message);
 			enqueueSnackbar('Failed to fetch user data', {
 				variant: 'error',
-				anchorOrigin: {
-					horizontal: 'center',
-					vertical: 'top',
-				},
-				autoHideDuration: 5000,
 			});
 		}
 	};

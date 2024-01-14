@@ -76,28 +76,20 @@ const ProductPage = () => {
 		try {
 			const response = await getProducts();
 			if (response) {
-				setRelatedProducts(response.data.data);
+				setRelatedProducts(response);
 			}
-		} catch (error) {}
+		} catch (error) {
+			console.error(error);
+			enqueueSnackbar('Could not fetch related products', {
+				variant: 'error',
+			});
+		}
 	};
 
 	useEffect(() => {
 		setLoading(true);
 		fetchProduct();
 		fetchRelatedProducts();
-		// axios
-		// 	.get(`${API_URL}/api/products`)
-		// 	.then((response) => {
-		// 		setRelatedProducts(response.data.data);
-		// 	})
-		// 	.catch((error) => {
-		// 		console.log(error);
-		// 		setLoading(false);
-		// 		enqueueSnackbar('Could not load products', {
-		// 			variant: 'error',
-		// 		});
-		// 		navigate('/');
-		// 	});
 		userDetails._id ? setLoggedIn(true) : setLoggedIn(false);
 		window.scrollTo(0, 0);
 	}, [id]);
