@@ -83,21 +83,6 @@ router.get('/:id', verifyToken, async (request, response) => {
 //Get favorite products
 // Get product by ID
 router.get('/product/:id', async (request, response) => {
-	// try {
-	// 	const { id } = request.params;
-	// 	const product = await Product.findOne({ storeId: id });
-
-	// 	if (!product) {
-	// 		return response.status(404).send({ message: 'Product not found' });
-	// 	}
-
-	// 	return response.status(200).json({
-	// 		data: product,
-	// 	});
-	// } catch (error) {
-	// 	console.error(error.message);
-	// 	response.status(500).send({ message: 'Server Error' });
-	// }
 	try {
 		const { id } = request.params;
 		const product = await Product.findOne({ storeId: id });

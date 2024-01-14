@@ -57,7 +57,7 @@ const Navbar = () => {
 				setLogoImg(LogoBlack);
 			}
 		};
-
+		console.log(userRole(), ' is current role number');
 		handleScroll(); // Initial call to set navbar style based on scroll position
 		window.addEventListener('scroll', handleScroll);
 
@@ -127,8 +127,8 @@ const Navbar = () => {
 									<Link to={item.linkTo}>{item.linkName}</Link>
 								</li>
 							))}
-							{userRole() && <span className='text-2xl'>|</span>}
-							{userRole() &&
+							{userRole() > 1 && <span className='text-2xl'>|</span>}
+							{userRole() > 1 &&
 								navAdminData.map((item, index) => (
 									<li
 										className={`px-3 py-1 btn-ghost hover:bg-opacity-90 cursor-pointer`}
@@ -253,8 +253,8 @@ const Navbar = () => {
 									</Link>
 								</li>
 							))}
-							{userRole() && <div>------</div>}
-							{userRole() &&
+							{userRole() > 1 && <div>------</div>}
+							{userRole() > 1 &&
 								navAdminData.map((item, index) => (
 									<li className='py-2' key={index}>
 										<Link to={item.linkTo} className='text-black'>

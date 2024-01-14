@@ -75,9 +75,7 @@ const ProductPage = () => {
 	const fetchRelatedProducts = async () => {
 		try {
 			const response = await getProducts();
-			if (response) {
-				setRelatedProducts(response);
-			}
+			setRelatedProducts(response);
 		} catch (error) {
 			console.error(error);
 			enqueueSnackbar('Could not fetch related products', {

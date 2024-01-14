@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import getProducts from '../../../api/products.api';
 import LoadingModal from '../../../components/LoadingModal';
 import ProductModal from './ProductModal';
 import DeleteModal from '../DeleteModal';
 import { MdAdd } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import getProducts from '../../../api/Products.api';
 
 const Products = () => {
 	const [products, setProducts] = useState([]);

@@ -5,6 +5,8 @@ import {
 	MdOutlinePriceCheck,
 	MdOutlineSettings,
 	MdOutlineNotificationsNone,
+	MdErrorOutline,
+	MdOutlineArchive,
 } from 'react-icons/md';
 import { TbBrandMinecraft, TbShipOff } from 'react-icons/tb';
 import { IoIosPricetag } from 'react-icons/io';
@@ -18,14 +20,14 @@ import Products from './components/dashboard/Products';
 import Users from './components/dashboard/Users';
 
 const AdminDashboard = () => {
-	const { isAdmin } = useUser();
+	const { userRole } = useUser();
 	const navigate = useNavigate();
 
-	const checkUser = async () => {
+	const checkUser = () => {
 		try {
 			const token = Cookies.get('token');
 			if (token) {
-				!isAdmin() && navigate('/user/dashboard');
+				userRole() < 2 && navigate('/user/dashboard');
 				return;
 			}
 			navigate('/login');
@@ -45,7 +47,7 @@ const AdminDashboard = () => {
 		<div className='p-8 mt-[8rem] w-full'>
 			<div className='flex flex-col lg:flex-row w-full items-center justify-between'>
 				<h2 className='text-2xl font-bold'>Admin Home</h2>
-				<div className='flex mt-8 lg:mt-0 gap-4'>
+				<div className='flex mt-8 lg:mt-0 gap-4 flex-wrap items-center justify-center'>
 					<button
 						onClick={() => {
 							setDashView('home');
@@ -94,8 +96,29 @@ const AdminDashboard = () => {
 						onClick={() => {
 							setDashView('home');
 						}}
+						className={`${userRole() > 2 ? 'block' : 'hidden'} ${
+							dashView === 'errorLogs' ? 'btn' : 'btn-outline'
+						} px-2`}
+					>
+						<MdOutlineArchive size={30} />
+					</button>
+					<button
+						onClick={() => {
+							setDashView('home');
+						}}
+						className={`${userRole() > 2 ? 'block' : 'hidden'} ${
+							dashView === 'errorLogs' ? 'btn' : 'btn-outline'
+						} px-2`}
+					>
+						<MdErrorOutline size={30} />
+					</button>
+
+					<button
+						onClick={() => {
+							setDashView('home');
+						}}
 						className={`lg:hidden ${
-							dashView === 'home' ? 'btn' : 'btn-outline'
+							dashView === 'notifications' ? 'btn' : 'btn-outline'
 						} px-2`}
 					>
 						<MdOutlineNotificationsNone size={30} />
@@ -106,7 +129,9 @@ const AdminDashboard = () => {
 						onClick={() => {
 							setDashView('home');
 						}}
-						className={`${dashView === 'home' ? 'btn' : 'btn-outline'} px-2`}
+						className={`${
+							dashView === 'notifications' ? 'btn' : 'btn-outline'
+						} px-2`}
 					>
 						<MdOutlineNotificationsNone size={30} />
 					</button>
