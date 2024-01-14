@@ -4,7 +4,7 @@ import ProductModal from './ProductModal';
 import DeleteModal from '../DeleteModal';
 import { MdAdd } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { getProducts } from '../../../api/Products.api';
+import getProducts from '../../../api/products.api';
 
 const Products = ({ archived }) => {
 	const [products, setProducts] = useState([]);
@@ -17,6 +17,7 @@ const Products = ({ archived }) => {
 		try {
 			const fetchedProducts = await getProducts(); // Await the asynchronous function
 			let filteredProducts = '';
+
 			if (archived === false || !archived) {
 				filteredProducts = fetchedProducts.filter(
 					(product) => product.archived === false

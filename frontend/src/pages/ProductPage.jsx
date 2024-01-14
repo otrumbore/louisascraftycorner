@@ -20,7 +20,7 @@ import { useSnackbar } from 'notistack';
 import ProductCard from '../components/ProductCard';
 import { useCart } from '../context/CartContext';
 import { useUser } from '../context/UserContext';
-import { getProduct, getProducts } from '../api/Products.api';
+import { getProduct, getProducts } from '../api/products.api';
 
 const ProductPage = () => {
 	const [product, setProduct] = useState([]);
