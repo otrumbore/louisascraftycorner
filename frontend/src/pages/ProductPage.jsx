@@ -103,10 +103,10 @@ const ProductPage = () => {
 		if (
 			product &&
 			Array.isArray(product) &&
-			product.length === 0 &&
+			product.length !== 0 &&
 			relatedProducts &&
 			Array.isArray(relatedProducts) &&
-			relatedProducts.length === 0
+			relatedProducts.length !== 0
 		) {
 			setLoading(false);
 		}
