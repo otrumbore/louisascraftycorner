@@ -213,6 +213,7 @@ const Login = () => {
 								minLength={4} // Example: Minimum length validation
 								maxLength={30} // Example: Maximum length validation
 								pattern='^[a-zA-Z0-9._!-]{4,30}$' // Example: Pattern validation
+								tabIndex={1}
 							/>
 							{username && (
 								<button
@@ -229,6 +230,7 @@ const Login = () => {
 						<div className='relative'>
 							<input
 								type={showPassword ? 'text' : 'password'}
+								tabIndex={2}
 								className={`p-4 w-full text-lg bg-slate-50 border-4  focus:border-[6px] focus:border-[#0066b2] rounded-md shadow-md ${
 									!password.match(passwordPattern)
 										? 'border-red-500'
@@ -275,6 +277,7 @@ const Login = () => {
 							<button
 								type='submit'
 								className='btn px-14 py-2 w-full lg:w-auto mt-4'
+								tabIndex={3}
 							>
 								Login
 							</button>
