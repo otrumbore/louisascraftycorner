@@ -20,11 +20,11 @@ const getUsers = async () => {
 	}
 };
 
-export const getUser = async (token) => {
+export const getUser = async () => {
 	try {
 		const response = await axios.get(`${API_URL}/api/user/getUser`, {
 			headers: {
-				Authorization: `Bearer ${token}, ApiKey ${API_KEY}`,
+				Authorization: `Bearer ${token}`,
 			},
 		});
 		return response;
