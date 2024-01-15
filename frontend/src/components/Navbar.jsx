@@ -40,7 +40,7 @@ const Navbar = () => {
 
 	useEffect(() => {
 		window.screen.width <= 768 ? setisMobile(true) : setisMobile(false);
-		//console.log(cartItemsCount);
+
 		const handleScroll = () => {
 			const currentScrollPos = window.scrollY;
 			const isScrolled = currentScrollPos > 0;
@@ -58,7 +58,7 @@ const Navbar = () => {
 				setLogoImg(LogoBlack);
 			}
 		};
-		console.log(userRole(), ' is current role number');
+
 		handleScroll(); // Initial call to set navbar style based on scroll position
 		window.addEventListener('scroll', handleScroll);
 
