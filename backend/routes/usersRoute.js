@@ -163,8 +163,22 @@ router.get('/getUser/:usernameEmail', async (req, res) => {
 	}
 });
 
-router.get('/getUsers', async (req, res) => {
+//admin to get all users
+router.get('/getUsers', verifyToken, async (req, res) => {
 	try {
+		//const requesterUserId = req.user.userId;
+
+		// Check if the requester has the appropriate authorization (admin or the user themselves)
+		if (
+			//requesterUserId !== userIdToUpdate &&
+			req.user.role !== 'admin' &&
+			req.user.role !== 'moderator'
+		) {
+			return res
+				.status(403)
+				.json({ message: 'Unauthorized to update this user' });
+		}
+
 		const users = await User.find({});
 		return res.status(200).json({
 			count: users.length,

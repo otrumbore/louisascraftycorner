@@ -2,12 +2,32 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const API_URL = import.meta.env.VITE_SERVER_API_URL;
+
 const token = Cookies.get('token');
 
 const getUsers = async () => {
 	try {
-		const response = await axios.get(`${API_URL}/api/user/getUsers`);
+		const response = await axios.get(`${API_URL}/api/user/getUsers`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
+			},
+		});
 		return response.data.data;
+	} catch (error) {
+		console.log(error);
+		return [];
+	}
+};
+
+export const getUser = async (token) => {
+	try {
+		const response = await axios.get(`${API_URL}/api/user/getUser`, {
+			headers: {
+				Authorization: `Bearer ${token}, ApiKey ${API_KEY}`,
+			},
+		});
+		return response;
 	} catch (error) {
 		console.log(error);
 		return [];

@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack';
 import LoadingModal from '../components/LoadingModal';
 
 import { useNavigate } from 'react-router-dom';
+import { getUser } from '../api/admin/users.api';
 
 const UserContext = createContext();
 
@@ -37,14 +38,7 @@ export function UserProvider({ children }) {
 			const token = Cookies.get('token');
 			if (token) {
 				try {
-					const userDetailsResponse = await axios.get(
-						`${API_URL}/api/user/getUser`,
-						{
-							headers: {
-								Authorization: `Bearer ${token}`,
-							},
-						}
-					);
+					const userDetailsResponse = await getUser();
 
 					if ('password' in userDetailsResponse.data) {
 						const { password, ...userDetailsWithoutPassword } =

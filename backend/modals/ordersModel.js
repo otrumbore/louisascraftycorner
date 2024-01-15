@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 const itemSchema = new mongoose.Schema({
 	storeId: { type: Number },
 	price: { type: Number },

@@ -69,16 +69,6 @@ router.post('/', upload.single('image'), async (request, response) => {
 
 // Get all products
 router.get('/', async (request, response) => {
-	// try {
-	// 	const products = await Product.find({});
-	// 	return response.status(200).json({
-	// 		count: products.length,
-	// 		data: products,
-	// 	});
-	// } catch (error) {
-	// 	console.error(error.message);
-	// 	response.status(500).send({ message: 'Server Error' });
-	// }
 	try {
 		const products = await Product.find({});
 
@@ -99,21 +89,6 @@ router.get('/', async (request, response) => {
 
 // Get product by ID
 router.get('/:id', async (request, response) => {
-	// try {
-	// 	const { id } = request.params;
-	// 	const product = await Product.findById(id);
-
-	// 	if (!product) {
-	// 		return response.status(404).send({ message: 'Product not found' });
-	// 	}
-
-	// 	return response.status(200).json({
-	// 		data: product,
-	// 	});
-	// } catch (error) {
-	// 	console.error(error.message);
-	// 	response.status(500).send({ message: 'Server Error' });
-	// }
 	try {
 		const { id } = request.params;
 		const product = await Product.findById(id);
