@@ -250,7 +250,7 @@ const ProductPage = () => {
 									className={`flex w-full lg:text-center whitespace-pre-line text-lg ${
 										product.description && showFullDescription
 											? ''
-											: 'rounded-b-lg shadow-[inset_0_-20px_6px_-6px_rgba(0,102,178,0.7)]'
+											: 'rounded-b-lg shadow-[inset_0px_-24px_10px_-10px_rgba(125,125,125,.4)]'
 									}`}
 								>
 									{product.description && showFullDescription
@@ -272,7 +272,7 @@ const ProductPage = () => {
 									<button
 										onClick={() => {
 											if (!loggedIn) {
-												enqueueSnackbar('Login first to add to favorites', {
+												enqueueSnackbar('Log in first to add to favorites', {
 													variant: 'warning',
 												});
 												return;
@@ -299,7 +299,7 @@ const ProductPage = () => {
 												);
 											}
 										}}
-										className='flex items-center px-4 py-2 btn-outline'
+										className='flex items-center px-4 py-2 btn-outline text-gray-700'
 									>
 										<FaRegHeart size={25} />
 										<span className='hidden lg:block'>
@@ -315,7 +315,7 @@ const ProductPage = () => {
 								</div>
 								<div className='flex'>
 									<div className='flex w-full items-center justify-end'>
-										<div className='flex justify-between items-center gap-x-6 px-4 py-2 lg:h-12 btn-outline'>
+										<div className='flex justify-between items-center gap-x-6 px-4 py-2 lg:h-12 btn-outline text-gray-700'>
 											<FaMinus
 												className='hover:cursor-pointer'
 												size={20}
