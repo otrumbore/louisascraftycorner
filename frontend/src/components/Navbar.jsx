@@ -98,7 +98,7 @@ const Navbar = () => {
 					<div className='flex items-center'>
 						<RxHamburgerMenu
 							className={`lg:hidden mr-4 ${
-								scrolled ? 'text-gray-600' : 'text-white'
+								scrolled || pathName !== '/' ? 'text-gray-600' : 'text-white'
 							}`}
 							size={30}
 							onClick={toggleMobileMenu}
@@ -107,7 +107,7 @@ const Navbar = () => {
 						<div className='rounded-md w-auto h-[50px]'>
 							<Link to='/'>
 								<img
-									src={scrolled ? LogoBlack : LogoWhite}
+									src={scrolled || pathName !== '/' ? LogoBlack : LogoWhite}
 									alt="Louisa's Crafty Corner Logo"
 									className='w-auto h-full'
 								/>
