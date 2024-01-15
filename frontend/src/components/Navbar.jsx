@@ -53,7 +53,7 @@ const Navbar = () => {
 				setNavStyle(
 					isScrolled
 						? defaultNavStyle
-						: 'bg-opacity-90 top-10 shadow shadow-primary'
+						: 'bg-opacity-90 bg-slate-200 top-10 shadow shadow-primary'
 				);
 				setLogoImg(LogoBlack);
 			}

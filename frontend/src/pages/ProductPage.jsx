@@ -55,6 +55,12 @@ const ProductPage = () => {
 	const { userDetails, addToFavorites, userFavorites, removeFromFavorites } =
 		useUser();
 
+	const [showFullDescription, setShowFullDescription] = useState(false);
+
+	const toggleDescription = () => {
+		setShowFullDescription(!showFullDescription);
+	};
+
 	const fetchProduct = async () => {
 		try {
 			const response = await getProduct(id);
@@ -62,6 +68,7 @@ const ProductPage = () => {
 				setBase64ImageData(response.image);
 				//console.log(response.data.data.image);
 			}
+			console.log(response);
 			setProduct(response);
 		} catch (error) {
 			console.error(error);
@@ -238,10 +245,27 @@ const ProductPage = () => {
 									)}
 								</div>
 							</div>
-							<div className='mt-4 w-full flex justify-center items-center'>
-								<p className='flex w-full lg:text-center whitespace-pre-line text-lg'>
-									{product.description}
+							<div className='mt-4 w-full flex flex-col justify-center items-center'>
+								<p
+									className={`flex w-full lg:text-center whitespace-pre-line text-lg ${
+										product.description && showFullDescription
+											? ''
+											: 'rounded-b-lg shadow-[inset_0_-20px_6px_-6px_rgba(0,102,178,0.7)]'
+									}`}
+								>
+									{product.description && showFullDescription
+										? product.description
+										: product.description &&
+										  `${product.description.slice(0, 295)}...`}
 								</p>
+								{product.description && product.description.length > 200 && (
+									<button
+										className='mt-1 btn-ghost text-primary'
+										onClick={toggleDescription}
+									>
+										{showFullDescription ? 'View Less' : 'View More'}
+									</button>
+								)}
 							</div>
 							<div className='mt-10 grid grid-cols-2 w-full items-center'>
 								<div className='mlg:mt-0 flex items-center justify-start'>

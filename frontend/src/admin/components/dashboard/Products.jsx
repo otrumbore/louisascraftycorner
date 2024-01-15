@@ -157,7 +157,11 @@ const Products = ({ archived }) => {
 						No products have been archived
 					</p>
 				)}
-				<div className='w-full grid grid-cols-1 border-4 border-primary rounded-md'>
+				<div
+					className={`${
+						archived && 'hidden'
+					} w-full grid grid-cols-1 border-4 border-primary rounded-md`}
+				>
 					<div
 						className='relative w-full flex px-4 py-4 cursor-pointer items-center border-b-2 border-slate-400 gap-4'
 						//onClick={}//openModal(user._id)}

@@ -6,6 +6,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie'; // Import the js-cookie library
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
+import sendErrorLog from '../api/admin/logging.api';
 
 const Login = () => {
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
@@ -65,6 +66,12 @@ const Login = () => {
 			fetchUserData();
 		} catch (error) {
 			console.error('Login error:', error.message);
+			const errorData = {
+				userId: username,
+				errorData: { error: 'Login attempt error: ' + error, page: 'login' },
+				browser: navigator.userAgent,
+			};
+			sendErrorLog(errorData);
 			setLoginError('Wrong username or password');
 		}
 	};
@@ -125,7 +132,13 @@ const Login = () => {
 			});
 			navigate('/user/dashboard');
 		} catch (error) {
-			console.error('User data fetch error:', error.message);
+			console.error('User data fetch error:', error);
+			const errorData = {
+				userId: username,
+				errorData: { error: 'User data fetch error: ' + error, page: 'login' },
+				browser: navigator.userAgent,
+			};
+			sendErrorLog(errorData);
 			enqueueSnackbar('Failed to fetch user data', { variant: 'error' });
 		}
 	};

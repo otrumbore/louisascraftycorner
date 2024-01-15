@@ -8,6 +8,7 @@ import productsRoute from './routes/productsRoute.js';
 import siteSettingsRoute from './routes/siteSettingsRoute.js';
 import usersRoute from './routes/usersRoute.js';
 import userFavoritesRoute from './routes/userFavoritesRoute.js';
+import errorLoggingRoute from './routes/errorLoggingRoute.js';
 
 import crypto from 'crypto';
 
@@ -66,6 +67,7 @@ app.use('/api/products', productsRoute);
 app.use('/api/admin/site_settings', siteSettingsRoute);
 app.use('/api/user', usersRoute);
 app.use('/api/user/favorites', userFavoritesRoute);
+app.use('/api/error_logging', errorLoggingRoute);
 
 mongoose
 	.connect(mongoDBURL)
