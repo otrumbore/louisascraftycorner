@@ -34,13 +34,23 @@ const AdminDashboard = () => {
 		}
 	}, [location, setDashView]);
 
-	const checkUser = () => {
+	const checkUser = async () => {
 		try {
+			let userRoleCheck;
 			const token = Cookies.get('token');
-			if (token) {
-				//userRole() < 2 && navigate('/user/dashboard');
+
+			while (!userRoleCheck) {
+				userRoleCheck = await userRole(); // Replace with the actual function that sets the user
+				await new Promise((resolve) => setTimeout(resolve, 1000)); // Adjust the timeout as needed
+			}
+
+			if (token && userRoleCheck) {
+				if (userRoleCheck < 2) {
+					navigate('/user/dashboard');
+				}
 				return;
 			}
+
 			navigate('/login');
 		} catch (error) {
 			console.error('Admin user: ', error.message);

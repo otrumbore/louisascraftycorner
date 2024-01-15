@@ -1,5 +1,5 @@
 import express from 'express';
-import { siteSettings } from '../modals/siteSettingsModel.js';
+import { siteSettings } from '../models/siteSettingsModel.js';
 
 const router = express.Router();
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { errorLogging } from '../models/errorLoggingModel.js';
+import { activityLogging } from '../models/activityLoggingModel.js';
 
 const router = express.Router();
 

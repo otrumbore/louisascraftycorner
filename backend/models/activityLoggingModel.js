@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const errorLoggingSchema = mongoose.Schema(
+const activityLoggingSchema = mongoose.Schema(
 	{
 		userId: {
 			type: String,
@@ -16,8 +16,11 @@ const errorLoggingSchema = mongoose.Schema(
 	},
 	{
 		timestamps: true,
-		collection: 'error_logging',
+		//collection: 'activity_log',
 	}
 );
 
-export const errorLogging = mongoose.model('error_logging', errorLoggingSchema);
+export const activityLogging = mongoose.model(
+	'activity_logs',
+	activityLoggingSchema
+);

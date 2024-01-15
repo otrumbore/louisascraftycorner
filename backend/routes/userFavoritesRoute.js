@@ -1,8 +1,8 @@
 import express from 'express';
-import { Favorites } from '../modals/userFavoritesModel.js';
+import { Favorites } from '../models/userFavoritesModel.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { Product } from '../modals/productsModel.js';
+import { Product } from '../models/productsModel.js';
 
 const router = express.Router();
 

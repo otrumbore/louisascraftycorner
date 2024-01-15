@@ -1,5 +1,5 @@
 import express from 'express';
-import { Product } from '../modals/productsModel.js';
+import { Product } from '../models/productsModel.js';
 import multer from 'multer';
 import fs from 'fs';
 import sharp from 'sharp';
