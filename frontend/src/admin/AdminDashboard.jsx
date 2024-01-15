@@ -38,7 +38,7 @@ const AdminDashboard = () => {
 		try {
 			const token = Cookies.get('token');
 			if (token) {
-				userRole() < 2 && navigate('/user/dashboard');
+				//userRole() < 2 && navigate('/user/dashboard');
 				return;
 			}
 			navigate('/login');
@@ -61,7 +61,7 @@ const AdminDashboard = () => {
 				<div className='flex mt-8 lg:mt-0 gap-4 flex-wrap items-center justify-center'>
 					<button
 						onClick={() => {
-							setDashView('home');
+							navigate('#home');
 						}}
 						className={`${dashView === 'home' ? 'btn' : 'btn-outline'} px-2`}
 					>
@@ -69,7 +69,7 @@ const AdminDashboard = () => {
 					</button>
 					<button
 						onClick={() => {
-							setDashView('orders');
+							navigate('#orders');
 						}}
 						className={`${dashView === 'orders' ? 'btn' : 'btn-outline'} px-2`}
 					>
@@ -77,7 +77,7 @@ const AdminDashboard = () => {
 					</button>
 					<button
 						onClick={() => {
-							setDashView('products');
+							navigate('#products');
 						}}
 						className={`${
 							dashView === 'products' ? 'btn' : 'btn-outline'
@@ -87,7 +87,7 @@ const AdminDashboard = () => {
 					</button>
 					<button
 						onClick={() => {
-							setDashView('users');
+							navigate('#users');
 						}}
 						className={`${dashView === 'users' ? 'btn' : 'btn-outline'} px-2`}
 					>
@@ -95,7 +95,7 @@ const AdminDashboard = () => {
 					</button>
 					<button
 						onClick={() => {
-							setDashView('settings');
+							navigate('#settings');
 						}}
 						className={`${
 							dashView === 'settings' ? 'btn' : 'btn-outline'
@@ -105,7 +105,7 @@ const AdminDashboard = () => {
 					</button>
 					<button
 						onClick={() => {
-							setDashView('archived');
+							navigate('#archived');
 						}}
 						className={`${userRole() > 2 ? 'block' : 'hidden'} ${
 							dashView === 'errorLogs' ? 'btn' : 'btn-outline'
@@ -115,7 +115,7 @@ const AdminDashboard = () => {
 					</button>
 					<button
 						onClick={() => {
-							setDashView('home');
+							navigate('#home');
 						}}
 						className={`${userRole() > 2 ? 'block' : 'hidden'} ${
 							dashView === 'errorLogs' ? 'btn' : 'btn-outline'
@@ -126,7 +126,7 @@ const AdminDashboard = () => {
 
 					<button
 						onClick={() => {
-							setDashView('home');
+							navigate('#home');
 						}}
 						className={`lg:hidden ${
 							dashView === 'notifications' ? 'btn' : 'btn-outline'
@@ -138,7 +138,7 @@ const AdminDashboard = () => {
 				<div className='hidden lg:block'>
 					<button
 						onClick={() => {
-							setDashView('home');
+							navigate('#home');
 						}}
 						className={`${
 							dashView === 'notifications' ? 'btn' : 'btn-outline'

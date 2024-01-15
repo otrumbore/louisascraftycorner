@@ -174,7 +174,7 @@ const users = () => {
 											user.enabled ? 'text-green-600' : 'text-orange-400'
 										}`}
 									>
-										{user.enabled ? 'Unlocked' : 'Locked'}
+										{user.enabled ? 'Enabled' : 'Disabled'}
 									</p>
 									<p>
 										{user.lastActivity

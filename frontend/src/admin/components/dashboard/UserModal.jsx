@@ -20,10 +20,7 @@ const UserModal = ({ user, onClose }) => {
 					className='absolute right-4 top-4 text-3xl text-red-600 cursor-pointer'
 					onClick={onClose}
 				/>
-				<div
-					className='mt-4 w-full p-4 rounded-md space-y-2 cursor-pointer'
-					//onClick={}//openModal(user._id)}
-				>
+				<div className='mt-4 w-full p-4 rounded-md space-y-2'>
 					<div className='w-full flex items-center justify-between'>
 						<p className='text-xs'>
 							<strong>System ID:</strong> {user._id}
@@ -86,7 +83,7 @@ const UserModal = ({ user, onClose }) => {
 					</p>
 					<div className='pt-4 flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-center'>
 						<button
-							className={`btn-outline ${
+							className={`hidden btn-outline ${
 								user.enabled
 									? 'border-red-600 hover:bg-red-700'
 									: 'border-green-600 hover:bg-green-700'

@@ -24,7 +24,7 @@ const Products = ({ archived }) => {
 		setLoading(true);
 		try {
 			const fetchedProducts = await getProducts(); // Await the asynchronous function
-			let filteredProducts = '';
+			let filteredProducts = [];
 
 			if (archived === false || !archived) {
 				filteredProducts = fetchedProducts.filter(
@@ -36,7 +36,21 @@ const Products = ({ archived }) => {
 				);
 			}
 
-			console.log(filteredProducts);
+			// Sort products to show inactive ones at the bottom
+			filteredProducts.sort((a, b) => {
+				// Inactive products (active: false) should come after active ones
+				if (!a.active && b.active) {
+					return 1;
+				}
+				// Active products (active: true) should come before inactive ones
+				if (a.active && !b.active) {
+					return -1;
+				}
+				// For products with the same active status, maintain their order
+				return 0;
+			});
+
+			//console.log(filteredProducts);
 
 			setProducts(filteredProducts);
 			setLoading(false); // Update loading state when data is fetched
@@ -49,8 +63,9 @@ const Products = ({ archived }) => {
 					Could not load products refresh to try again.
 				</div>
 			);
+		} finally {
+			setLoading(false);
 		}
-		setLoading(false);
 	};
 
 	const sendProductUpdate = async (id, data, name) => {
@@ -164,7 +179,7 @@ const Products = ({ archived }) => {
 							<p>Status</p>
 						</div>
 						<div className='hidden lg:block w-[15%] text-left text-lg font-bold pl-4'>
-							<p>Last Activity</p>
+							<p>Last Update</p>
 						</div>
 
 						<div className='absolute right-0 pr-4 flex w-[15%] gap-2 items-center justify-end text-lg font-bold'>

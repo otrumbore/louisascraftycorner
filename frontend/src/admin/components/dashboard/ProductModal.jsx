@@ -134,8 +134,7 @@ const ProductModal = ({ product, onClose }) => {
 							)}
 						</div>
 						<div className='flex justify-end items-center gap-x-2'>
-							{/* <h2 className='my-1'>{capitalizedType}</h2>
-						<SiMonkeytype className='text-primary text-2xl' /> */}
+							<strong>Scroll down for more</strong>
 						</div>
 					</div>
 
