@@ -1,17 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import getUsers from '../../../api/admin/users.api';
+import getUsers, { updateUser } from '../../../api/admin/users.api';
 import LoadingModal from '../../../components/LoadingModal';
 import productModal from './ProductModal';
 import DeleteModal from '../DeleteModal';
-import { MdAdd } from 'react-icons/md';
+import {
+	MdOutlineRemoveRedEye,
+	MdOutlineLock,
+	MdOutlineLockOpen,
+	MdDeleteOutline,
+	MdOutlineMarkEmailRead,
+} from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import UserModal from './UserModal';
+import { useUser } from '../../../context/UserContext';
+import { useSnackbar } from 'notistack';
 
 const users = () => {
 	const [users, setUsers] = useState([]);
 	const [loading, setLoading] = useState(true);
 
+	const { enqueueSnackbar } = useSnackbar();
+
 	const [showModal, setShowModal] = useState(null);
 	const [showDeleteModal, setShowDeleteModal] = useState(null);
+
+	const { userRole } = useUser();
 
 	const fetchUsers = async () => {
 		try {
@@ -35,15 +48,55 @@ const users = () => {
 		}
 	};
 
+	const sendUserUpdate = async (id, data, username) => {
+		setLoading(true);
+		try {
+			const response = await updateUser(id, data);
+			if (
+				(response.status === 200 || response.status === 201) &&
+				(data.enabled || !data.enabled)
+			) {
+				enqueueSnackbar(username + `'s account locked is ` + data.enabled, {
+					variant: 'success',
+				});
+			}
+
+			if ((response === 200 || response === 201) && data.emailValidated) {
+				enqueueSnackbar(username + ' email has been marked validated!', {
+					variant: 'success',
+				});
+			}
+
+			fetchUsers();
+		} catch (error) {
+			console.error(error);
+			enqueueSnackbar(
+				'Could not update ' + username + `'s email validation status!`,
+				{
+					variant: 'error',
+				}
+			);
+		}
+	};
+
+	const openModal = (userId) => {
+		setShowModal(userId);
+	};
+
+	const closeModal = () => {
+		fetchUsers();
+		setShowModal(null);
+	};
+
 	useEffect(() => {
 		fetchUsers();
 	}, []);
 
 	const adminNotifications = [
-		{ text: '111111 - low inventory' },
-		{ text: '111112 - low inventory' },
-		{ text: '111111 - low inventory' },
-		{ text: '111112 - low inventory' },
+		{ text: 'user: latrumbore - attempted login' },
+		{ text: 'user: ntrumbore - created' },
+		{ text: 'user: ntrumbore - created' },
+		{ text: 'user: ntrumbore - created' },
 	];
 	// Calculate counts of active and inactive users
 	const activeCount = users.filter((user) => user.isActive === true).length;
@@ -66,86 +119,107 @@ const users = () => {
 						<p>Disabled: {disabledCount}</p>
 					</div>
 				</div>
-				<div className='w-full grid grid-cols-1 lg:grid-cols-2 gap-4'>
+				<div className='w-full grid grid-cols-1 border-4 border-primary rounded-md'>
+					<div
+						className='relative w-full flex px-4 py-4 cursor-pointer items-center border-b-2 border-slate-400'
+						//onClick={}//openModal(user._id)}
+					>
+						<div className='hidden lg:block w-[20%] text-left text-lg font-bold'>
+							Name
+						</div>
+						<div className='w-[15%] text-left text-lg font-bold'>Username</div>
+						<div className='hidden lg:block w-[25%] text-left text-lg font-bold'>
+							Email
+						</div>
+
+						<div className='hidden lg:flex absolute right-32 min-w-[20%] gap-x-4 justify-between text-lg font-bold'>
+							<p>Status</p>
+							<p>Last Activity</p>
+						</div>
+						<div className='absolute right-0 pr-2 flex w-[15%] gap-2 items-center justify-end text-lg font-bold'>
+							Actions
+						</div>
+					</div>
 					{users.map((user) => (
 						<div
 							key={user._id}
-							className='w-full p-4 border-4 border-primary rounded-md space-y-2 cursor-pointer'
-							//onClick={}//openModal(user._id)}
+							className='relative w-full flex px-4 py-4 border-b-2 border-slate-300 items-center'
 						>
-							<div className='w-full flex items-center justify-between'>
-								<p className='text-xs'>
-									<strong>System ID:</strong> {user._id}
-								</p>
+							<button
+								onClick={() => {
+									openModal(user._id);
+								}}
+								className='flex w-full cursor-pointer items-center'
+							>
+								<div className='hidden lg:block w-[20%] text-left text-wrap'>
+									{user.name}
+								</div>
+								<div className='w-[15%] text-left text-wrap'>
+									{user.username}
+								</div>
+								<div className='hidden lg:block w-[25%] text-left text-wrap'>
+									{user.email}
+								</div>
 
-								<p className='hidden lg:block text-xs'>
-									<strong>Enabled: </strong>
-									{user.enabled ? 'Yes' : 'No'}
-								</p>
-							</div>
-							<div className='flex flex-col gap-2'>
-								<p
-									className='flex-wrap'
+								<div className='hidden lg:flex absolute right-32 min-w-[20%] gap-x-4 justify-between text-wrap'>
+									<p
+										className={`w-[5%] text-left text-wrap ${
+											user.isActive ? 'text-green-600' : 'text-orange-400'
+										}`}
+									>
+										{user.isActive ? 'Online' : 'Offline'}
+									</p>
+									<p
+										className={`w-[5%] text-left text-wrap ${
+											user.enabled ? 'text-green-600' : 'text-orange-400'
+										}`}
+									>
+										{user.enabled ? 'Unlocked' : 'Locked'}
+									</p>
+									<p>
+										{user.lastActivity
+											? new Date(user.lastActivity).toLocaleString('en-US', {
+													hour: 'numeric',
+													minute: 'numeric',
+													hour12: true,
+													day: 'numeric',
+													month: 'numeric',
+													year: 'numeric',
+											  })
+											: 'No Recent Login'}
+									</p>
+								</div>
+							</button>
+							<div className='absolute right-0 pr-2 flex w-[15%] gap-2 items-center justify-end'>
+								<button
+									className='btn-ghost px-2'
 									onClick={() => {
-										//userModal(user);
+										const data = { enabled: !user.enabled };
+										sendUserUpdate(user._id, data, user.username);
 									}}
 								>
-									<strong>Name: </strong>
-									{user.name}
-								</p>
-								<p>
-									<strong>Username: </strong>
-									{user.username}
-								</p>
-								<p>
-									<strong>Email: </strong>
-									{user.email}
-								</p>
-							</div>
-							<div className='flex flex-col lg:flex-row lg:justify-between lg:tems-center'>
-								<p>
-									<strong>Email Validated: </strong>
-									{user.emailValidated ? 'Yes' : 'No'}
-								</p>
-								<p>
-									<strong>Email Marketing: </strong>
-									{user.emailMarketing ? 'Yes' : 'No'}
-								</p>
-							</div>
-							<div className='flex items-center justify-between'>
-								<p>
-									<strong>Role: </strong>
-									{user.role}
-								</p>
-								<div className='flex'>
-									{user.isActive ? (
-										<p className='text-green-600'>Online</p>
+									{user.enabled ? (
+										<MdOutlineLock className='text-orange-400' size={25} />
 									) : (
-										<p className='text-orange-500'>Offline</p>
+										<MdOutlineLockOpen className='text-green-600' size={25} />
 									)}
-									<p> (Maybe 😉)</p>
-								</div>
-							</div>
-							{/* {showModal === user._id && (
-								<userModal user={user} onClose={closeModal} />
-							)} */}
-							<p className='text-xs'>
-								<strong>Last Activity: </strong>
-								{user.lastActivity}
-							</p>
-							<div className='flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-center'>
-								<button
-									className={`btn ${
-										user.enabled
-											? 'bg-red-600 hover:bg-red-700'
-											: 'bg-green-600 hover:bg-green-700'
-									} `}
-								>
-									Disable
 								</button>
-								<button className='btn'>Testing</button>
-								<button className='btn-outline'>Lock Account</button>
+								<button
+									className={`${
+										user.emailValidated ? 'hidden' : 'block'
+									} btn-ghost px-2 text-green-600`}
+									onClick={() => {
+										const data = { emailValidated: !user.emailValidated };
+										sendUserUpdate(user._id, data, user.username);
+									}}
+								>
+									<MdOutlineMarkEmailRead size={25} />
+								</button>
 							</div>
+
+							{showModal === user._id && (
+								<UserModal user={user} onClose={closeModal} />
+							)}
 						</div>
 					))}
 				</div>

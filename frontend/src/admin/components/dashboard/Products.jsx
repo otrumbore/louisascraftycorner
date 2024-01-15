@@ -2,13 +2,20 @@ import React, { useEffect, useState } from 'react';
 import LoadingModal from '../../../components/LoadingModal';
 import ProductModal from './ProductModal';
 import DeleteModal from '../DeleteModal';
-import { MdAdd } from 'react-icons/md';
+import {
+	MdAdd,
+	MdOutlineVisibilityOff,
+	MdOutlineVisibility,
+	MdOutlineEdit,
+} from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import getProducts from '../../../api/products.api';
+import { useSnackbar } from 'notistack';
+import getProducts, { updateProduct } from '../../../api/products.api';
 
 const Products = ({ archived }) => {
 	const [products, setProducts] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const { enqueueSnackbar } = useSnackbar();
 
 	const [showModal, setShowModal] = useState(null);
 	const [showDeleteModal, setShowDeleteModal] = useState(null);
@@ -29,6 +36,8 @@ const Products = ({ archived }) => {
 				);
 			}
 
+			console.log(filteredProducts);
+
 			setProducts(filteredProducts);
 			setLoading(false); // Update loading state when data is fetched
 			//console.log(filteredProducts);
@@ -42,6 +51,29 @@ const Products = ({ archived }) => {
 			);
 		}
 		setLoading(false);
+	};
+
+	const sendProductUpdate = async (id, data, name) => {
+		setLoading(true);
+		try {
+			const response = await updateProduct(id, data);
+			console.log(response);
+			if (
+				(response.status === 200 || response.status === 201) &&
+				(data.active || !data.active)
+			) {
+				enqueueSnackbar(name + `'s active status set to ` + data.active, {
+					variant: 'success',
+				});
+			}
+			fetchProducts(archived);
+		} catch (error) {
+			console.error(error);
+			setLoading(false);
+			enqueueSnackbar('Could not set product to inactive', {
+				variant: 'error',
+			});
+		}
 	};
 
 	const openModal = (productId) => {
@@ -110,35 +142,51 @@ const Products = ({ archived }) => {
 						No products have been archived
 					</p>
 				)}
-				<div className='w-full grid grid-cols-1 lg:grid-cols-2 gap-4'>
+				<div className='w-full grid grid-cols-1 border-4 border-primary rounded-md'>
+					<div
+						className='relative w-full flex px-4 py-4 cursor-pointer items-center border-b-2 border-slate-400 gap-4'
+						//onClick={}//openModal(user._id)}
+					>
+						<div className='lg:w-[5%] text-left text-lg font-bold'>Store #</div>
+						<div className='lg:w-[25%] text-left text-lg font-bold'>Name</div>
+						<div className='hidden lg:block w-[10%] text-left text-lg font-bold'>
+							Price
+						</div>
+						<div className='hidden lg:block w-[5%] text-left text-lg font-bold'>
+							QTY
+						</div>
+						<div className='hidden lg:block w-[5%] text-left text-lg font-bold'>
+							Rating
+						</div>
+						<div className='hidden lg:block w-[15%] text-left text-lg font-bold'></div>
+
+						<div className='hidden lg:block w-[12%] text-left text-lg font-bold'>
+							<p>Status</p>
+						</div>
+						<div className='hidden lg:block w-[15%] text-left text-lg font-bold pl-4'>
+							<p>Last Activity</p>
+						</div>
+
+						<div className='absolute right-0 pr-4 flex w-[15%] gap-2 items-center justify-end text-lg font-bold'>
+							Actions
+						</div>
+					</div>
 					{products.map((product) => (
 						<div
 							key={product._id}
-							className='w-full p-4 border-4 border-primary rounded-md space-y-2 cursor-pointer'
-							onClick={() => openModal(product._id)}
+							className='relative w-full flex px-4 py-4 border-b-2 border-slate-300 items-center'
 						>
-							<div className='w-full flex items-center justify-between'>
-								<p className='text-xs'>
-									<strong>Store ID:</strong> {product.storeId}
-								</p>
-								{product.sale > 0 && (
-									<p className='text-red-600 text-sm'>On Sale</p>
-								)}
-
-								<p className='hidden lg:block text-xs'>
-									<strong>System ID:</strong> {product._id}
-								</p>
-							</div>
-							<div className='flex flex-row lg:items-center justify-between'>
-								<p
-									className='flex-wrap'
-									onClick={() => {
-										ProductModal(product);
-									}}
-								>
+							<button
+								onClick={() => openModal(product._id)}
+								className='flex w-full cursor-pointer items-center gap-4'
+							>
+								<div className='lg:w-[5%] text-left text-wrap'>
+									{product.storeId}
+								</div>
+								<div className='lg:w-[25%] text-left text-wrap'>
 									{product.name} - {product.type}
-								</p>
-								<div className='flex flex-wrap lg:items-center gap-2'>
+								</div>
+								<div className='hidden w-[10%] lg:flex gap-2 text-wrap'>
 									<p className={`${product.sale > 0 && 'line-through'}`}>
 										${product.price}
 									</p>
@@ -146,20 +194,74 @@ const Products = ({ archived }) => {
 										<p className='text-red-600'>${product.sale}</p>
 									)}
 								</div>
-							</div>
-							<div className='flex justify-between items-center'>
-								<p>Inventory: {product.inventory}</p>
-								<p>{product.rating}/5</p>
-							</div>
-							<div className='flex items-center justify-between'>
-								<p className='text-xs'>
-									<strong>Last Update:</strong> {product.updatedAt}
-								</p>
-								{product.active ? (
-									<p className='text-green-600'>Active</p>
-								) : (
-									<p className='text-orange-500'>Inactive</p>
-								)}
+
+								<div className='hidden lg:flex w-[5%] text-wrap'>
+									<p className={`text-left text-wrap `}>{product.inventory}</p>
+								</div>
+								<div className='hidden lg:flex w-[5%] text-wrap'>
+									<p className={`text-left text-wrap `}>{product.rating}/5</p>
+								</div>
+								<div className='hidden lg:flex w-[15%] text-wrap'></div>
+
+								<div className='hidden lg:flex w-[12%] text-wrap justify-between items-center'>
+									{product.active ? (
+										<p
+											className={`text-left text-wrap bg-green-400 text-white px-3 py-1 rounded-md`}
+										>
+											Active
+										</p>
+									) : (
+										<p
+											className={`text-left text-wrap bg-orange-400 text-white px-3 py-1 rounded-md`}
+										>
+											Inactive
+										</p>
+									)}
+									{product.sale > 0 && (
+										<p
+											className={`text-left text-wrap bg-red-500 text-white px-3 py-1 rounded-md`}
+										>
+											On Sale
+										</p>
+									)}
+								</div>
+								<div className='hidden lg:flex w-[15%] text-wrap pl-4'>
+									<p className={`text-wrap `}>
+										{product.updatedAt
+											? new Date(product.updatedAt).toLocaleString('en-US', {
+													hour: 'numeric',
+													minute: 'numeric',
+													hour12: true,
+													day: 'numeric',
+													month: 'numeric',
+													year: 'numeric',
+											  })
+											: 'No Recent Update'}
+									</p>
+								</div>
+							</button>
+							<div className='absolute right-0 pr-2 flex min-w-[5%] items-center justify-end'>
+								<Link
+									to={`/admin/editproduct/${product._id}`}
+									className='btn-ghost px-2'
+								>
+									<MdOutlineEdit size={25} />
+								</Link>
+								<button
+									className={`btn-ghost px-2 ${
+										product.active ? 'text-orange-400' : 'text-green-400'
+									}`}
+									onClick={() => {
+										const data = { active: !product.active };
+										sendProductUpdate(product._id, data, product.name);
+									}}
+								>
+									{product.active ? (
+										<MdOutlineVisibilityOff className='' size={25} />
+									) : (
+										<MdOutlineVisibility className='' size={25} />
+									)}
+								</button>
 							</div>
 							{showModal === product._id && (
 								<ProductModal product={product} onClose={closeModal} />

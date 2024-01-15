@@ -38,6 +38,7 @@ router.post('/register', async (request, response) => {
 			profilePicture,
 			dateOfBirth,
 			address,
+			archived,
 		} = request.body;
 
 		// Hash the password before saving it to the database
@@ -58,6 +59,7 @@ router.post('/register', async (request, response) => {
 			profilePicture,
 			dateOfBirth,
 			address: address || {},
+			archived,
 		});
 
 		return response.status(201).send(newUser);
@@ -177,12 +179,24 @@ router.get('/getUsers', async (req, res) => {
 // Update user data route
 router.put('/updateUser/:userId', verifyToken, async (req, res) => {
 	try {
-		const userId = req.params.userId; // Extract userId from request parameters
+		const requesterUserId = req.user.userId; // Extract userId from the decoded token
+		const userIdToUpdate = req.params.userId; // Extract userId from request parameters
 		const updatedUserData = req.body; // New user data to update
+
+		// Check if the requester has the appropriate authorization (admin or the user themselves)
+		if (
+			requesterUserId !== userIdToUpdate &&
+			req.user.role !== 'admin' &&
+			req.user.role !== 'moderator'
+		) {
+			return res
+				.status(403)
+				.json({ message: 'Unauthorized to update this user' });
+		}
 
 		// Find the user by ID and update the user data
 		const updatedUser = await User.findByIdAndUpdate(
-			userId,
+			userIdToUpdate,
 			{ $set: updatedUserData },
 			{ new: true } // Return the updated document
 		);

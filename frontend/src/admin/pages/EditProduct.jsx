@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import LoadingModal from '../../components/LoadingModal';
 import { getProduct, updateProduct } from '../../api/products.api';
+import { useUser } from '../../context/UserContext';
 
 const EditProduct = () => {
 	const [storeId, setStoreId] = useState('');
@@ -20,6 +21,8 @@ const EditProduct = () => {
 	const [rating, setRating] = useState('');
 	const [active, setActive] = useState(false);
 	const archived = false;
+
+	const { userRole } = useUser();
 
 	const { id } = useParams();
 
@@ -50,7 +53,6 @@ const EditProduct = () => {
 			setLoading(false);
 			enqueueSnackbar('Could not retrieve product', {
 				variant: 'error',
-				anchorOrigin: { horizontal: 'right', vertical: 'top' },
 			});
 			console.log('Could not get product');
 			navigate('/admin');
@@ -83,16 +85,14 @@ const EditProduct = () => {
 		//console.log(id);
 		const response = await updateProduct(id, data);
 		if (response.status === 201 || response.status === 200) {
-			enqueueSnackbar('Product updated', {
+			enqueueSnackbar('Product ' + storeId + ' updated', {
 				variant: 'success',
-				anchorOrigin: { horizontal: 'right', vertical: 'top' },
 			});
 			navigate('/admin');
 		} else {
 			setLoading(false);
 			enqueueSnackbar('Could not update product', {
 				variant: 'error',
-				anchorOrigin: { horizontal: 'right', vertical: 'top' },
 			});
 			console.log(error);
 		}
@@ -111,7 +111,7 @@ const EditProduct = () => {
 						value={storeId}
 						onChange={(e) => setStoreId(e.target.value)}
 						className='border-2 border-gray-500 px-4 py-2 w-full'
-						disabled
+						disabled={userRole() < 3}
 					/>
 				</div>
 				<div className='my-4'>
@@ -184,9 +184,10 @@ const EditProduct = () => {
 					<label className='text-xl mr-4 text-gray-500'>Rating</label>
 					<input
 						type='text'
-						value={rating || ''}
+						value={rating}
 						onChange={(e) => setRating(e.target.value)}
 						className='border-2 border-gray-500 px-4 py-2 w-full'
+						disabled={userRole() < 3}
 					/>
 				</div>
 				<div className='my-4'>
