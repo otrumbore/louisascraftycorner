@@ -33,25 +33,12 @@ const Home = () => {
 
 	useEffect(() => {
 		setLoading(true);
-		// axios
-		// 	.get(`${API_URL}/api/products`)
-		// 	.then((response) => {
-		// 		setNewArrivals(response.data.data);
-		// 		//setLoading(false);
-		// 		console.log(response.data.data);
-		// 	})
-		// 	.catch((error) => {
-		// 		console.log(error + ' api failure');
-		// 		setLoading(false);
-		// 	});
 		getNewArivals();
 		window.scroll(0, 0);
 	}, []);
 
 	useEffect(() => {
-		//console.log(newArrivals);
 		newArrivals && newArrivals.length > 0 ? setLoading(false) : null;
-		//setLoading(false);
 	}, [newArrivals]);
 
 	return (
@@ -59,13 +46,13 @@ const Home = () => {
 			<LoadingModal loading={loading} />
 			<Hero />
 			<div className='w-full p-4 flex justify-center'>
-				<div className='w-full max-w-[1600px] flex'>
+				<div className='w-full max-w-[1400px] flex'>
 					{/* Links to new products */}
 					<div className='w-full py-4 flex flex-col items-center justify-center'>
 						<h3 className='text-3xl lg:text-4xl'>
 							<span className='text-primary'>New Arrivals</span>
 						</h3>
-						{/* <p>Newest Christmas Products:</p> */}
+
 						<div className='mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8 w-[100%]'>
 							<ProductCard numProducts={3} products={newArrivals} />
 						</div>

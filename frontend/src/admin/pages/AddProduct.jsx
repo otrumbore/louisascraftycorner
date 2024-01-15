@@ -9,7 +9,7 @@ import { addProduct } from '../../api/products.api';
 const AddProduct = () => {
 	const [name, setName] = useState('');
 	const [description, setDescription] = useState(
-		'Note: Please note that variations in wood grain and finish may occur due to its handmade nature, adding unique character to each ornament.'
+		`Note: Please be advised that the handcrafted nature of our products may result in variations in wood grain and finish, adding distinct character to each item. Additionally, slight differences in dimensions are expected due to the bespoke craftsmanship. It's important to note that the final product may vary slightly from the images on our website or promotional materials. Your understanding of these inherent characteristics is greatly appreciated as we strive to deliver uniquely crafted pieces.`
 	);
 	const [price, setPrice] = useState('');
 	const [type, setType] = useState('');

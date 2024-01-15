@@ -11,7 +11,7 @@ import {
 import { TbBrandMinecraft, TbShipOff } from 'react-icons/tb';
 import { IoIosPricetag } from 'react-icons/io';
 import { FaUsers } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Dashboard from './components/dashboard/Dashboard';
 import Orders from './components/dashboard/Orders';
 import Cookies from 'js-cookie';
@@ -24,6 +24,15 @@ const AdminDashboard = () => {
 	const { userRole } = useUser();
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
+	const [dashView, setDashView] = useState('home');
+	const location = useLocation();
+
+	useEffect(() => {
+		if (location.hash) {
+			const hashWithoutSymbol = location.hash.substring(1);
+			setDashView(hashWithoutSymbol);
+		}
+	}, [location, setDashView]);
 
 	const checkUser = () => {
 		try {
@@ -44,7 +53,6 @@ const AdminDashboard = () => {
 		window.scroll(0, 0);
 	}, []);
 
-	const [dashView, setDashView] = useState('home');
 	return (
 		<div className='p-8 mt-[8rem] w-full'>
 			<LoadingModal loading={loading} />

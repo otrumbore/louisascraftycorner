@@ -1,5 +1,5 @@
 import React from 'react';
-import SantaHat from '../../assets/product-img/santa-hat-ordiment.png';
+import HeroPic from '../../assets/hero.jpg';
 import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
@@ -13,13 +13,12 @@ const Hero = () => {
 		<div className='w-full h-screen flex items-center justify-center'>
 			<div className='w-full max-w-[2400px] h-screen lg:h-full flex justify-center'>
 				<img
-					//src='https://c.pxhere.com/images/6f/bb/bb0b8bd8365deffc9cdcda034a02-1634123.jpg!d'
-					src={SantaHat}
+					src={HeroPic}
 					className='object-cover w-full h-full glass opacity-80'
 				/>
 				{/* promo text over the image hero */}
 				<div className='absolute flex w-full lg:w-[35%] left-0 lg:left-[33%] top-[30%] lg:top-[30%]'>
-					<div className='absolute p-6 flex flex-col items-center gap-y-4 lg:items-start w-full bg-slate-100 bg-opacity-40 text-gray-800 border-4 border-[#0066b2] rounded-xl'>
+					<div className='absolute p-6 flex flex-col items-center gap-y-4 lg:items-start w-full bg-slate-300 bg-opacity-50 text-gray-900 border-4 border-primary rounded-xl'>
 						<div className='flex w-full justify-center'>
 							<h3 className='text-3xl flex-wrap'>🌷Spring Has Sprung!🌻</h3>
 						</div>

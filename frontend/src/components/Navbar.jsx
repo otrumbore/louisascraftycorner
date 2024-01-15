@@ -34,7 +34,8 @@ const Navbar = () => {
 	const totalItemsCount = cartItemsCount();
 	//end cart stuff
 
-	const defaultNavStyle = 'bg-opacity-90 top-0 shadow shadow-primary';
+	const defaultNavStyle =
+		'bg-opacity-90 bg-slate-200 top-0 shadow shadow-primary';
 	const homePagePath = '/';
 
 	useEffect(() => {
@@ -46,7 +47,7 @@ const Navbar = () => {
 			setScrolled(isScrolled);
 
 			if (!isScrolled && pathName === homePagePath) {
-				setNavStyle('bg-opacity-0 glass top-10');
+				setNavStyle('bg-opacity-30 bg-slate-800 glass top-10');
 				setLogoImg(LogoWhite);
 			} else {
 				setNavStyle(
@@ -91,12 +92,14 @@ const Navbar = () => {
 				}
 			/>
 			<nav
-				className={`fixed flex ${navStyle} left-0 p-2 px-4 w-full h-[4rem] bg-slate-200 justify-center items-center z-50 transition-all duration-200`}
+				className={`fixed flex ${navStyle} left-0 p-2 px-4 w-full h-[4rem] justify-center items-center z-50 transition-all duration-200`}
 			>
 				<div className='flex w-full max-w-[1400px] h-fit items-center justify-between'>
-					<div className='flex text-gray-900 items-center'>
+					<div className='flex items-center'>
 						<RxHamburgerMenu
-							className={`lg:hidden mr-4`}
+							className={`lg:hidden mr-4 ${
+								scrolled ? 'text-gray-600' : 'text-white'
+							}`}
 							size={30}
 							onClick={toggleMobileMenu}
 						/>
@@ -104,7 +107,7 @@ const Navbar = () => {
 						<div className='rounded-md w-auto h-[50px]'>
 							<Link to='/'>
 								<img
-									src={!isMobile ? logoImg : LogoBlack}
+									src={scrolled ? LogoBlack : LogoWhite}
 									alt="Louisa's Crafty Corner Logo"
 									className='w-auto h-full'
 								/>
