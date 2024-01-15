@@ -163,6 +163,12 @@ export function UserProvider({ children }) {
 			console.log(userDetails);
 			getUserFavorites();
 			sendActivityStatus(true);
+			if (!userDetails.enabled) {
+				navigate('/user/logout');
+				enqueueSnackbar('Account was disbaled, you were logged out!', {
+					variant: 'info',
+				});
+			}
 
 			const eventListener = () => handleUserActivity();
 

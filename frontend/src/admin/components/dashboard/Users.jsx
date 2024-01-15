@@ -56,7 +56,7 @@ const users = () => {
 				(response.status === 200 || response.status === 201) &&
 				(data.enabled || !data.enabled)
 			) {
-				enqueueSnackbar(username + `'s account locked is ` + data.enabled, {
+				enqueueSnackbar(username + `'s account locked is ` + !data.enabled, {
 					variant: 'success',
 				});
 			}
