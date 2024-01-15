@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios'; // Import Axios
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
@@ -29,6 +29,10 @@ const Register = () => {
 	const handleCheckboxChange = () => {
 		setAgreeTerms(!agreeTerms);
 	};
+
+	useEffect(() => {
+		window.scroll(0, 0);
+	}, []);
 
 	const onSubmit = async (e) => {
 		e.preventDefault();
