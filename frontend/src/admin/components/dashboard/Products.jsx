@@ -157,92 +157,59 @@ const Products = ({ archived }) => {
 						No products have been found
 					</p>
 				)}
-				<div
-					className={` w-full grid grid-cols-1 border-4 border-primary rounded-md`}
-				>
-					<div
-						className='relative w-full flex px-4 py-4 cursor-pointer items-center border-b-2 border-slate-400 gap-4'
-						//onClick={}//openModal(user._id)}
-					>
-						<div className='lg:w-[5%] text-left text-lg font-bold'>Store #</div>
-						<div className='lg:w-[25%] text-left text-lg font-bold'>Name</div>
-						<div className='hidden lg:block w-[10%] text-left text-lg font-bold'>
-							Price
-						</div>
-						<div className='hidden lg:block w-[5%] text-left text-lg font-bold'>
-							QTY
-						</div>
-						<div className='hidden lg:block w-[5%] text-left text-lg font-bold'>
-							Rating
-						</div>
-						<div className='hidden lg:block w-[15%] text-left text-lg font-bold'></div>
-
-						<div className='hidden lg:block w-[12%] text-left text-lg font-bold'>
-							<p>Status</p>
-						</div>
-						<div className='hidden lg:block w-[15%] text-left text-lg font-bold pl-4'>
-							<p>Last Update</p>
-						</div>
-
-						<div className='absolute right-0 pr-4 flex w-[15%] gap-2 items-center justify-end text-lg font-bold'>
-							Actions
-						</div>
-					</div>
-					{products.map((product) => (
-						<div
-							key={product._id}
-							className='relative w-full flex px-4 py-4 border-b-2 border-slate-300 items-center'
-						>
-							<button
-								onClick={() => openModal(product._id)}
-								className='flex w-full cursor-pointer items-center gap-4'
-							>
-								<div className='lg:w-[5%] text-left text-wrap'>
-									{product.storeId}
-								</div>
-								<div className='lg:w-[25%] text-left text-wrap'>
-									{product.name} - {product.type}
-								</div>
-								<div className='hidden w-[10%] lg:flex gap-2 text-wrap'>
-									<p className={`${product.sale > 0 && 'line-through'}`}>
-										${product.price}
-									</p>
-									{product.sale > 0 && (
-										<p className='text-red-600'>${product.sale}</p>
-									)}
-								</div>
-
-								<div className='hidden lg:flex w-[5%] text-wrap'>
-									<p className={`text-left text-wrap `}>{product.inventory}</p>
-								</div>
-								<div className='hidden lg:flex w-[5%] text-wrap'>
-									<p className={`text-left text-wrap `}>{product.rating}/5</p>
-								</div>
-								<div className='hidden lg:flex w-[15%] text-wrap'></div>
-
-								<div className='hidden lg:flex w-[12%] text-wrap justify-between items-center'>
-									{product.active ? (
-										<p
-											className={`text-left text-wrap bg-green-400 text-white px-3 py-1 rounded-md`}
-										>
-											Active
-										</p>
-									) : (
-										<p
-											className={`text-left text-wrap bg-orange-400 text-white px-3 py-1 rounded-md`}
-										>
-											Inactive
-										</p>
-									)}
-									{product.sale > 0 && (
-										<p
-											className={`text-left text-wrap bg-red-500 text-white px-3 py-1 rounded-md`}
-										>
-											On Sale
-										</p>
-									)}
-								</div>
-								<div className='hidden lg:flex w-[15%] text-wrap pl-4'>
+				<table className='w-full border-4 border-primary'>
+					<thead className='border-4 border-primary text-xl font-bold'>
+						<tr className=''>
+							<th className='max-lg:hidden'></th>
+							<th className='max-md:hidden'>ID</th>
+							<th>Name</th>
+							<th>Price</th>
+							<th>Quantity</th>
+							<th>Rating</th>
+							<th className='max-lg:hidden'>Status</th>
+							<th className='max-lg:hidden'>Last Update</th>
+							<th className='max-lg:hidden'>Actions</th>
+						</tr>
+					</thead>
+					<tbody className=''>
+						{products.map((product) => (
+							<tr key={product._id} className='border-b-4'>
+								<th className='max-lg:hidden'>
+									<img
+										src={product.image}
+										className='w-20 h-20 border-2 rounded-md'
+									/>
+								</th>
+								<th className='max-md:hidden'>{product.storeId}</th>
+								<th>{product.name}</th>
+								<th>${product.price}</th>
+								<th>{product.inventory}</th>
+								<th>{product.rating}</th>
+								<th className='max-lg:hidden'>
+									<div className='flex items-center justify-center space-x-2'>
+										{product.active ? (
+											<p
+												className={`text-left w-fit text-wrap bg-green-400 text-white px-3 py-1 rounded-md`}
+											>
+												Active
+											</p>
+										) : (
+											<p
+												className={`text-left w-fit text-wrap bg-orange-400 text-white px-3 py-1 rounded-md`}
+											>
+												Inactive
+											</p>
+										)}
+										{product.sale > -1 && (
+											<p
+												className={`text-left w-fit text-wrap bg-red-500 text-white px-3 py-1 rounded-md`}
+											>
+												On Sale
+											</p>
+										)}
+									</div>
+								</th>
+								<th className='max-lg:hidden'>
 									<p className={`text-wrap `}>
 										{product.updatedAt
 											? new Date(product.updatedAt).toLocaleString('en-US', {
@@ -255,37 +222,36 @@ const Products = ({ archived }) => {
 											  })
 											: 'No Recent Update'}
 									</p>
-								</div>
-							</button>
-							<div className='absolute right-0 pr-2 flex min-w-[5%] items-center justify-end'>
-								<Link
-									to={`/admin/editproduct/${product._id}`}
-									className='btn-ghost px-2'
-								>
-									<MdOutlineEdit size={25} />
-								</Link>
-								<button
-									className={`btn-ghost px-2 ${
-										product.active ? 'text-orange-400' : 'text-green-400'
-									}`}
-									onClick={() => {
-										const data = { active: !product.active };
-										sendProductUpdate(product._id, data, product.name);
-									}}
-								>
-									{product.active ? (
-										<MdOutlineVisibilityOff className='' size={25} />
-									) : (
-										<MdOutlineVisibility className='' size={25} />
-									)}
-								</button>
-							</div>
-							{showModal === product._id && (
-								<ProductModal product={product} onClose={closeModal} />
-							)}
-						</div>
-					))}
-				</div>
+								</th>
+								<th className='max-lg:hidden'>
+									<div className='flex items-center justify-center'>
+										<Link
+											to={`/admin/editproduct/${product._id}`}
+											className='btn-ghost px-2'
+										>
+											<MdOutlineEdit size={25} />
+										</Link>
+										<button
+											className={`btn-ghost px-2 ${
+												product.active ? 'text-orange-400' : 'text-green-400'
+											}`}
+											onClick={() => {
+												const data = { active: !product.active };
+												sendProductUpdate(product._id, data, product.name);
+											}}
+										>
+											{product.active ? (
+												<MdOutlineVisibilityOff className='' size={25} />
+											) : (
+												<MdOutlineVisibility className='' size={25} />
+											)}
+										</button>
+									</div>
+								</th>
+							</tr>
+						))}
+					</tbody>
+				</table>
 			</div>
 		</>
 	);
