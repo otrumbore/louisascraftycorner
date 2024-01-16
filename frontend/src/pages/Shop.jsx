@@ -187,9 +187,11 @@ const Shop = () => {
 						{products.length > 0 ? (
 							<ProductCard products={products} numProducts={20} />
 						) : (
-							<div className='flex w-full justify-center'>
-								<h3 className='text-2xl'>No products found...😔</h3>
-							</div>
+							loading && (
+								<div className='flex w-full justify-center'>
+									<h3 className='text-2xl'>No products found...😔</h3>
+								</div>
+							)
 						)}
 					</div>
 				</div>
