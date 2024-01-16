@@ -375,7 +375,7 @@ const ProductPage = () => {
 					{/* Links to new products */}
 					<div className='w-full py-4 flex flex-col items-center justify-center'>
 						<h3 className='text-3xl lg:text-4xl'>
-							<span className=''>Related Products</span>
+							<span className=''>More products like this</span>
 						</h3>
 						{/* <p>Newest Christmas Products:</p> */}
 						<div className='mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8 w-[100%]'>
