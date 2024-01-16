@@ -90,6 +90,12 @@ const Shop = () => {
 		setOnSaleOnly(false);
 	};
 
+	const handleKeyDown = (event) => {
+		if (event.key === 'Enter') {
+			fetchData();
+		}
+	};
+
 	useEffect(() => {
 		const fetchFilteredData = async () => {
 			await fetchData();
@@ -125,6 +131,7 @@ const Shop = () => {
 								placeholder='Search...'
 								value={searchText}
 								onChange={handleSearchChange}
+								onKeyDown={handleKeyDown}
 							/>
 							<select
 								className='p-[.80rem] w-full lg:min-w-fit lg:max-w-[20%] input-ghost'
@@ -167,13 +174,7 @@ const Shop = () => {
 							>
 								Clear Filters
 							</button>
-							<button
-								onClick={() => {
-									//clearFilters();
-									fetchData();
-								}}
-								className='btn'
-							>
+							<button onClick={() => fetchData()} className='btn'>
 								Search
 							</button>
 						</div>
