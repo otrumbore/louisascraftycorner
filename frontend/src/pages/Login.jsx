@@ -133,13 +133,17 @@ const Login = () => {
 			// 	browser: '',
 			// };
 
-			const activity = {
-				user: { username: res.data.username, userId: res.data.userId },
-				activityData: { activity: 'sucessful login', page: 'login' },
-				browser: 'Browser: ' + navigator.userAgent,
-			};
+			try {
+				const activity = {
+					user: { username: res.data.username, userId: res.data.userId },
+					activityData: { activity: 'sucessful login', page: 'login' },
+					browser: 'Browser: ' + navigator.userAgent,
+				};
 
-			sendActivityLog(activity);
+				sendActivityLog(activity);
+			} catch (error) {
+				console.log('could not send activity log');
+			}
 
 			getUserDetails();
 			sendActivityStatus(true);
