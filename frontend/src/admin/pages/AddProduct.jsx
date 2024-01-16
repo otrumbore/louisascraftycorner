@@ -92,12 +92,12 @@ const AddProduct = () => {
 				});
 				try {
 					const data = {
-						userId: { userId: userDetails._id, username: userDetails.username },
+						user: { username: userDetails.username, userId: userDetails._id },
 						activityData: {
 							activity: 'added new product ' + data.name,
 							page: 'admin/addproduct',
 						},
-						browser: '',
+						browser: navigator.userAgent,
 					};
 					const res = await sendActivityLog(data);
 				} catch (error) {
