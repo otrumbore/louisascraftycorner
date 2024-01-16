@@ -210,102 +210,108 @@ const Navbar = () => {
 				</div>
 			</nav>
 			{/* Mobile Menu */}
-			{isMobileMenuOpen && (
+			{/* {isMobileMenuOpen && ( */}
+			<div
+				className={`fixed inset-0 z-50 bg-primary bg-opacity-20 ${
+					!isMobileMenuOpen ? 'w-0' : 'w-[100%]'
+				} transition-all duration-500 ease-in-out`}
+				onClick={toggleMobileMenu}
+			>
 				<div
-					className='fixed inset-0 z-50 bg-primary bg-opacity-75 transition-all duration-300 ease-in-out'
-					onClick={toggleMobileMenu}
+					className={`absolute inset-y-0 left-0 top-0 w-64 bg-slate-200 bg-opacity-90 rounded-r-md shadow-lg ${
+						!isMobileMenuOpen && ' -mx-72'
+					} transform duration-500 ease-in-out`}
 				>
-					<div className='absolute inset-y-0 left-0 top-0 w-64 bg-slate-50 bg-opacity-80 rounded-r-md shadow-lg transition-transform duration-300 ease-in-out'>
-						<div className='flex justify-between items-center p-4'>
-							<img
-								src={!isMobile ? logoImg : LogoBlack}
-								alt="Louisa's Crafty Corner Logo"
-								className='w-auto h-[50px]'
-							/>
-							<MdClose
-								className='text-gray-800'
-								size={30}
-								onClick={toggleMobileMenu}
-							/>
-						</div>
-						<div
-							className={`flex w-full items-center px-4 mb-4 mt-4 justify-evenly text-gray-800`}
+					<div className='flex justify-between items-center p-4'>
+						<img
+							src={!isMobile ? logoImg : LogoBlack}
+							alt="Louisa's Crafty Corner Logo"
+							className='w-auto h-[50px]'
+						/>
+						<MdClose
+							className='text-gray-800'
+							size={30}
+							onClick={toggleMobileMenu}
+						/>
+					</div>
+					<div
+						className={`flex w-full items-center px-4 mb-4 mt-4 justify-evenly text-gray-800`}
+					>
+						<Link
+							to='/user/dashboard'
+							className={`font-medium p-2 btn-ghost cursor-pointer`}
 						>
-							<Link
-								to='/user/dashboard'
-								className={`font-medium p-2 btn-ghost cursor-pointer`}
-							>
-								<FaRegUser className='' size={25} />
-							</Link>
-							<Link
-								to='/user/dashboard#favorites'
-								className={`font-medium p-2 ${
-									userFavorites.length > 0 ? 'btn-outline py-1' : 'btn-ghost'
-								} cursor-pointer`}
-							>
-								<FaRegHeart className='' size={27} />
-								<p
-									className={`${
-										userFavorites.length > 0 ? 'block text-xl' : 'hidden'
-									}`}
-								>
-									{userFavorites.length}
-								</p>
-							</Link>
-
-							<Link
-								to={'/cart'}
-								className={`font-medium p-2 ${
-									totalItemsCount > 0 ? 'btn-outline py-1' : 'btn-ghost'
+							<FaRegUser className='' size={25} />
+						</Link>
+						<Link
+							to='/user/dashboard#favorites'
+							className={`font-medium p-2 ${
+								userFavorites.length > 0 ? 'btn-outline py-1' : 'btn-ghost'
+							} cursor-pointer`}
+						>
+							<FaRegHeart className='' size={27} />
+							<p
+								className={`${
+									userFavorites.length > 0 ? 'block text-xl' : 'hidden'
 								}`}
 							>
-								<MdOutlineShoppingCart className='' size={28} />
-								<p
-									className={` ${
-										totalItemsCount > 0 ? 'block' : 'hidden'
-									} text-xl`}
-								>
-									{totalItemsCount}
-								</p>
-							</Link>
-						</div>
-						<ul className='flex flex-col items-center text-xl'>
-							{/* Render your mobile menu links here */}
-							{navData.map((item, index) => (
-								<li className='py-4' key={index}>
+								{userFavorites.length}
+							</p>
+						</Link>
+
+						<Link
+							to={'/cart'}
+							className={`font-medium p-2 ${
+								totalItemsCount > 0 ? 'btn-outline py-1' : 'btn-ghost'
+							}`}
+						>
+							<MdOutlineShoppingCart className='' size={28} />
+							<p
+								className={` ${
+									totalItemsCount > 0 ? 'block' : 'hidden'
+								} text-xl`}
+							>
+								{totalItemsCount}
+							</p>
+						</Link>
+					</div>
+					<ul className='flex flex-col items-center text-xl'>
+						{/* Render your mobile menu links here */}
+						{navData.map((item, index) => (
+							<li className='py-4' key={index}>
+								<Link to={item.linkTo} className='text-black'>
+									{/* Update text color */}
+									{item.linkName}
+								</Link>
+							</li>
+						))}
+						{userRole() > 1 && <div>------</div>}
+						{userRole() > 1 &&
+							navAdminData.map((item, index) => (
+								<li className='py-2' key={index}>
 									<Link to={item.linkTo} className='text-black'>
 										{/* Update text color */}
 										{item.linkName}
 									</Link>
 								</li>
 							))}
-							{userRole() > 1 && <div>------</div>}
-							{userRole() > 1 &&
-								navAdminData.map((item, index) => (
-									<li className='py-2' key={index}>
-										<Link to={item.linkTo} className='text-black'>
-											{/* Update text color */}
-											{item.linkName}
-										</Link>
-									</li>
-								))}
+					</ul>
+					<div className='absolute w-full bottom-4 px-4'>
+						<ul className='flex w-full items-center justify-between'>
+							<li>
+								<Link to='/info/help'>Help</Link>
+							</li>
+							<li>
+								<Link to='/info/terms'>Terms</Link>
+							</li>
+							<li>
+								<Link to='/info/privacy'>Privacy</Link>
+							</li>
 						</ul>
-						<div className='absolute w-full bottom-4 px-4'>
-							<ul className='flex w-full items-center justify-between'>
-								<li>
-									<Link to='/info/help'>Help</Link>
-								</li>
-								<li>
-									<Link to='/info/terms'>Terms</Link>
-								</li>
-								<li>
-									<Link to='/info/privacy'>Privacy</Link>
-								</li>
-							</ul>
-						</div>
 					</div>
 				</div>
-			)}
+			</div>
+			{/* )} */}
 		</div>
 	);
 };
