@@ -16,16 +16,11 @@ const Logout = () => {
 				// Clear the token cookie using js-cookie
 				Cookies.remove('token', { path: '/' });
 				//clear userDetails context
-				addUserDetails({});
+				addUserDetails([]);
 				setUserFavorites([]);
 				// Show a success notification
 				enqueueSnackbar('Logged out successfully', {
 					variant: 'success',
-					anchorOrigin: {
-						horizontal: 'center',
-						vertical: 'top',
-					},
-					autoHideDuration: 3000,
 				});
 
 				// Redirect to the home page after logout
@@ -34,11 +29,6 @@ const Logout = () => {
 				console.error('Logout error:', error.message);
 				enqueueSnackbar('Failed to log out', {
 					variant: 'error',
-					anchorOrigin: {
-						horizontal: 'center',
-						vertical: 'top',
-					},
-					autoHideDuration: 3000,
 				});
 				navigate('/');
 			}

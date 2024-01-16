@@ -23,7 +23,15 @@ export const getErrorLogs = async () => {
 	}
 };
 
-export const sendActivityLog = async () => {};
+export const sendActivityLog = async (data) => {
+	try {
+		const response = await axios.post(`${API_URL}/api/activity_logging/`, data);
+		return response;
+	} catch (error) {
+		console.error(error);
+		return [];
+	}
+};
 
 export const getActivityLog = async () => {};
 

@@ -112,10 +112,18 @@ const Favorites = () => {
 													<img
 														src={
 															item.data.image
-																? 'data:image/jpeg;base64,' + item.data.image
+																? `data:image/jpeg;base64,${item.data.image}`
 																: DefaultProductImg
 														}
-														alt={item.data.name + ' image'}
+														alt={
+															item.data.image
+																? item.data.name + 'Product Image'
+																: 'Default Product Image'
+														}
+														onError={(e) => {
+															e.target.src = DefaultProductImg; // Fallback to default image on error
+															e.target.alt = 'Default Product Image';
+														}}
 														className='object-cover border-2 border-slate-300 h-full w-full rounded-md'
 													/>
 												</div>

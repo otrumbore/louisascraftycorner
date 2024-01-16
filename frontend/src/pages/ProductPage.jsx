@@ -181,11 +181,19 @@ const ProductPage = () => {
 						<div className='h-[500px] flex justify-center'>
 							<img
 								src={
-									base64ImageData
-										? 'data:image/jpeg;base64,' + base64ImageData
+									product.image
+										? `data:image/jpeg;base64,${product.image}`
 										: DefaultProductImg
 								}
-								alt={product.name + ' image'}
+								alt={
+									product.image
+										? product.name + 'Product Image'
+										: 'Default Product Image'
+								}
+								onError={(e) => {
+									e.target.src = DefaultProductImg; // Fallback to default image on error
+									e.target.alt = 'Default Product Image';
+								}}
 								className='h-full w-fit object-cover rounded-2xl shadow-2xl shadow-gray-400 lg:hover:scale-110'
 							/>
 						</div>

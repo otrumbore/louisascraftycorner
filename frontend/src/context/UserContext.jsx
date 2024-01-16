@@ -11,7 +11,7 @@ const UserContext = createContext();
 
 export function UserProvider({ children }) {
 	const navigate = useNavigate();
-	const [userDetails, setUserDetails] = useState({});
+	const [userDetails, setUserDetails] = useState([]);
 	const [userFavorites, setUserFavorites] = useState([]);
 	const { enqueueSnackbar } = useSnackbar();
 	const [loading, setLoading] = useState(false);
@@ -38,20 +38,15 @@ export function UserProvider({ children }) {
 			const token = Cookies.get('token');
 			if (token) {
 				try {
-					const userDetailsResponse = await getUser();
+					const userDetailsResponse = await getUser(token);
 
 					if ('password' in userDetailsResponse.data) {
 						const { password, ...userDetailsWithoutPassword } =
 							userDetailsResponse.data;
-						// userDetailsWithoutPassword now contains all properties from userDetailsResponse.data except 'password'
 
-						// Assuming addUserDetails is a function to set userDetails in your state
 						addUserDetails(userDetailsWithoutPassword);
-						console.log('password found still not remvoed!');
 					} else {
-						// If 'password' field doesn't exist, set userDetails directly
 						addUserDetails(userDetailsResponse.data);
-						console.log('password not found so not remvoed!');
 					}
 				} catch (error) {
 					console.error('Error fetching user details or favorites:', error);
@@ -64,7 +59,7 @@ export function UserProvider({ children }) {
 			const token = Cookies.get('token');
 			if (token) {
 				Cookies.remove('token');
-				setUserDetails({});
+				setUserDetails([]);
 				setUserFavorites([]);
 				navigate('/login');
 			}
@@ -79,19 +74,19 @@ export function UserProvider({ children }) {
 		try {
 			const token = Cookies.get('token');
 			if (token) {
-				const favoritesResponse = await axios.get(
-					`${API_URL}/api/user/favorites/${userDetails._id}`,
-					{
+				const favoritesResponse =
+					(await axios.get(`${API_URL}/api/user/favorites/${userDetails._id}`, {
 						headers: {
 							Authorization: `Bearer ${token}`,
 						},
-					}
-				);
+					})) || '';
 
-				setUserFavorites(favoritesResponse.data.data.items);
+				if (favoritesResponse.data.data.items) {
+					setUserFavorites(favoritesResponse.data.data.items);
+				}
 			}
 		} catch (error) {
-			console.log(error);
+			console.log('No favorites', error);
 		}
 	};
 

@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack';
 import LoadingModal from '../../components/LoadingModal';
 import { getProduct, updateProduct } from '../../api/products.api';
 import { useUser } from '../../context/UserContext';
+import { sendActivityLog } from '../../api/admin/logging.api';
 
 const EditProduct = () => {
 	const [storeId, setStoreId] = useState('');
@@ -16,13 +17,13 @@ const EditProduct = () => {
 	const [category, setCategory] = useState('');
 	const [tags, setTags] = useState('');
 	const [inventory, setInventory] = useState('');
-	const [img, setImg] = useState('');
+	const [image, setImage] = useState('');
 	const [sale, setSale] = useState(0);
 	const [rating, setRating] = useState('');
 	const [active, setActive] = useState(false);
 	const archived = false;
 
-	const { userRole } = useUser();
+	const { userRole, userDetails } = useUser();
 
 	const { id } = useParams();
 
@@ -45,7 +46,7 @@ const EditProduct = () => {
 			setRating(response.rating);
 			setTags(response.tags);
 			setInventory(response.inventory);
-			setImg(response.img);
+			setImage(response.image);
 			setActive(response.active);
 
 			setLoading(false);
@@ -77,7 +78,7 @@ const EditProduct = () => {
 			rating,
 			tags,
 			inventory,
-			img,
+			image,
 			active,
 			archived,
 		};
@@ -85,16 +86,32 @@ const EditProduct = () => {
 		//console.log(id);
 		const response = await updateProduct(id, data);
 		if (response.status === 201 || response.status === 200) {
-			enqueueSnackbar('Product ' + storeId + ' updated', {
+			enqueueSnackbar('Product ' + data.name + ' updated', {
 				variant: 'success',
 			});
+			try {
+				const data = [
+					{
+						userId: userDetails._id,
+						activityData: {
+							activity: 'edited ' + data.name + ' product',
+							page: 'admin/editproduct',
+						},
+						browser: '',
+					},
+				];
+
+				const res = await sendActivityLog(data);
+			} catch (error) {
+				console.error('could not send actvity log:', error);
+			}
 			navigate('/admin');
 		} else {
 			setLoading(false);
 			enqueueSnackbar('Could not update product', {
 				variant: 'error',
 			});
-			console.log(error);
+			//console.log(error);
 		}
 	};
 

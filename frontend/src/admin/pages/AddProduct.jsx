@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import LoadingModal from '../../components/LoadingModal';
 import { addProduct } from '../../api/products.api';
+import errorLogging, { sendActivityLog } from '../../api/admin/logging.api';
+import { useUser } from '../../context/UserContext';
 
 const AddProduct = () => {
 	const [name, setName] = useState('');
@@ -26,6 +28,8 @@ const AddProduct = () => {
 	const navigate = useNavigate();
 	const { enqueueSnackbar } = useSnackbar();
 
+	const { userDetails } = useUser();
+
 	const handleImageChange = (e) => {
 		const selectedImage = e.target.files[0];
 
@@ -38,6 +42,9 @@ const AddProduct = () => {
 			} else {
 				// Show an error message or provide feedback to the user
 				console.error('Invalid file type. Please choose an image file.');
+				nqueueSnackbar('Invalid file type. Please choose an image file.', {
+					variant: 'error',
+				});
 			}
 		}
 	};
@@ -71,7 +78,7 @@ const AddProduct = () => {
 			formData.append(key, data[key]);
 		}
 
-		console.log('image log 2: ', image);
+		//console.log('image log 2: ', image);
 		setLoading(true);
 		try {
 			const response = await addProduct(formData); // Await the asynchronous function
@@ -79,26 +86,37 @@ const AddProduct = () => {
 				setLoading(false); // Update loading state when data is fetched
 				enqueueSnackbar(`Product ${data.name} added`, {
 					variant: 'success',
-					anchorOrigin: { horizontal: 'right', vertical: 'top' },
 				});
-				console.log(response);
+				try {
+					const data = [
+						{
+							userId: userDetails._id,
+							activityData: {
+								activity: 'added new product ' + data.name,
+								page: 'admin/addproduct',
+							},
+							browser: '',
+						},
+					];
+
+					const res = await sendActivityLog(data);
+				} catch (error) {
+					console.error('could not send actvity log:', error);
+				}
+				//console.log(response);
 				navigate('/admin#products');
 			} else {
 				setLoading(false);
 				enqueueSnackbar('Could not add product', {
 					variant: 'error',
-					anchorOrigin: { horizontal: 'right', vertical: 'top' },
 				});
-				//console.log(error);
 			}
-
-			//console.log(fetchedProducts);
 		} catch (error) {
 			console.error(error);
 			setLoading(false); // Update loading state in case of error
 			return (
 				<div className='mt-8 w-full justify-center text-xl'>
-					Could not load products refresh to try again.
+					Could not load product refresh to try again.
 				</div>
 			);
 		}

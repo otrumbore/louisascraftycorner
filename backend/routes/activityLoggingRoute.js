@@ -13,54 +13,60 @@ const router = express.Router();
 // 	}
 //   };
 
-// Creating error log
+// Creating activity log
 router.post('/', async (request, response) => {
 	try {
-		const { userId, errorData, browser } = request.body;
+		const { userId, activityData, browser } = request.body;
 
-		const newErrorLog = await errorLogging.create({
+		const newActivityLog = await activityLogging.create({
 			userId,
-			errorData,
+			activityData,
 			browser,
 		});
 
-		return response.status(201).json(newErrorLog);
+		return response.status(201).json(newActivityLog);
 	} catch (error) {
 		console.error(error);
-		response.status(500).json({ message: 'Server Error' });
+		response
+			.status(500)
+			.json({ message: 'Server Error - Unable to log activity' });
 	}
 });
 
-// Get all error logs
+// Get all activity logs
 router.get('/', async (request, response) => {
 	try {
-		const errorLogs = await errorLogging.find({});
+		const activityLogs = await activityLogging.find({});
 		return response.status(200).json({
-			count: errorLogs.length,
-			data: errorLogs,
+			count: activityLogs.length,
+			data: activityLogs,
 		});
 	} catch (error) {
 		console.error(error.message);
-		response.status(500).send({ message: 'Server Error' });
+		response
+			.status(500)
+			.send({ message: 'Server Error - Unable to retrieve activity logs' });
 	}
 });
 
-// Get error log by ID
+// Get activity log by ID
 router.get('/:id', async (request, response) => {
 	try {
 		const { id } = request.params;
-		const errorLog = await errorLogging.findById(id);
+		const activityLog = await activityLogging.findById(id);
 
-		if (!errorLog) {
-			return response.status(404).send({ message: 'Error log not found' });
+		if (!activityLog) {
+			return response.status(404).send({ message: 'Activity log not found' });
 		}
 
 		return response.status(200).json({
-			data: errorLog,
+			data: activityLog,
 		});
 	} catch (error) {
 		console.error(error.message);
-		response.status(500).send({ message: 'Server Error' });
+		response
+			.status(500)
+			.send({ message: 'Server Error - Unable to retrieve activity log' });
 	}
 });
 

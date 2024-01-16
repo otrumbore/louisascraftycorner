@@ -26,13 +26,13 @@ const Products = ({ archived }) => {
 			const fetchedProducts = await getProducts(); // Await the asynchronous function
 			let filteredProducts = [];
 
-			if (archived === false || !archived) {
+			if (archived) {
 				filteredProducts = fetchedProducts.filter(
-					(product) => product.archived === false
+					(product) => product.archived === true
 				);
 			} else {
 				filteredProducts = fetchedProducts.filter(
-					(product) => product.archived === true
+					(product) => product.archived === false
 				);
 			}
 
@@ -152,15 +152,13 @@ const Products = ({ archived }) => {
 						</Link>
 					</div>
 				</div>
-				{archived && (
+				{!products && (
 					<p className='w-full text-center text-xl'>
-						No products have been archived
+						No products have been found
 					</p>
 				)}
 				<div
-					className={`${
-						archived && 'hidden'
-					} w-full grid grid-cols-1 border-4 border-primary rounded-md`}
+					className={` w-full grid grid-cols-1 border-4 border-primary rounded-md`}
 				>
 					<div
 						className='relative w-full flex px-4 py-4 cursor-pointer items-center border-b-2 border-slate-400 gap-4'

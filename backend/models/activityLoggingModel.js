@@ -6,8 +6,8 @@ const activityLoggingSchema = mongoose.Schema(
 			type: String,
 			default: 'guest',
 		},
-		errorData: {
-			error: { type: String },
+		activityData: {
+			activity: { type: String },
 			page: { type: String },
 		},
 		browser: {

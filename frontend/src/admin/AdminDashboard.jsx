@@ -8,6 +8,7 @@ import {
 	MdErrorOutline,
 	MdOutlineArchive,
 } from 'react-icons/md';
+import { BsActivity } from 'react-icons/bs';
 import { TbBrandMinecraft, TbShipOff } from 'react-icons/tb';
 import { IoIosPricetag } from 'react-icons/io';
 import { FaUsers } from 'react-icons/fa';
@@ -118,10 +119,20 @@ const AdminDashboard = () => {
 							navigate('#archived');
 						}}
 						className={`${userRole() > 2 ? 'block' : 'hidden'} ${
-							dashView === 'errorLogs' ? 'btn' : 'btn-outline'
+							dashView === 'archived' ? 'btn' : 'btn-outline'
 						} px-2`}
 					>
 						<MdOutlineArchive size={30} />
+					</button>
+					<button
+						onClick={() => {
+							navigate('#home');
+						}}
+						className={`${userRole() > 2 ? 'block' : 'hidden'} ${
+							dashView === 'errorLogs' ? 'btn' : 'btn-outline'
+						} px-2`}
+					>
+						<BsActivity size={30} />
 					</button>
 					<button
 						onClick={() => {

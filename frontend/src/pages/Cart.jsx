@@ -80,10 +80,18 @@ const Cart = () => {
 												<img
 													src={
 														item.image
-															? 'data:image/jpeg;base64,' + item.image
+															? `data:image/jpeg;base64,${item.image}`
 															: DefaultProductImg
 													}
-													alt={item.name + ' image'}
+													alt={
+														item.image
+															? item.name + 'Product Image'
+															: 'Default Product Image'
+													}
+													onError={(e) => {
+														e.target.src = DefaultProductImg; // Fallback to default image on error
+														e.target.alt = 'Default Product Image';
+													}}
 													className='object-cover border-2 border-slate-300 h-full w-full rounded-md'
 												/>
 											</div>

@@ -94,24 +94,22 @@ const ProductCard = ({
 								SALE
 							</span>
 						)}
-						<div
-							//to={`/product/${item._id}`}
-							className='w-full h-[250px] flex justify-center items-center overflow-hidden rounded-t-lg'
-						>
+						<div className='w-full h-[250px] flex justify-center items-center overflow-hidden rounded-t-lg'>
 							<img
-								alt={item.name + ' image'}
-								// src={
-								// 	item.img === '' || item.img === undefined
-								// 		? DefaultProductImg
-								// 		: item.img === 'santaHat'
-								// 		? SantaHat
-								// 		: item.img
-								// }
 								src={
 									item.image
-										? 'data:image/jpeg;base64,' + item.image
+										? `data:image/jpeg;base64,${item.image}`
 										: DefaultProductImg
 								}
+								alt={
+									item.image
+										? item.name + 'Product Image'
+										: 'Default Product Image'
+								}
+								onError={(e) => {
+									e.target.src = DefaultProductImg; // Fallback to default image on error
+									e.target.alt = 'Default Product Image';
+								}}
 								className='object-cover min-h-full min-w-full'
 							/>
 						</div>
