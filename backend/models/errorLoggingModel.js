@@ -2,9 +2,14 @@ import mongoose from 'mongoose';
 
 const errorLoggingSchema = mongoose.Schema(
 	{
-		userId: {
-			type: String,
-			default: 'guest',
+		user: {
+			userId: {
+				type: String,
+			},
+			username: {
+				type: String,
+				default: 'Guest',
+			},
 		},
 		errorData: {
 			error: { type: String },

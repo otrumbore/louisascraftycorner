@@ -89,23 +89,23 @@ const EditProduct = () => {
 			enqueueSnackbar('Product ' + data.name + ' updated', {
 				variant: 'success',
 			});
-			try {
-				const data = [
-					{
-						userId: userDetails._id,
-						activityData: {
-							activity: 'edited ' + data.name + ' product',
-							page: 'admin/editproduct',
-						},
-						browser: '',
-					},
-				];
 
-				const res = await sendActivityLog(data);
+			try {
+				const data2 = {
+					user: { username: userDetails.username, userId: userDetails._id },
+					activityData: {
+						activity: 'edited ' + data.name + ' product',
+						page: 'admin/editproduct',
+					},
+					browser: '',
+				};
+				console.log(data2);
+				const res = await sendActivityLog(data2);
+				console.log(res);
 			} catch (error) {
 				console.error('could not send actvity log:', error);
 			}
-			navigate('/admin');
+			navigate('/admin#products');
 		} else {
 			setLoading(false);
 			enqueueSnackbar('Could not update product', {

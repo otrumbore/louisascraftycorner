@@ -88,17 +88,14 @@ const AddProduct = () => {
 					variant: 'success',
 				});
 				try {
-					const data = [
-						{
-							userId: userDetails._id,
-							activityData: {
-								activity: 'added new product ' + data.name,
-								page: 'admin/addproduct',
-							},
-							browser: '',
+					const data = {
+						userId: { userId: userDetails._id, username: userDetails.username },
+						activityData: {
+							activity: 'added new product ' + data.name,
+							page: 'admin/addproduct',
 						},
-					];
-
+						browser: '',
+					};
 					const res = await sendActivityLog(data);
 				} catch (error) {
 					console.error('could not send actvity log:', error);

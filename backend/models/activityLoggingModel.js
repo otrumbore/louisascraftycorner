@@ -2,9 +2,14 @@ import mongoose from 'mongoose';
 
 const activityLoggingSchema = mongoose.Schema(
 	{
-		userId: {
-			type: String,
-			default: 'guest',
+		user: {
+			username: {
+				type: String,
+				default: 'guest',
+			},
+			userId: {
+				type: String,
+			},
 		},
 		activityData: {
 			activity: { type: String },

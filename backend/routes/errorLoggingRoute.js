@@ -16,10 +16,10 @@ const router = express.Router();
 // Creating error log
 router.post('/', async (request, response) => {
 	try {
-		const { userId, errorData, browser } = request.body;
+		const { user, errorData, browser } = request.body;
 
 		const newErrorLog = await errorLogging.create({
-			userId,
+			user,
 			errorData,
 			browser,
 		});

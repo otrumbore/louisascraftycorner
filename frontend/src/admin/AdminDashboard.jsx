@@ -20,6 +20,8 @@ import { useUser } from '../context/UserContext';
 import Products from './components/dashboard/Products';
 import Users from './components/dashboard/Users';
 import LoadingModal from '../components/LoadingModal';
+import ActivityLogs from './components/dashboard/ActivityLogs';
+import ErrorLogs from './components/dashboard/ErrorLogs';
 
 const AdminDashboard = () => {
 	const { userRole } = useUser();
@@ -126,17 +128,17 @@ const AdminDashboard = () => {
 					</button>
 					<button
 						onClick={() => {
-							navigate('#home');
+							navigate('#activityLogs');
 						}}
 						className={`${userRole() > 2 ? 'block' : 'hidden'} ${
-							dashView === 'errorLogs' ? 'btn' : 'btn-outline'
+							dashView === 'activityLogs' ? 'btn' : 'btn-outline'
 						} px-2`}
 					>
 						<BsActivity size={30} />
 					</button>
 					<button
 						onClick={() => {
-							navigate('#home');
+							navigate('#errorLogs');
 						}}
 						className={`${userRole() > 2 ? 'block' : 'hidden'} ${
 							dashView === 'errorLogs' ? 'btn' : 'btn-outline'
@@ -223,6 +225,10 @@ const AdminDashboard = () => {
 				<Products archived={true} />
 			) : dashView === 'settings' ? (
 				<Dashboard />
+			) : dashView === 'activityLogs' ? (
+				<ActivityLogs />
+			) : dashView === 'errorLogs' ? (
+				<ErrorLogs />
 			) : (
 				<Dashboard />
 			)}

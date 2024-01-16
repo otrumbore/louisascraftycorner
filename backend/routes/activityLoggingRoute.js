@@ -16,10 +16,10 @@ const router = express.Router();
 // Creating activity log
 router.post('/', async (request, response) => {
 	try {
-		const { userId, activityData, browser } = request.body;
+		const { user, activityData, browser } = request.body;
 
 		const newActivityLog = await activityLogging.create({
-			userId,
+			user,
 			activityData,
 			browser,
 		});
