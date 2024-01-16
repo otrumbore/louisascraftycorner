@@ -9,6 +9,8 @@ import errorLogging, { sendActivityLog } from '../../api/admin/logging.api';
 import { useUser } from '../../context/UserContext';
 import ImageUpload, { sendImageURL } from '../components/ImageUpload';
 
+import { MdAttachMoney } from 'react-icons/md';
+
 const AddProduct = () => {
 	const [name, setName] = useState('');
 	const [description, setDescription] = useState(
@@ -125,84 +127,107 @@ const AddProduct = () => {
 	return (
 		<div className='mt-[8rem] p-4'>
 			<BackButton />
-			<h1 className='text-3xl my-4'>Add Product</h1>
+			<h1 className='text-3xl my-4 w-full text-center'>Add Product</h1>
 			<LoadingModal loading={loading} />
-			<div className='flex flex-col border-2 border-sky-400 rounded-xl w-[600px] p-4 mx-auto'>
-				<div className='my-4'>
-					<label className='text-xl mr-4 text-gray-500'>Name</label>
-					<input
-						type='text'
-						value={name}
-						onChange={(e) => setName(e.target.value)}
-						className='border-2 border-gray-500 px-4 py-2 w-full'
-					/>
-				</div>
-				<div className='my-4'>
-					<label className='text-xl mr-4 text-gray-500'>Description</label>
-					<textarea
-						type='text'
-						value={description}
-						onChange={(e) => setDescription(e.target.value)}
-						className='border-2 border-gray-500 px-4 py-2 w-full resize-none'
-						rows={6}
-					/>
-				</div>
-				<div className='my-4'>
-					<div className='flex'>
-						<label className='w-full text-xl text-gray-500'>Price</label>
-						<label className='ml-4 w-full text-xl text-gray-500'>
-							Stock Available
-						</label>
+			<div className='flex flex-col border-2 border-primary rounded-xl w-[1200px] p-4 mx-auto'>
+				<div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
+					<div>
+						<div className='my-4'>
+							<label className='text-xl mr-4 text-gray-500'>Name</label>
+							<input
+								type='text'
+								value={name}
+								onChange={(e) => setName(e.target.value)}
+								className='input'
+								placeholder='Name'
+							/>
+						</div>
+
+						<div className='my-4'>
+							<label className='text-xl mr-4 text-gray-500'>Description</label>
+							<textarea
+								type='text'
+								value={description}
+								onChange={(e) => setDescription(e.target.value)}
+								className='input px-4 py-2 w-full resize-none'
+								rows={6}
+							/>
+						</div>
+						<ImageUpload />
 					</div>
-					<div className='flex gap-4'>
-						<input
-							type='text'
-							value={price}
-							onChange={(e) => setPrice(e.target.value)}
-							className='border-2 border-gray-500 px-4 py-2 w-full'
-						/>
-						<input
-							type='text'
-							value={inventory}
-							onChange={(e) => setInventory(e.target.value)}
-							className='border-2 border-gray-500 px-4 py-2 w-full'
-						/>
-					</div>
-				</div>
-				<div className='my-4'>
-					<div className='flex'>
-						<label className='text-xl w-full text-gray-500'>Type</label>
-						<label className='ml-4 text-xl w-full text-gray-500'>
-							Collection
-						</label>
-					</div>
-					<div className='flex gap-4'>
-						<input
-							type='text'
-							value={type}
-							onChange={(e) => setType(e.target.value)}
-							className='border-2 border-gray-500 px-4 py-2 w-full'
-						/>
-						<input
-							type='text'
-							value={category}
-							onChange={(e) => setCategory(e.target.value)}
-							className='border-2 border-gray-500 px-4 py-2 w-full'
-						/>
+					<div>
+						<div className='my-4'>
+							<div className='flex'>
+								<label className='w-full text-xl text-gray-500'>Price</label>
+								<label className='ml-4 w-full text-xl text-gray-500'>
+									Stock Available
+								</label>
+							</div>
+							<div className='flex gap-4'>
+								<div className='relative flex w-full items-center'>
+									<input
+										type='text'
+										value={price}
+										onChange={(e) => setPrice(e.target.value)}
+										className='input text-xl pl-6'
+									/>
+									<MdAttachMoney
+										size={25}
+										className='absolute left-1 top-[1.4rem] text-gray-500'
+									/>
+								</div>
+								<div className='w-full'>
+									<input
+										type='text'
+										value={inventory}
+										onChange={(e) => setInventory(e.target.value)}
+										className='input'
+									/>
+								</div>
+							</div>
+						</div>
+						<div className='my-4'>
+							<div className='flex'>
+								<label className='text-xl w-full text-gray-500'>Type</label>
+								<label className='ml-4 text-xl w-full text-gray-500'>
+									Collection
+								</label>
+							</div>
+							<div className='flex gap-4'>
+								<input
+									type='text'
+									value={type}
+									onChange={(e) => setType(e.target.value)}
+									className='input'
+								/>
+								<input
+									type='text'
+									value={category}
+									onChange={(e) => setCategory(e.target.value)}
+									className='input'
+								/>
+							</div>
+						</div>
+
+						<div className='mt-7 mb-5'>
+							<label className='text-xl mr-4 text-gray-500'>
+								Tags (separate with commas)
+							</label>
+							<input
+								type='text'
+								value={tags}
+								onChange={(e) => setTags(e.target.value)}
+								className='input'
+							/>
+						</div>
+						<div className='w-full flex justify-end'>
+							<button className='btn w-[35%]' onClick={handleAddProduct}>
+								Save
+							</button>
+						</div>
 					</div>
 				</div>
 
-				<div className='my-4'>
-					<label className='text-xl mr-4 text-gray-500'>
-						Tags (separate with commas)
-					</label>
-					<input
-						type='text'
-						value={tags}
-						onChange={(e) => setTags(e.target.value)}
-						className='border-2 border-gray-500 px-4 py-2 w-full'
-					/>
-				</div>
 				{/* <div className='my-4'>
 					<label className='text-xl mr-4 text-gray-500'>Image</label>
 					<input
@@ -222,11 +247,6 @@ const AddProduct = () => {
 						)}
 					</div>
 				</div> */}
-				<ImageUpload />
-
-				<button className='p-2 bg-sky-300 m-8' onClick={handleAddProduct}>
-					Save
-				</button>
 			</div>
 		</div>
 	);
