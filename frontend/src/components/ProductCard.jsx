@@ -40,7 +40,7 @@ const ProductCard = ({
 		let filteredProducts = products;
 
 		if (products && products.length > 0) {
-			if (filteredProducts && !userRole()) {
+			if (filteredProducts && !userRole() < 2) {
 				filteredProducts = filteredProducts.filter(
 					(item) => item.type !== 'test'
 				);
@@ -57,18 +57,30 @@ const ProductCard = ({
 							(filterCategory && item.category === filterCategory) ||
 							(filterType && item.type === filterType)
 					)
-					.filter((item) => item._id !== currProduct);
+					.filter(
+						(item) =>
+							item._id !== currProduct &&
+							item.archived === false &&
+							item.active === true
+					);
 			} else {
 				if (filterCategory) {
 					filteredProducts = filteredProducts.filter(
 						(item) =>
-							item.category === filterCategory && item._id !== currProduct
+							item.category === filterCategory &&
+							item._id !== currProduct &&
+							item.archived === false &&
+							item.active === true
 					);
 				}
 
 				if (filterType) {
 					filteredProducts = filteredProducts.filter(
-						(item) => item.type === filterType && item._id !== currProduct
+						(item) =>
+							item.type === filterType &&
+							item._id !== currProduct &&
+							item.archived === false &&
+							item.active === true
 					);
 				}
 			}
