@@ -20,6 +20,7 @@ const Navbar = () => {
 	const location = useLocation();
 	const pathName = location.pathname;
 	const { userDetails, userRole, userFavorites } = useUser();
+	const [searchOpen, setSearchOpen] = useState(false);
 
 	//cart stuff
 	const {
@@ -82,6 +83,10 @@ const Navbar = () => {
 
 	const toggleMobileMenu = () => {
 		setIsMobileMenuOpen(!isMobileMenuOpen);
+	};
+
+	const toggleSearch = () => {
+		setSearchOpen(!searchOpen);
 	};
 
 	return (
@@ -147,6 +152,24 @@ const Navbar = () => {
 							scrolled || pathName !== '/' ? 'text-gray-600' : 'text-white'
 						}`}
 					>
+						{/* <div
+							className={`relative ${
+								searchOpen ? 'w-56' : 'w-0'
+							} overflow-hidden transition-all duration-300 `}
+						>
+							<p>Search</p>
+							<input
+								type='text'
+								placeholder='Search...'
+								className='absolute top-0 right-0 w-full h-full p-2 bg-gray-100 border-4 border-primary rounded-md'
+							/>
+						</div>
+						<IoIosSearch
+							size={28}
+							onClick={toggleSearch}
+							className='cursor-pointer'
+						/> */}
+
 						<Link
 							to='/user/dashboard'
 							className='p-2 btn-ghost font-medium hover:bg-opacity-90 cursor-pointer'
