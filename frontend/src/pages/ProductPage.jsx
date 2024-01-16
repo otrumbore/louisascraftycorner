@@ -323,26 +323,32 @@ const ProductPage = () => {
 								<div className='flex'>
 									<div className='flex w-full items-center justify-end'>
 										<div className='flex justify-between items-center gap-x-6 px-4 py-2 lg:h-12 btn-outline text-gray-700'>
-											<FaMinus
-												className='hover:cursor-pointer'
-												size={20}
-												onClick={() => qty > 1 && setQty(qty - 1)}
-											/>
-											<p className='text-xl lg:text-2xl'>{qty}</p>
-											<FaPlus
-												className='hover:cursor-pointer'
-												size={20}
-												onClick={() =>
-													qty !== product.inventory
-														? setQty(qty + 1)
-														: enqueueSnackbar(
-																'Max quantity reached. Please contact us for custom order if more needed!',
-																{
-																	variant: 'info',
-																}
-														  )
-												}
-											/>
+											{product.inventory === 1 ? (
+												<p>Only 1 Left</p>
+											) : (
+												<>
+													<FaMinus
+														className='hover:cursor-pointer'
+														size={20}
+														onClick={() => qty > 1 && setQty(qty - 1)}
+													/>
+													<p className='text-xl lg:text-2xl'>{qty}</p>
+													<FaPlus
+														className='hover:cursor-pointer'
+														size={20}
+														onClick={() =>
+															qty !== product.inventory
+																? setQty(qty + 1)
+																: enqueueSnackbar(
+																		'Max quantity reached. Please contact us for custom order if more needed!',
+																		{
+																			variant: 'info',
+																		}
+																  )
+														}
+													/>
+												</>
+											)}
 										</div>
 									</div>
 								</div>
