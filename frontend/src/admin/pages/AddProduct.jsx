@@ -126,10 +126,13 @@ const AddProduct = () => {
 
 	return (
 		<div className='mt-[8rem] p-4'>
-			<BackButton />
-			<h1 className='text-3xl my-4 w-full text-center'>Add Product</h1>
 			<LoadingModal loading={loading} />
+
 			<div className='flex flex-col border-2 border-primary rounded-xl w-[1200px] p-4 mx-auto'>
+				<div className=' mb-2 flex'>
+					<BackButton />
+					<h1 className='text-3xl w-full text-center'>Add Product</h1>
+				</div>
 				<div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
 					<div>
 						<div className='my-4'>
@@ -170,6 +173,7 @@ const AddProduct = () => {
 										value={price}
 										onChange={(e) => setPrice(e.target.value)}
 										className='input text-xl pl-6'
+										placeholder='0.00'
 									/>
 									<MdAttachMoney
 										size={25}
