@@ -121,13 +121,13 @@ const Shop = () => {
 						<div className='flex w-full flex-col lg:flex-row items-center justify-between gap-4'>
 							<input
 								type='text'
-								className='p-2.5 input-ghost'
+								className='p-2.5 input-ghost lg:w-[30%] focus:lg:w-full transform duration-700'
 								placeholder='Search...'
 								value={searchText}
 								onChange={handleSearchChange}
 							/>
 							<select
-								className='p-[.80rem] w-full lg:max-w-fit input-ghost'
+								className='p-[.80rem] w-full lg:min-w-fit lg:max-w-[20%] input-ghost'
 								value={selectedCollection}
 								onChange={handleCollectionChange}
 							>
@@ -139,7 +139,7 @@ const Shop = () => {
 								))}
 							</select>
 							<select
-								className='p-[.80rem] w-full lg:max-w-fit input-ghost'
+								className='p-[.80rem] w-full lg:min-w-fit lg:max-w-[20%] input-ghost'
 								//value={}
 								//onChange={/* your corresponding handler */}
 							>
@@ -187,7 +187,7 @@ const Shop = () => {
 						{products.length > 0 ? (
 							<ProductCard products={products} numProducts={20} />
 						) : (
-							loading && (
+							!loading && (
 								<div className='flex w-full justify-center'>
 									<h3 className='text-2xl'>No products found...😔</h3>
 								</div>
