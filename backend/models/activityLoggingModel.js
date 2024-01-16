@@ -9,6 +9,7 @@ const activityLoggingSchema = mongoose.Schema(
 			},
 			userId: {
 				type: String,
+				default: '0',
 			},
 		},
 		activityData: {

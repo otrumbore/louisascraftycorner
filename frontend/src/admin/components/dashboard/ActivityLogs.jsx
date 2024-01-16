@@ -10,7 +10,16 @@ const ActivityLogs = () => {
 	const fetchActivity = async () => {
 		try {
 			const res = await getActivityLogs();
-			setActivity(res);
+			// Sort the activity array based on createdAt in descending order (newest first)
+			const sortedActivity = [...res].sort(
+				(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+			);
+
+			// Keep only the last 30 logs
+			const trimmedActivity = sortedActivity.slice(0, 30);
+
+			setActivity(trimmedActivity);
+			//setActivity(res);
 		} catch (error) {
 			console.log(error);
 			setLoading(false);
@@ -27,6 +36,7 @@ const ActivityLogs = () => {
 			setLoading(false);
 		}
 	}, [activity]);
+
 	return (
 		<>
 			<LoadingModal loading={loading} />
@@ -38,7 +48,7 @@ const ActivityLogs = () => {
 							<th className='text-left'>User</th>
 							<th className='text-left'>Activity</th>
 							<th className='text-left'>Page</th>
-							<th className='text-right'>Operations</th>
+							<th className='max-md:hidden text-right'>Operations</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -56,10 +66,12 @@ const ActivityLogs = () => {
 										  })
 										: 'No Recent Update'}
 								</td>
-								<td className=''>{item.user.username}</td>
-								<td className='text-wrap'>{item.activityData.activity}</td>
-								<td className=''>{item.activityData.page}</td>
-								<td className='text-right'>Buttons</td>
+								<td className=''>{item.user?.username ?? 'No Data'}</td>
+								<td className='text-wrap'>
+									{item.activityData?.activity ?? 'No Data'}
+								</td>
+								<td className=''>{item.activityData?.page ?? 'No Data'}</td>
+								<td className='max-md:hidden text-right'>Buttons</td>
 							</tr>
 						))}
 					</tbody>

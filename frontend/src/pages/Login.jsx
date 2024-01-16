@@ -6,7 +6,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie'; // Import the js-cookie library
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
-import sendErrorLog from '../api/admin/logging.api';
+import sendErrorLog, { sendActivityLog } from '../api/admin/logging.api';
 
 const Login = () => {
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
@@ -124,6 +124,22 @@ const Login = () => {
 
 				return;
 			}
+			// const data2 = {
+			// 	user: { username: userDetails.username, userId: userDetails._id },
+			// 	activityData: {
+			// 		activity: 'edited ' + data.name + ' product',
+			// 		page: 'admin/editproduct',
+			// 	},
+			// 	browser: '',
+			// };
+
+			const activity = {
+				user: { username: res.data.username, userId: res.data.userId },
+				activityData: { activity: 'sucessful login', page: 'login' },
+				browser: 'Browser: ' + navigator.userAgent,
+			};
+
+			sendActivityLog(activity);
 
 			getUserDetails();
 			sendActivityStatus(true);
