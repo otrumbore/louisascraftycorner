@@ -11,6 +11,7 @@ import { IoPricetagsOutline } from 'react-icons/io5';
 import { SiMonkeytype } from 'react-icons/si';
 import { updateProduct } from '../../../api/products.api';
 import { Link, useNavigate } from 'react-router-dom';
+import DefaultProductImg from '../../../assets/product-img/default.png';
 
 const capitalizeFirstLetter = (string) => {
 	return string.charAt(0).toUpperCase() + string.slice(1);
