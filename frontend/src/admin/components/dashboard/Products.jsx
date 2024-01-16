@@ -8,8 +8,8 @@ import {
 	MdOutlineVisibility,
 	MdOutlineEdit,
 	MdOutlinePreview,
-	MdOutlineSubdirectoryArrowRight,
 } from 'react-icons/md';
+import { VscPreview } from 'react-icons/vsc';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import getProducts, { updateProduct } from '../../../api/products.api';
@@ -160,116 +160,138 @@ const Products = ({ archived }) => {
 						No products have been found
 					</p>
 				)}
-				<table className='w-full border-4 border-primary'>
-					<thead className='border-4 border-primary text-xl font-bold'>
-						<tr className=''>
-							<th className='max-lg:hidden'></th>
-							<th className='max-md:hidden'>ID</th>
-							<th>Name</th>
-							<th>Price</th>
-							<th>Quantity</th>
-							<th>Rating</th>
-							<th className='max-lg:hidden'>Status</th>
-							<th className='max-lg:hidden'>Last Update</th>
-							<th className='max-lg:hidden'>Actions</th>
-						</tr>
-					</thead>
-					<tbody className=''>
-						{products.map((product) => (
-							<tr key={product._id} className='border-b-4'>
-								<td className='max-lg:hidden'>
-									<div className='flex justify-center'>
-										<img
-											src={product.image}
-											className='w-20 h-20 border-2 rounded-md hover:scale-150'
-										/>
-									</div>
-								</td>
-								<td className='max-md:hidden text-center'>{product.storeId}</td>
-								<td>
-									<div className='flex justify-center gap-1'>
-										<p>{product.name}</p>
-										<p className='max-lg:hidden'>{'- ' + product.type}</p>
-									</div>
-								</td>
-								<td className='text-center'>${product.price}</td>
-								<td className='text-center'>{product.inventory}</td>
-								<td className='text-center'>{product.rating}</td>
-								<td className='max-lg:hidden'>
-									<div className='flex items-center justify-center space-x-2'>
-										{product.active ? (
-											<p
-												className={`text-left w-fit text-wrap bg-green-400 text-white px-3 py-1 rounded-md`}
-											>
-												Active
-											</p>
-										) : (
-											<p
-												className={`text-left w-fit text-wrap bg-orange-400 text-white px-3 py-1 rounded-md`}
-											>
-												Inactive
-											</p>
-										)}
-										{product.sale > 0 && (
-											<p
-												className={`text-left w-fit text-wrap bg-red-500 text-white px-3 py-1 rounded-md`}
-											>
-												On Sale
-											</p>
-										)}
-									</div>
-								</td>
-								<td className='max-lg:hidden'>
-									<p className={`text-wrap text-center `}>
-										{product.updatedAt
-											? new Date(product.updatedAt).toLocaleString('en-US', {
-													hour: 'numeric',
-													minute: 'numeric',
-													hour12: true,
-													day: 'numeric',
-													month: 'numeric',
-													year: 'numeric',
-											  })
-											: 'No Recent Update'}
-									</p>
-								</td>
-								<td className='max-lg:hidden'>
-									<div className='flex items-center justify-center'>
-										<Link
-											to={`/admin/editproduct/${product._id}`}
-											className='btn-ghost px-2'
-										>
-											<MdOutlineEdit size={25} />
-										</Link>
-										<button
-											className={`btn-ghost px-2 ${
-												product.active ? 'text-orange-400' : 'text-green-400'
-											}`}
-											onClick={() => {
-												const data = { active: !product.active };
-												sendProductUpdate(product._id, data, product.name);
-											}}
-										>
-											{product.active ? (
-												<MdOutlineVisibilityOff className='' size={25} />
-											) : (
-												<MdOutlineVisibility className='' size={25} />
-											)}
-										</button>
-										<button
-											className={`btn-ghost px-2 `}
-											onClick={() => {
-												openModal(product);
-											}}
-										>
-											<MdOutlinePreview className='' size={25} />
-										</button>
-									</div>
-								</td>
+
+				<div className='pb-4 pr-4 border-4 border-primary rounded-md'>
+					<table className='w-full'>
+						<thead className='border-b-4 border-primary text-xl font-bold'>
+							<tr className=''>
+								<th className='max-lg:hidden'>
+									<div className='py-4'>Image</div>
+								</th>
+								<th className='max-md:hidden'>ID</th>
+								<th>Name</th>
+								<th>Price</th>
+								<th>Quantity</th>
+								<th>Rating</th>
+								<th className='max-lg:hidden'>Status</th>
+								<th className='max-lg:hidden'>Last Update</th>
+								<th className='max-lg:hidden text-right pr-2'>Actions</th>
 							</tr>
-						))}
-					</tbody>
-				</table>
+						</thead>
+						<tbody className=''>
+							{products.map((product) => (
+								<tr key={product._id} className='border-b-4'>
+									<td className='max-lg:hidden'>
+										<div className='flex justify-center py-2'>
+											<img
+												src={product.image}
+												className='w-20 h-20 border-2 rounded-md hover:scale-150'
+											/>
+										</div>
+									</td>
+									<td className='max-md:hidden text-center'>
+										{product.storeId}
+									</td>
+									<td>
+										<div className='flex justify-center gap-1'>
+											<p>{product.name}</p>
+											<p className='max-lg:hidden'>{'- ' + product.type}</p>
+										</div>
+									</td>
+									<td className='text-center'>${product.price}</td>
+									<td className='text-center'>{product.inventory}</td>
+									<td className='text-center'>{product.rating}/5</td>
+									<td className='max-lg:hidden'>
+										<div className='flex items-center justify-center space-x-2'>
+											{product.active ? (
+												<p
+													className={`text-left w-fit text-wrap bg-green-400 text-white px-3 py-1 rounded-md`}
+												>
+													Active
+												</p>
+											) : (
+												<p
+													className={`text-left w-fit text-wrap bg-orange-400 text-white px-3 py-1 rounded-md`}
+												>
+													Inactive
+												</p>
+											)}
+											{product.sale > 0 && (
+												<p
+													className={`text-left w-fit text-wrap bg-red-500 text-white px-3 py-1 rounded-md`}
+												>
+													On Sale
+												</p>
+											)}
+										</div>
+									</td>
+									<td className='max-lg:hidden'>
+										<p className={`text-wrap text-center `}>
+											{product.updatedAt
+												? new Date(product.updatedAt).toLocaleString('en-US', {
+														hour: 'numeric',
+														minute: 'numeric',
+														hour12: true,
+														day: 'numeric',
+														month: 'numeric',
+														year: 'numeric',
+												  })
+												: 'No Recent Update'}
+										</p>
+									</td>
+									<td className='max-lg:hidden'>
+										<div className='flex flex-col items-end'>
+											<div className='flex items-center'>
+												<Link
+													to={`/admin/editproduct/${product._id}`}
+													className='btn-ghost px-2'
+												>
+													<MdOutlineEdit size={25} />
+												</Link>
+												<button
+													className={`btn-ghost px-2 ${
+														product.active
+															? 'text-orange-400'
+															: 'text-green-400'
+													}`}
+													onClick={() => {
+														const data = { active: !product.active };
+														sendProductUpdate(product._id, data, product.name);
+													}}
+												>
+													{product.active ? (
+														<MdOutlineVisibilityOff className='' size={25} />
+													) : (
+														<MdOutlineVisibility className='' size={25} />
+													)}
+												</button>
+											</div>
+											<div className='flex items-center'>
+												<Link
+													to={`/product/${product._id}`}
+													className={`btn-ghost px-2 `}
+													onClick={() => {
+														openModal(product);
+													}}
+												>
+													<MdOutlinePreview className='' size={25} />
+												</Link>
+												<button
+													className={`btn-ghost px-2 `}
+													onClick={() => {
+														openModal(product);
+													}}
+												>
+													<VscPreview className='' size={25} />
+												</button>
+											</div>
+										</div>
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
 				{showModal && <ProductModal product={showModal} onClose={closeModal} />}
 			</div>
 		</>
