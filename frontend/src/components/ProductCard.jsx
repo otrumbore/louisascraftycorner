@@ -144,7 +144,7 @@ const ProductCard = ({
 									))}
 								</div>
 							) : (
-								<div>No Rating</div>
+								''
 							)}
 						</div>
 					</Link>
