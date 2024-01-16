@@ -20,6 +20,10 @@ const Shop = () => {
 
 			// Filter products based on search criteria
 			const filteredProducts = fetchedProducts.filter((product) => {
+				// Additional filters to exclude archived and inactive products
+				const excludeArchived = product.archived !== true;
+				const excludeInactive = product.active !== false;
+
 				const isNumericSearch = !isNaN(searchText);
 
 				const matchesSearch =
@@ -41,7 +45,14 @@ const Shop = () => {
 
 				const matchesOnSale = onSaleOnly ? product.sale > 0 : true;
 
-				return matchesSearch && matchesCollection && matchesOnSale;
+				// Apply all filters
+				return (
+					excludeArchived &&
+					excludeInactive &&
+					matchesSearch &&
+					matchesCollection &&
+					matchesOnSale
+				);
 			});
 
 			setProducts(filteredProducts);
@@ -73,11 +84,29 @@ const Shop = () => {
 		setOnSaleOnly(event.target.checked);
 	};
 
-	useEffect(() => {
-		fetchData();
-	}, [searchText, selectedCollection, onSaleOnly]);
+	const clearFilters = () => {
+		setSearchText('');
+		setSelectedCollection('');
+		setOnSaleOnly(false);
+	};
 
 	useEffect(() => {
+		const fetchFilteredData = async () => {
+			await fetchData();
+		};
+
+		if (searchText === '' && selectedCollection === '' && !onSaleOnly) {
+			// If all filters are cleared, fetch all products immediately
+			fetchFilteredData();
+		}
+	}, [searchText, selectedCollection, onSaleOnly]);
+
+	// useEffect(() => {
+	// 	fetchData();
+	// }, [searchText, selectedCollection, onSaleOnly]);
+
+	useEffect(() => {
+		fetchData();
 		fetchSettings();
 		window.scroll(0, 0);
 	}, []);
@@ -92,13 +121,13 @@ const Shop = () => {
 						<div className='flex w-full flex-col lg:flex-row items-center justify-between gap-4'>
 							<input
 								type='text'
-								className='p-2.5 lg:w-2/3 input-ghost'
+								className='p-2.5 input-ghost'
 								placeholder='Search...'
 								value={searchText}
 								onChange={handleSearchChange}
 							/>
 							<select
-								className='p-[.80rem] lg:w-1/3 input-ghost'
+								className='p-[.80rem] w-full lg:max-w-fit input-ghost'
 								value={selectedCollection}
 								onChange={handleCollectionChange}
 							>
@@ -110,11 +139,11 @@ const Shop = () => {
 								))}
 							</select>
 							<select
-								className='p-[.80rem] w-full lg:w-1/3 input-ghost'
+								className='p-[.80rem] w-full lg:max-w-fit input-ghost'
 								//value={}
 								//onChange={/* your corresponding handler */}
 							>
-								<option>Testing</option>
+								<option>All Types</option>
 								<option>Testing</option>
 								<option>Testing</option>
 							</select>
@@ -125,13 +154,22 @@ const Shop = () => {
 									checked={onSaleOnly}
 									onChange={handleOnSaleChange}
 								/>
-								On Sale?
+								Sales
 							</label>
 						</div>
 						<div className='flex w-full lg:w-[35%] justify-between lg:justify-end gap-2 items-center'>
-							<button className='btn-outline px-2 py-1.5'>Clear Filters</button>
 							<button
 								onClick={() => {
+									clearFilters();
+									//fetchFilteredData();
+								}}
+								className='btn-outline px-2 py-1.5'
+							>
+								Clear Filters
+							</button>
+							<button
+								onClick={() => {
+									//clearFilters();
 									fetchData();
 								}}
 								className='btn'
