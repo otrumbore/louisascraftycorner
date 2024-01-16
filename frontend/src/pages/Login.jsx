@@ -137,7 +137,7 @@ const Login = () => {
 				const activity = {
 					user: { username: res.data.username, userId: res.data.userId },
 					activityData: { activity: 'sucessful login', page: 'login' },
-					browser: 'Browser: ' + navigator.userAgent,
+					browser: navigator.userAgent,
 				};
 
 				sendActivityLog(activity);
@@ -154,8 +154,8 @@ const Login = () => {
 		} catch (error) {
 			console.error('User data fetch error:', error);
 			const errorData = {
-				userId: username,
-				errorData: { error: 'User data fetch error: ' + error, page: 'login' },
+				user: { username: username, userId: '' },
+				errorData: { error: 'Unsucessful login ' + error, page: 'login' },
 				browser: navigator.userAgent,
 			};
 			sendErrorLog(errorData);
