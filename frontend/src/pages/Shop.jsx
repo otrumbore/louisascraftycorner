@@ -9,32 +9,75 @@ const Shop = () => {
 	const [products, setProducts] = useState([]);
 	const [collections, setCollections] = useState([]);
 	const [loading, setLoading] = useState(false);
+	const [searchText, setSearchText] = useState('');
+	const [selectedCollection, setSelectedCollection] = useState('');
+	const [onSaleOnly, setOnSaleOnly] = useState(false);
 
 	const fetchData = async () => {
 		setLoading(true);
 		try {
 			const fetchedProducts = await getProducts();
-			setProducts(fetchedProducts);
+
+			// Filter products based on search criteria
+			const filteredProducts = fetchedProducts.filter((product) => {
+				const isNumericSearch = !isNaN(searchText);
+
+				const matchesSearch =
+					searchText === '' ||
+					(isNumericSearch
+						? product.storeId === parseInt(searchText)
+						: product.name.toLowerCase().includes(searchText.toLowerCase()) ||
+						  product.description
+								.toLowerCase()
+								.includes(searchText.toLowerCase()) ||
+						  product.tags.toLowerCase().includes(searchText.toLowerCase()) ||
+						  product.category
+								.toLowerCase()
+								.includes(searchText.toLowerCase()) ||
+						  product.type.toLowerCase().includes(searchText.toLowerCase()));
+
+				const matchesCollection =
+					!selectedCollection || product.collection === selectedCollection;
+
+				const matchesOnSale = onSaleOnly ? product.sale > 0 : true;
+
+				return matchesSearch && matchesCollection && matchesOnSale;
+			});
+
+			setProducts(filteredProducts);
 		} catch (error) {
 			console.error('Error fetching products:', error);
-			setLoading(false);
 		} finally {
 			setLoading(false);
 		}
 	};
+
 	const fetchSettings = async () => {
 		try {
 			const fetchedSettings = await getSettings();
 			setCollections(fetchedSettings.collections);
-			//console.log(fetchedSettings);
 		} catch (error) {
 			console.error('Error fetching products:', error);
-			setLoading(false);
 		}
+	};
+
+	const handleSearchChange = (event) => {
+		setSearchText(event.target.value);
+	};
+
+	const handleCollectionChange = (event) => {
+		setSelectedCollection(event.target.value);
+	};
+
+	const handleOnSaleChange = (event) => {
+		setOnSaleOnly(event.target.checked);
 	};
 
 	useEffect(() => {
 		fetchData();
+	}, [searchText, selectedCollection, onSaleOnly]);
+
+	useEffect(() => {
 		fetchSettings();
 		window.scroll(0, 0);
 	}, []);
@@ -51,13 +94,26 @@ const Shop = () => {
 								type='text'
 								className='p-2.5 lg:w-2/3 input-ghost'
 								placeholder='Search...'
+								value={searchText}
+								onChange={handleSearchChange}
 							/>
-							<select className='p-[.80rem] lg:w-1/3 input-ghost'>
+							<select
+								className='p-[.80rem] lg:w-1/3 input-ghost'
+								value={selectedCollection}
+								onChange={handleCollectionChange}
+							>
+								<option value=''>All Collections</option>
 								{collections.map((item, i) => (
-									<option key={i}>{item.name}</option>
+									<option key={i} value={item.name}>
+										{item.name}
+									</option>
 								))}
 							</select>
-							<select className='p-[.80rem] w-full lg:w-1/3 input-ghost'>
+							<select
+								className='p-[.80rem] w-full lg:w-1/3 input-ghost'
+								//value={}
+								//onChange={/* your corresponding handler */}
+							>
 								<option>Testing</option>
 								<option>Testing</option>
 								<option>Testing</option>
@@ -66,18 +122,37 @@ const Shop = () => {
 								<input
 									className='w-6 h-6 lg:w-5 lg:h-5 text-secondary'
 									type='checkbox'
-									//onChange=''
+									checked={onSaleOnly}
+									onChange={handleOnSaleChange}
 								/>
-								On Sale Only
+								On Sale?
 							</label>
 						</div>
 						<div className='flex w-full lg:w-[35%] justify-between lg:justify-end gap-2 items-center'>
 							<button className='btn-outline px-2 py-1.5'>Clear Filters</button>
-							<button className='btn'>Search</button>
+							<button
+								onClick={() => {
+									fetchData();
+								}}
+								className='btn'
+							>
+								Search
+							</button>
 						</div>
 					</div>
-					<div className='mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-[90%]'>
-						<ProductCard products={products} numProducts={20} />
+					<div
+						className={`mt-12 ${
+							products.length > 0 &&
+							'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
+						} w-[90%]`}
+					>
+						{products.length > 0 ? (
+							<ProductCard products={products} numProducts={20} />
+						) : (
+							<div className='flex w-full justify-center'>
+								<h3 className='text-2xl'>No products found...😔</h3>
+							</div>
+						)}
 					</div>
 				</div>
 			</div>
