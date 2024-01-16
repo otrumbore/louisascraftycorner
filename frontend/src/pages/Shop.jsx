@@ -119,10 +119,10 @@ const Shop = () => {
 
 	return (
 		<div className='p-4 mt-[8rem] w-full flex justify-center'>
-			<LoadingModal loading={loading} />
+			{/* <LoadingModal loading={loading} /> */}
 			<div className='w-full max-w-[1800px]'>
 				<div className='flex flex-col justify-center items-center'>
-					<h3 className='text-3xl lg:text-4xl'>Our Products</h3>
+					<h3 className='text-3xl lg:text-4xl'>Lets get shopping...</h3>
 					<div className='mt-8 gap-4 w-[90%] flex flex-col lg:flex-row items-center justify-between bg-slate-300 p-4 rounded-md'>
 						<div className='flex w-full flex-col lg:flex-row items-center justify-between gap-4'>
 							<input
@@ -179,20 +179,41 @@ const Shop = () => {
 							</button>
 						</div>
 					</div>
+
 					<div
-						className={`mt-12 ${
-							products.length > 0 &&
-							'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
-						} w-[90%]`}
+						className={`mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-[90%]`}
 					>
-						{products.length > 0 ? (
+						{loading &&
+							Array.from({ length: 6 }).map((_, index) => (
+								<div
+									key={index}
+									className='border-4 border-primary shadow rounded-lg w-full mx-auto'
+								>
+									<div className='animate-pulse flex flex-col space-y-4'>
+										<div className='rounded-md bg-slate-700 h-64 w-full'></div>
+										<div className='p-4 flex-1 space-y-6 py-1'>
+											<div className='h-6 bg-slate-700 rounded'></div>
+											<div className='space-y-3'>
+												<div className='grid grid-cols-3 gap-4'>
+													<div className='h-2 bg-slate-700 rounded col-span-2'></div>
+													<div className='h-2 bg-slate-700 rounded col-span-1'></div>
+												</div>
+												<div className='h-2 bg-slate-700 rounded'></div>
+											</div>
+											<div className='flex justify-between items-center'>
+												<div className='h-6 w-20 bg-slate-700 rounded'></div>
+												<div className='h-10 w-24 bg-slate-700 rounded'></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							))}
+						{!loading && products.length > 0 ? (
 							<ProductCard products={products} numProducts={20} />
 						) : (
-							!loading && (
-								<div className='flex w-full justify-center'>
-									<h3 className='text-2xl'>No products found...😔</h3>
-								</div>
-							)
+							<div className='flex w-full justify-center'>
+								<h3 className='text-2xl'>No products found...😔</h3>
+							</div>
 						)}
 					</div>
 				</div>
