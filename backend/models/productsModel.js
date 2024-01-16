@@ -73,7 +73,7 @@ const productSchema = mongoose.Schema(
 			},
 		},
 		image: {
-			type: Buffer,
+			type: String,
 		},
 		active: {
 			type: Boolean,

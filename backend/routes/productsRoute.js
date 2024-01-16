@@ -20,7 +20,7 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-router.post('/', upload.single('image'), async (request, response) => {
+router.post('/', async (request, response) => {
 	try {
 		const {
 			name,
@@ -32,17 +32,17 @@ router.post('/', upload.single('image'), async (request, response) => {
 			rating,
 			tags,
 			inventory,
-			//image,
+			image,
 			active,
 			archived,
 		} = request.body;
 
 		// Compress the uploaded image using sharp
-		const compressedImage = await sharp(request.file.buffer)
-			.rotate() // Automatically rotate based on EXIF orientation
-			.resize({ width: 1200 }) // Set the desired width
-			.jpeg({ quality: 80 }) // Set the desired JPEG quality (0-100)
-			.toBuffer();
+		// const compressedImage = await sharp(request.file.buffer)
+		// 	.rotate() // Automatically rotate based on EXIF orientation
+		// 	.resize({ width: 1200 }) // Set the desired width
+		// 	.jpeg({ quality: 80 }) // Set the desired JPEG quality (0-100)
+		// 	.toBuffer();
 
 		const newProduct = await Product.create({
 			name,
@@ -54,7 +54,7 @@ router.post('/', upload.single('image'), async (request, response) => {
 			rating,
 			tags,
 			inventory,
-			image: compressedImage,
+			image,
 			active,
 			archived,
 		});
@@ -74,12 +74,12 @@ router.get('/', async (request, response) => {
 
 		return response.status(200).json({
 			count: products.length,
-			data: products.map((product) => ({
-				...product._doc,
-				image: product.image
-					? Buffer.from(product.image).toString('base64')
-					: null, // Convert binary to base64
-			})),
+			data: products, //.map((product) => ({
+			// 	...product._doc,
+			// 	image: product.image
+			// 		? Buffer.from(product.image).toString('base64')
+			// 		: null, // Convert binary to base64
+			// })),
 		});
 	} catch (error) {
 		console.error(error.message);
@@ -106,10 +106,12 @@ router.get('/:id', async (request, response) => {
 			: null;
 
 		return response.status(200).json({
-			data: {
-				...product._doc,
-				image: base64Image,
-			},
+			data: product,
+			// data: {
+			// 	p,
+			// 	// ...product._doc,
+			// 	// image: base64Image,
+			// },
 		});
 	} catch (error) {
 		console.error(error.message);
