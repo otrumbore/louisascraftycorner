@@ -7,6 +7,8 @@ import {
 	MdOutlineVisibilityOff,
 	MdOutlineVisibility,
 	MdOutlineEdit,
+	MdOutlinePreview,
+	MdOutlineSubdirectoryArrowRight,
 } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
@@ -91,8 +93,9 @@ const Products = ({ archived }) => {
 		}
 	};
 
-	const openModal = (productId) => {
-		setShowModal(productId);
+	const openModal = (product) => {
+		//console.log(productId);
+		setShowModal(product);
 	};
 
 	const closeModal = () => {
@@ -174,18 +177,25 @@ const Products = ({ archived }) => {
 					<tbody className=''>
 						{products.map((product) => (
 							<tr key={product._id} className='border-b-4'>
-								<th className='max-lg:hidden'>
-									<img
-										src={product.image}
-										className='w-20 h-20 border-2 rounded-md'
-									/>
-								</th>
-								<th className='max-md:hidden'>{product.storeId}</th>
-								<th>{product.name}</th>
-								<th>${product.price}</th>
-								<th>{product.inventory}</th>
-								<th>{product.rating}</th>
-								<th className='max-lg:hidden'>
+								<td className='max-lg:hidden'>
+									<div className='flex justify-center'>
+										<img
+											src={product.image}
+											className='w-20 h-20 border-2 rounded-md hover:scale-150'
+										/>
+									</div>
+								</td>
+								<td className='max-md:hidden text-center'>{product.storeId}</td>
+								<td>
+									<div className='flex justify-center gap-1'>
+										<p>{product.name}</p>
+										<p className='max-lg:hidden'>{'- ' + product.type}</p>
+									</div>
+								</td>
+								<td className='text-center'>${product.price}</td>
+								<td className='text-center'>{product.inventory}</td>
+								<td className='text-center'>{product.rating}</td>
+								<td className='max-lg:hidden'>
 									<div className='flex items-center justify-center space-x-2'>
 										{product.active ? (
 											<p
@@ -208,9 +218,9 @@ const Products = ({ archived }) => {
 											</p>
 										)}
 									</div>
-								</th>
-								<th className='max-lg:hidden'>
-									<p className={`text-wrap `}>
+								</td>
+								<td className='max-lg:hidden'>
+									<p className={`text-wrap text-center `}>
 										{product.updatedAt
 											? new Date(product.updatedAt).toLocaleString('en-US', {
 													hour: 'numeric',
@@ -222,8 +232,8 @@ const Products = ({ archived }) => {
 											  })
 											: 'No Recent Update'}
 									</p>
-								</th>
-								<th className='max-lg:hidden'>
+								</td>
+								<td className='max-lg:hidden'>
 									<div className='flex items-center justify-center'>
 										<Link
 											to={`/admin/editproduct/${product._id}`}
@@ -246,12 +256,21 @@ const Products = ({ archived }) => {
 												<MdOutlineVisibility className='' size={25} />
 											)}
 										</button>
+										<button
+											className={`btn-ghost px-2 `}
+											onClick={() => {
+												openModal(product);
+											}}
+										>
+											<MdOutlinePreview className='' size={25} />
+										</button>
 									</div>
-								</th>
+								</td>
 							</tr>
 						))}
 					</tbody>
 				</table>
+				{showModal && <ProductModal product={showModal} onClose={closeModal} />}
 			</div>
 		</>
 	);
