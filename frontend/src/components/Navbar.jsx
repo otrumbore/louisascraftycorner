@@ -213,12 +213,12 @@ const Navbar = () => {
 			{/* {isMobileMenuOpen && ( */}
 			<div
 				className={`fixed inset-0 z-50 bg-primary bg-opacity-20 ${
-					!isMobileMenuOpen ? 'w-0' : 'w-[100%]'
-				} transition-all duration-500 ease-in-out`}
+					!isMobileMenuOpen ? 'w-0' : 'w-full'
+				} transition-all duration-700 ease-in-out`}
 				onClick={toggleMobileMenu}
 			>
 				<div
-					className={`absolute inset-y-0 left-0 top-0 w-64 bg-slate-200 bg-opacity-90 rounded-r-md shadow-lg ${
+					className={`absolute inset-y-0 left-0 top-0 w-64 bg-slate-200 bg-opacity-90 rounded-r-md shadow-xl shadow-black ${
 						!isMobileMenuOpen && ' -mx-72'
 					} transform duration-500 ease-in-out`}
 				>
