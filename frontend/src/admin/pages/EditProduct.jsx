@@ -8,6 +8,7 @@ import { getProduct, updateProduct } from '../../api/products.api';
 import { useUser } from '../../context/UserContext';
 import { sendActivityLog } from '../../api/admin/logging.api';
 import ImageUpload, { sendImageURL } from '../components/ImageUpload';
+import DefaultProductImg from '../../assets/product-img/default.png';
 
 const EditProduct = () => {
 	const [storeId, setStoreId] = useState('');
@@ -80,7 +81,7 @@ const EditProduct = () => {
 			rating,
 			tags,
 			inventory,
-			image: img,
+			image: !img ? image : img,
 			active,
 			archived,
 		};
@@ -232,7 +233,7 @@ const EditProduct = () => {
 						Current Image:
 						{image && (
 							<img
-								src={image}
+								src={!image ? DefaultProductImg : image}
 								alt='Selected Preview'
 								style={{ maxWidth: '50%', marginTop: '8px' }}
 							/>
