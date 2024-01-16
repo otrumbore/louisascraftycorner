@@ -200,7 +200,7 @@ const Products = ({ archived }) => {
 												Inactive
 											</p>
 										)}
-										{product.sale > -1 && (
+										{product.sale > 0 && (
 											<p
 												className={`text-left w-fit text-wrap bg-red-500 text-white px-3 py-1 rounded-md`}
 											>
