@@ -76,7 +76,7 @@ const Navbar = () => {
 	];
 	const navAdminData = [
 		{ linkName: 'Admin Home', linkTo: '/admin' },
-		{ linkName: 'Orders', linkTo: '/admin' },
+		{ linkName: 'Orders', linkTo: '/admin#orders' },
 		//{ linkName: 'Site Settings', linkTo: '/admin/site_settings' },
 	];
 

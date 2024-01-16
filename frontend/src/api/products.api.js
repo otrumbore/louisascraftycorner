@@ -25,9 +25,9 @@ export const getProduct = async (id) => {
 export const addProduct = async (data) => {
 	try {
 		const response = await axios.post(`${API_URL}/api/products/`, data, {
-			headers: {
-				'Content-Type': 'multipart/form-data',
-			},
+			// headers: {
+			// 	'Content-Type': 'multipart/form-data',
+			// },
 		});
 		return response;
 	} catch (error) {
