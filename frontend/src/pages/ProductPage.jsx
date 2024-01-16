@@ -37,7 +37,7 @@ const ProductPage = () => {
 
 	const [base64ImageData, setBase64ImageData] = useState('');
 
-	const [selectedProduct, setSelectedProduct] = useState({});
+	const [selectedProduct, setSelectedProduct] = useState([]);
 
 	const [loggedIn, setLoggedIn] = useState(false);
 
@@ -64,11 +64,14 @@ const ProductPage = () => {
 	const fetchProduct = async () => {
 		try {
 			const response = await getProduct(id);
+			setBase64ImageData(response.image);
+			console.log(response.image);
 			if (response.image !== undefined) {
 				setBase64ImageData(response.image);
+				console.log(base64ImageData);
 				//console.log(response.data.data.image);
 			}
-			console.log(response);
+			//console.log(response);
 			setProduct(response);
 		} catch (error) {
 			console.error(error);
@@ -180,11 +183,7 @@ const ProductPage = () => {
 					<div className='w-full grid grid-cols-1 lg:grid-cols-2 max-w-[1400px] items-start justify-start'>
 						<div className='h-[500px] flex justify-center'>
 							<img
-								src={
-									product.image
-										? `data:image/jpeg;base64,${product.image}`
-										: DefaultProductImg
-								}
+								src={product.image ? product.image : DefaultProductImg}
 								alt={
 									product.image
 										? product.name + 'Product Image'

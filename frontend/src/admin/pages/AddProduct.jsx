@@ -7,6 +7,7 @@ import LoadingModal from '../../components/LoadingModal';
 import { addProduct } from '../../api/products.api';
 import errorLogging, { sendActivityLog } from '../../api/admin/logging.api';
 import { useUser } from '../../context/UserContext';
+import ImageUpload, { sendImageURL } from '../components/ImageUpload';
 
 const AddProduct = () => {
 	const [name, setName] = useState('');
@@ -42,7 +43,7 @@ const AddProduct = () => {
 			} else {
 				// Show an error message or provide feedback to the user
 				console.error('Invalid file type. Please choose an image file.');
-				nqueueSnackbar('Invalid file type. Please choose an image file.', {
+				enqueueSnackbar('Invalid file type. Please choose an image file.', {
 					variant: 'error',
 				});
 			}
@@ -58,6 +59,8 @@ const AddProduct = () => {
 	}, []);
 
 	const handleAddProduct = async () => {
+		let img = sendImageURL();
+		console.log(img);
 		const data = {
 			name,
 			description,
@@ -68,7 +71,7 @@ const AddProduct = () => {
 			rating,
 			tags,
 			inventory,
-			image: image,
+			image: img,
 			active,
 			archived,
 		};
@@ -81,7 +84,7 @@ const AddProduct = () => {
 		//console.log('image log 2: ', image);
 		setLoading(true);
 		try {
-			const response = await addProduct(formData); // Await the asynchronous function
+			const response = await addProduct(data); // Await the asynchronous function
 			if (response.status === 201 || response.status === 200) {
 				setLoading(false); // Update loading state when data is fetched
 				enqueueSnackbar(`Product ${data.name} added`, {
@@ -200,7 +203,7 @@ const AddProduct = () => {
 						className='border-2 border-gray-500 px-4 py-2 w-full'
 					/>
 				</div>
-				<div className='my-4'>
+				{/* <div className='my-4'>
 					<label className='text-xl mr-4 text-gray-500'>Image</label>
 					<input
 						type='file'
@@ -218,7 +221,9 @@ const AddProduct = () => {
 							/>
 						)}
 					</div>
-				</div>
+				</div> */}
+				<ImageUpload />
+
 				<button className='p-2 bg-sky-300 m-8' onClick={handleAddProduct}>
 					Save
 				</button>

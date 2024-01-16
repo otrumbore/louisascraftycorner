@@ -23,8 +23,6 @@ const ProductModal = ({ product, onClose }) => {
 	const capitalizedCategory = capitalizeFirstLetter(product.category);
 	const capitalizedType = capitalizeFirstLetter(product.type);
 
-	const base64ImageData = product.image || '';
-
 	const toggleActive = (data) => {
 		updateProduct(product._id, data);
 		product.active
@@ -146,11 +144,7 @@ const ProductModal = ({ product, onClose }) => {
 					<div className='flex gap-2 justify-between'>
 						<div className='mt-4 h-[150px] lg:flex justify-center w-[35%]'>
 							<img
-								src={
-									base64ImageData
-										? 'data:image/jpeg;base64,' + base64ImageData
-										: DefaultProductImg
-								}
+								src={product.image ? product.image : DefaultProductImg}
 								alt={product.name + ' image'}
 								className='h-full w-fit object-cover rounded-2xl'
 							/>

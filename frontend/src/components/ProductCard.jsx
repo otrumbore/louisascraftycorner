@@ -108,11 +108,7 @@ const ProductCard = ({
 						)}
 						<div className='w-full h-[250px] flex justify-center items-center overflow-hidden rounded-t-lg'>
 							<img
-								src={
-									item.image
-										? `data:image/jpeg;base64,${item.image}`
-										: DefaultProductImg
-								}
+								src={item.image ? item.image : DefaultProductImg}
 								alt={
 									item.image
 										? item.name + 'Product Image'

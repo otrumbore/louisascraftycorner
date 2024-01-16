@@ -7,6 +7,7 @@ import LoadingModal from '../../components/LoadingModal';
 import { getProduct, updateProduct } from '../../api/products.api';
 import { useUser } from '../../context/UserContext';
 import { sendActivityLog } from '../../api/admin/logging.api';
+import ImageUpload, { sendImageURL } from '../components/ImageUpload';
 
 const EditProduct = () => {
 	const [storeId, setStoreId] = useState('');
@@ -34,7 +35,7 @@ const EditProduct = () => {
 	const fetchProducts = async () => {
 		setLoading(true);
 		const response = await getProduct(id);
-		//console.log(response);
+		console.log(response);
 		if (response) {
 			setStoreId(response.storeId);
 			setName(response.name);
@@ -67,6 +68,7 @@ const EditProduct = () => {
 
 	const handleEditProduct = async () => {
 		//const id = storeId;
+		let img = sendImageURL();
 		const data = {
 			storeId,
 			name,
@@ -78,7 +80,7 @@ const EditProduct = () => {
 			rating,
 			tags,
 			inventory,
-			image,
+			image: img,
 			active,
 			archived,
 		};
@@ -225,6 +227,19 @@ const EditProduct = () => {
 					/>
 					Make Active?
 				</label>
+				<div className='my-4'>
+					<div className='flex flex-col justify-center items-center'>
+						Current Image:
+						{image && (
+							<img
+								src={image}
+								alt='Selected Preview'
+								style={{ maxWidth: '50%', marginTop: '8px' }}
+							/>
+						)}
+					</div>
+				</div>
+				<ImageUpload />
 				<button className='p-2 bg-sky-300 m-8' onClick={handleEditProduct}>
 					Save
 				</button>
