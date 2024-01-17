@@ -93,19 +93,20 @@ const AddProduct = () => {
 					variant: 'success',
 				});
 				try {
-					const data = {
+					const data2 = {
 						user: { username: userDetails.username, userId: userDetails._id },
 						activityData: {
-							activity: 'added new product ' + data.name,
-							page: 'admin/addproduct',
+							activity: 'added product' + data.name,
+							page: 'admin/editproduct',
 						},
-						browser: navigator.userAgent,
+						browser: '',
 					};
-					const res = await sendActivityLog(data);
+
+					const res = await sendActivityLog(data2);
 				} catch (error) {
 					console.error('could not send actvity log:', error);
 				}
-				//console.log(response);
+
 				navigate('/admin#products');
 			} else {
 				setLoading(false);
