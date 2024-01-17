@@ -24,7 +24,7 @@ const Cart = () => {
 		cartSubTotal,
 	} = useCart();
 
-	const { addToFavorites, userFavorites, userDetails } = useUser();
+	const { addToFavorites, userFavorites, userDetails, userRole } = useUser();
 
 	const [loggedIn, setLoggedIn] = useState(false);
 
@@ -40,12 +40,12 @@ const Cart = () => {
 	}, [userDetails, loggedIn]);
 
 	const checkout = async () => {
-		await fetch(`${API_URL}/checkout`, {
+		await fetch(`${API_URL}/api/checkout`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ items: cartItems }),
+			body: JSON.stringify({ items: cartItems, userData: userDetails }),
 		})
 			.then((response) => {
 				return response.json();
@@ -78,11 +78,7 @@ const Cart = () => {
 										<Link to={`/product/${item._id}`}>
 											<div className='flex h-[100px] w-[100px] items-center justify-center'>
 												<img
-													src={
-														item.image
-															? `data:image/jpeg;base64,${item.image}`
-															: DefaultProductImg
-													}
+													src={item.image ? item.image : DefaultProductImg}
 													alt={
 														item.image
 															? item.name + 'Product Image'
@@ -214,7 +210,11 @@ const Cart = () => {
 									</p>
 								</div>
 								<div className='mt-4'>
-									<button className='btn py-3 w-full' onClick={checkout}>
+									<button
+										className='btn py-3 w-full'
+										onClick={checkout}
+										disabled={userRole() < 2}
+									>
 										Checkout
 									</button>
 								</div>
