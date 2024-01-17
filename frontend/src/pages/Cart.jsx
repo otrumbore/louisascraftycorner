@@ -217,7 +217,9 @@ const Cart = () => {
 									>
 										Checkout
 									</button>
-									{userRole() < 2 && <p>Checkout is disabled currently!</p>}
+									{userRole() < 2 && (
+										<h2 className='text-xl'>Checkout is disabled currently!</h2>
+									)}
 								</div>
 							</div>
 						</div>
