@@ -299,13 +299,19 @@ const Navbar = () => {
 					<div className='absolute w-full bottom-4 px-4'>
 						<ul className='flex w-full items-center justify-between'>
 							<li>
-								<Link to='/info/help'>Help</Link>
+								<Link className='btn-ghost px-2' to='/info/help'>
+									Help
+								</Link>
 							</li>
 							<li>
-								<Link to='/info/terms'>Terms</Link>
+								<Link className='btn-ghost px-2' to='/info/terms'>
+									Terms
+								</Link>
 							</li>
 							<li>
-								<Link to='/info/privacy'>Privacy</Link>
+								<Link className='btn-ghost px-2' to='/info/privacy'>
+									Privacy
+								</Link>
 							</li>
 						</ul>
 					</div>
