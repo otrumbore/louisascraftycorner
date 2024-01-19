@@ -15,7 +15,7 @@ import UserModal from './UserModal';
 import { useUser } from '../../../context/UserContext';
 import { useSnackbar } from 'notistack';
 
-const users = () => {
+const Users = () => {
 	const [users, setUsers] = useState([]);
 	const [loading, setLoading] = useState(true);
 
@@ -79,8 +79,8 @@ const users = () => {
 		}
 	};
 
-	const openModal = (userId) => {
-		setShowModal(userId);
+	const openModal = (user) => {
+		setShowModal(user);
 	};
 
 	const closeModal = () => {
@@ -119,7 +119,89 @@ const users = () => {
 						<p>Disabled: {disabledCount}</p>
 					</div>
 				</div>
-				<div className='w-full grid grid-cols-1 border-4 border-primary rounded-md'>
+				<table className='w-full'>
+					<thead className='border-b-4 border-primary text-xl font-bold'>
+						<tr className=''>
+							<th className='pl-2 text-left'>Name</th>
+							<th>Username</th>
+							<th>Email</th>
+
+							<th className=''>Status</th>
+							<th className=''>Last Activity</th>
+							<th className='text-right pr-2'>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{users.map((user) => (
+							<tr className='border-b-2'>
+								<td className='pl-2 text-left py-2'>
+									<button onClick={() => openModal(user)}>{user.name}</button>
+								</td>
+								<td className='text-center'>{user.username}</td>
+								<td className='text-center'>{user.email}</td>
+								<td className='text-center'>
+									<p
+										className={`text-wrap ${
+											user.isActive ? 'text-green-600' : 'text-orange-400'
+										}`}
+									>
+										{user.isActive ? 'Online' : 'Offline'}
+									</p>
+									<p
+										className={`text-wrap ${
+											user.enabled ? 'text-green-600' : 'text-orange-400'
+										}`}
+									>
+										{user.enabled ? 'Enabled' : 'Disabled'}
+									</p>
+								</td>
+								<td className='text-center'>
+									<p className={`text-wrap text-center `}>
+										{user.lastActivity
+											? new Date(user.lastActivity).toLocaleString('en-US', {
+													hour: 'numeric',
+													minute: 'numeric',
+													hour12: true,
+													day: 'numeric',
+													month: 'numeric',
+													year: 'numeric',
+											  })
+											: 'No Recent Update'}
+									</p>
+								</td>
+								<td className='flex justify-end gap-2 items-center'>
+									<button
+										className={`${
+											user.emailValidated ? 'hidden' : 'block'
+										} btn-ghost px-2 text-green-600`}
+										onClick={() => {
+											const data = { emailValidated: !user.emailValidated };
+											sendUserUpdate(user._id, data, user.username);
+										}}
+									>
+										<MdOutlineMarkEmailRead size={25} />
+									</button>
+									<button
+										className='btn-ghost px-2'
+										onClick={() => {
+											const data = { enabled: !user.enabled };
+											sendUserUpdate(user._id, data, user.username);
+										}}
+									>
+										{user.enabled ? (
+											<MdOutlineLock className='text-orange-400' size={25} />
+										) : (
+											<MdOutlineLockOpen className='text-green-600' size={25} />
+										)}
+									</button>
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+				{showModal && <UserModal user={showModal} onClose={closeModal} />}
+
+				{/* <div className='w-full grid grid-cols-1 border-4 border-primary rounded-md'>
 					<div
 						className='relative w-full flex px-4 py-4 cursor-pointer items-center border-b-2 border-slate-400'
 						//onClick={}//openModal(user._id)}
@@ -217,15 +299,13 @@ const users = () => {
 								</button>
 							</div>
 
-							{showModal === user._id && (
-								<UserModal user={user} onClose={closeModal} />
-							)}
+							
 						</div>
 					))}
-				</div>
+				</div> */}
 			</div>
 		</>
 	);
 };
 
-export default users;
+export default Users;
