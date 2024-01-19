@@ -13,11 +13,11 @@ const Register = () => {
 		email: '',
 		password: '',
 		confirmPassword: '',
+		agreeTerms: false,
 	});
 
-	const [agreeTerms, setAgreeTerms] = useState(false);
-
-	const { name, username, email, password, confirmPassword } = formData;
+	const { name, username, email, password, confirmPassword, agreeTerms } =
+		formData;
 
 	const [registerError, setRegisterError] = useState('');
 	const { enqueueSnackbar } = useSnackbar();
@@ -27,7 +27,7 @@ const Register = () => {
 	};
 
 	const handleCheckboxChange = () => {
-		setAgreeTerms(!agreeTerms);
+		setFormData((preData) => ({ ...preData, agreeTerms: !preData.agreeTerms }));
 	};
 
 	useEffect(() => {
@@ -93,6 +93,7 @@ const Register = () => {
 				username: username.trim(),
 				email: email.trim(),
 				password: password.trim(),
+				agreeTerms: agreeTerms,
 				enabled: true,
 			};
 
@@ -114,6 +115,7 @@ const Register = () => {
 				email: '',
 				password: '',
 				confirmPassword: '',
+				agreeTerms: false,
 			});
 
 			// Handle any further actions after successful registration (redirect, show success message, etc.)
