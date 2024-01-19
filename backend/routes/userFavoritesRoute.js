@@ -91,19 +91,8 @@ router.get('/product/:id', async (request, response) => {
 			return response.status(404).send({ message: 'Product not found' });
 		}
 
-		// Assuming 'image' is a Buffer field in your database
-		const imageBuffer = product.image;
-
-		// Check if imageBuffer is defined before converting to base64
-		const base64Image = imageBuffer
-			? Buffer.from(imageBuffer).toString('base64')
-			: null;
-
 		return response.status(200).json({
-			data: {
-				...product._doc,
-				image: base64Image,
-			},
+			data: product,
 		});
 	} catch (error) {
 		console.error(error.message);
