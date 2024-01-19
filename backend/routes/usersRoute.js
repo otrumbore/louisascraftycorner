@@ -37,7 +37,8 @@ router.post('/register', async (request, response) => {
 			enabled,
 			profilePicture,
 			dateOfBirth,
-			address,
+			billAddress,
+			shipAddress,
 			archived,
 		} = request.body;
 
@@ -58,7 +59,8 @@ router.post('/register', async (request, response) => {
 			enabled,
 			profilePicture,
 			dateOfBirth,
-			address: address || {},
+			billAddress: billAddress || {},
+			shipAddress: shipAddress || {},
 			archived,
 		});
 
