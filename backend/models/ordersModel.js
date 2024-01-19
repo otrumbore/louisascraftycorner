@@ -26,33 +26,44 @@ const returnSchema = new mongoose.Schema({
 	refundAmount: { type: String },
 });
 
+discountsSchema = new mongoose.Schema({
+	discountCode: { type: String },
+	promoCode: { type: String },
+});
+
 const ordersSchema = mongoose.Schema(
 	{
 		email: { type: String },
-		userID: { type: String },
+		username: { type: String },
+		userId: { type: String },
 		orderNum: { type: String },
-		items: [itemSchema], // Array of items
-		shipping: shippingSchema, // Nested shipping schema
+		items: [itemSchema],
+		shipping: shippingSchema,
 		billName: { type: String },
 		billAdd: {
-			streetAdd1: { type: String },
-			streetAdd2: { type: String },
+			line1: { type: String },
+			line2: { type: String },
 			city: { type: String },
+			state: { type: String },
 			zip: { type: Number },
+			country: { type: String, defualt: 'US' },
 		},
 		shipName: { type: String },
 		shipAdd: {
 			streetAdd1: { type: String },
 			streetAdd2: { type: String },
 			city: { type: String },
+			state: { type: String },
 			zip: { type: Number },
+			country: { type: String, defualt: 'US' },
 		},
 		phone: { type: String },
 		altEmail: { type: String },
 		status: [{ type: String }, { timestamps: true }],
-		prices: pricesSchema, // Nested prices schema
+		prices: pricesSchema,
+		dicounts: discountsSchema,
 		customerNotes: { type: String },
-		return: returnSchema, // Nested return schema
+		return: returnSchema,
 		source: { type: String },
 	},
 	{
