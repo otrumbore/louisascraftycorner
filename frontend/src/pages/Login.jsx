@@ -186,9 +186,11 @@ const Login = () => {
 
 		setShowPassword(false);
 
-		setUsernamePattern('^[a-zA-Z0-9._!-]{4,30}$');
+		setUsernamePattern(
+			/^[a-zA-Z0-9._!-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$|^[a-zA-Z0-9._!-]{4,30}$/
+		);
 		setPasswordPattern(
-			'^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()]).{8,}$'
+			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,}$/
 		);
 
 		if (validateInputs()) {
@@ -220,19 +222,20 @@ const Login = () => {
 						<div className='relative'>
 							<input
 								type='text'
-								className={`p-4 w-full text-lg bg-slate-50 border-4  focus:border-[6px] focus:border-[#0066b2] rounded-md shadow-md ${
+								className={`input ${
 									!username.match(usernamePattern)
 										? 'border-red-500'
-										: 'border-[#0066b2]'
+										: 'border-primary'
 								}`}
-								placeholder='Username'
+								placeholder='Username or Email'
 								name='username'
 								value={username}
 								onChange={onChange}
 								required
 								minLength={4} // Example: Minimum length validation
 								maxLength={30} // Example: Maximum length validation
-								pattern='^[a-zA-Z0-9._!-]{4,30}$' // Example: Pattern validation
+								title={'Username or Email'}
+								//pattern='^[a-zA-Z0-9._!-]{4,30}$' // Example: Pattern validation
 								tabIndex={1}
 							/>
 							{username && (
@@ -251,10 +254,10 @@ const Login = () => {
 							<input
 								type={showPassword ? 'text' : 'password'}
 								tabIndex={2}
-								className={`p-4 w-full text-lg bg-slate-50 border-4  focus:border-[6px] focus:border-[#0066b2] rounded-md shadow-md ${
+								className={`input ${
 									!password.match(passwordPattern)
 										? 'border-red-500'
-										: 'border-[#0066b2]'
+										: 'border-primary'
 								}`}
 								placeholder='Password'
 								name='password'
@@ -262,7 +265,7 @@ const Login = () => {
 								onChange={onChange}
 								required
 								minLength={8}
-								pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()]).{8,}$'
+								//pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()]).{8,}$'
 								title='Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character, and be at least 8 characters long.'
 							/>
 							{password && (
