@@ -40,9 +40,9 @@ const ProductCard = ({
 		let filteredProducts = products;
 
 		if (products && products.length > 0) {
-			if (filteredProducts && !userRole() < 2) {
+			if (filteredProducts && userRole() < 3) {
 				filteredProducts = filteredProducts.filter(
-					(item) => item.type !== 'test'
+					(item) => item.type !== 'test' && item.type !== 'Test'
 				);
 			}
 
