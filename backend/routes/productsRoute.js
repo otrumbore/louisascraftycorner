@@ -1,8 +1,5 @@
 import express from 'express';
 import { Product } from '../models/productsModel.js';
-import multer from 'multer';
-import fs from 'fs';
-import sharp from 'sharp';
 
 const router = express.Router();
 
@@ -15,10 +12,6 @@ const router = express.Router();
 // 	  res.status(403).json({ message: 'Access denied. Requires admin privileges.' });
 // 	}
 //   };
-
-// Set up Multer storage
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
 
 router.post('/', async (request, response) => {
 	try {
@@ -36,13 +29,6 @@ router.post('/', async (request, response) => {
 			active,
 			archived,
 		} = request.body;
-
-		// Compress the uploaded image using sharp
-		// const compressedImage = await sharp(request.file.buffer)
-		// 	.rotate() // Automatically rotate based on EXIF orientation
-		// 	.resize({ width: 1200 }) // Set the desired width
-		// 	.jpeg({ quality: 80 }) // Set the desired JPEG quality (0-100)
-		// 	.toBuffer();
 
 		const newProduct = await Product.create({
 			name,
@@ -74,12 +60,7 @@ router.get('/', async (request, response) => {
 
 		return response.status(200).json({
 			count: products.length,
-			data: products, //.map((product) => ({
-			// 	...product._doc,
-			// 	image: product.image
-			// 		? Buffer.from(product.image).toString('base64')
-			// 		: null, // Convert binary to base64
-			// })),
+			data: products,
 		});
 	} catch (error) {
 		console.error(error.message);
@@ -97,21 +78,8 @@ router.get('/:id', async (request, response) => {
 			return response.status(404).send({ message: 'Product not found' });
 		}
 
-		// Assuming 'image' is a Buffer field in your database
-		const imageBuffer = product.image;
-
-		// Check if imageBuffer is defined before converting to base64
-		const base64Image = imageBuffer
-			? Buffer.from(imageBuffer).toString('base64')
-			: null;
-
 		return response.status(200).json({
 			data: product,
-			// data: {
-			// 	p,
-			// 	// ...product._doc,
-			// 	// image: base64Image,
-			// },
 		});
 	} catch (error) {
 		console.error(error.message);
@@ -126,7 +94,7 @@ router.put('/:id', async (request, response) => {
 		const updatedProduct = await Product.findByIdAndUpdate(id, request.body, {
 			new: true,
 		});
-		//console.log(request.body.storeId);
+
 		if (!updatedProduct) {
 			return response.status(404).send({ message: 'Product not found' });
 		}
