@@ -112,7 +112,7 @@ const Favorites = () => {
 													<img
 														src={
 															item.data.image
-																? `data:image/jpeg;base64,${item.data.image}`
+																? item.data.image
 																: DefaultProductImg
 														}
 														alt={
