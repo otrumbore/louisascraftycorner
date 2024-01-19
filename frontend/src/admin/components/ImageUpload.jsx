@@ -33,7 +33,7 @@ const ImageUpload = () => {
 
 	return (
 		<div className='flex flex-col justify-center'>
-			<button className='btn' onClick={() => widgetRef.current.open()}>
+			<button className='btn-outline' onClick={() => widgetRef.current.open()}>
 				Upload Image
 			</button>
 			<div className='my-4'>
