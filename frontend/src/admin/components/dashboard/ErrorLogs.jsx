@@ -33,7 +33,10 @@ const ErrorLogs = () => {
 		<>
 			<LoadingModal loading={loading} />
 			<div className='flex p-4 border-4 border-primary rounded-md'>
-				<table className='w-full table-auto'>
+				{errors.length === 0 && <div>No errors logged!</div>}
+				<table
+					className={`${errors.length === 0 && 'hidden'} w-full table-auto`}
+				>
 					<thead className=''>
 						<tr>
 							<th className='text-left'>Date/Time</th>
@@ -45,7 +48,6 @@ const ErrorLogs = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{errors.length === 0 && <div>No errors logged!</div>}
 						{errors.map((item, index) => (
 							<tr key={index} className='border-t-4'>
 								<td className='text-left'>
