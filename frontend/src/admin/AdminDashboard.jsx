@@ -12,6 +12,7 @@ import { BsActivity } from 'react-icons/bs';
 import { TbBrandMinecraft, TbShipOff } from 'react-icons/tb';
 import { IoIosPricetag } from 'react-icons/io';
 import { FaUsers } from 'react-icons/fa';
+import { FaRegNewspaper } from 'react-icons/fa6';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Dashboard from './components/dashboard/Dashboard';
 import Orders from './components/dashboard/Orders';
@@ -92,6 +93,15 @@ const AdminDashboard = () => {
 						} px-2`}
 					>
 						<TbBrandMinecraft size={30} />
+					</button>
+
+					<button
+						onClick={() => {
+							navigate('#pages');
+						}}
+						className={`${dashView === 'pages' ? 'btn' : 'btn-outline'} px-2`}
+					>
+						<FaRegNewspaper size={30} />
 					</button>
 					<button
 						onClick={() => {
@@ -214,6 +224,8 @@ const AdminDashboard = () => {
 				<Orders />
 			) : dashView === 'products' ? (
 				<Products />
+			) : dashView === 'pages' ? (
+				<Dashboard />
 			) : dashView === 'users' ? (
 				<Users />
 			) : dashView === 'archived' ? (
