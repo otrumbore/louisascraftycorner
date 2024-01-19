@@ -76,8 +76,10 @@ router.post('/login', async (request, response) => {
 	try {
 		const { username, password, lastActivity } = request.body;
 
-		// Find user by username
-		const user = await User.findOne({ username });
+		// Find user by username or email
+		let user = await User.findOne({
+			$or: [{ username: username }, { email: username }],
+		});
 
 		if (!user) {
 			return response.status(404).json({ message: 'User not found' });
