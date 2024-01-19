@@ -96,8 +96,8 @@ const AddProduct = () => {
 					const data2 = {
 						user: { username: userDetails.username, userId: userDetails._id },
 						activityData: {
-							activity: 'added product' + data.name,
-							page: 'admin/editproduct',
+							activity: 'added product ' + data.name,
+							page: 'admin/addproduct',
 						},
 						browser: '',
 					};
