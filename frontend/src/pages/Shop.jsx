@@ -4,6 +4,7 @@ import getProducts from '../api/products.api.js';
 import { MdCheckBox } from 'react-icons/md';
 import getSettings from '../api/siteSettings.api.js';
 import LoadingModal from '../components/LoadingModal.jsx';
+import { useUser } from '../context/UserContext.jsx';
 
 const Shop = () => {
 	const [products, setProducts] = useState([]);
@@ -12,6 +13,7 @@ const Shop = () => {
 	const [searchText, setSearchText] = useState('');
 	const [selectedCollection, setSelectedCollection] = useState('');
 	const [onSaleOnly, setOnSaleOnly] = useState(false);
+	const { userRole } = useUser();
 
 	const fetchData = async () => {
 		setLoading(true);
