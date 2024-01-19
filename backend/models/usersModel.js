@@ -61,6 +61,11 @@ const userSchema = mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		agreeTerms: {
+			type: Boolean,
+			default: true,
+			//required: true,
+		},
 		lastActivity: {
 			type: Date,
 		},
@@ -79,8 +84,20 @@ const userSchema = mongoose.Schema(
 		dateOfBirth: {
 			type: Date,
 		},
-		address: {
-			street: String,
+		shipAddress: {
+			line1: String,
+			line2: String,
+			city: String,
+			state: String,
+			country: {
+				type: String,
+				default: 'US',
+			},
+			postalCode: String,
+		},
+		billAddress: {
+			line1: String,
+			line2: String,
 			city: String,
 			state: String,
 			country: {
