@@ -13,6 +13,7 @@ import { VscPreview } from 'react-icons/vsc';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import getProducts, { updateProduct } from '../../../api/products.api';
+import DefaultProductImg from '../../../assets/product-img/default.png';
 
 const Products = ({ archived }) => {
 	const [products, setProducts] = useState([]);
@@ -36,24 +37,24 @@ const Products = ({ archived }) => {
 				filteredProducts = fetchedProducts.filter(
 					(product) => product.archived === false
 				);
+
+				// Sort products to show inactive ones at the bottom
+				filteredProducts.sort((a, b) => {
+					// Inactive products (active: false) should come after active ones
+					if (!a.active && b.active) {
+						return 1;
+					}
+					// Active products (active: true) should come before inactive ones
+					if (a.active && !b.active) {
+						return -1;
+					}
+					// For products with the same active status, maintain their order
+					return 0;
+				});
 			}
 
-			// Sort products to show inactive ones at the bottom
-			filteredProducts.sort((a, b) => {
-				// Inactive products (active: false) should come after active ones
-				if (!a.active && b.active) {
-					return 1;
-				}
-				// Active products (active: true) should come before inactive ones
-				if (a.active && !b.active) {
-					return -1;
-				}
-				// For products with the same active status, maintain their order
-				return 0;
-			});
-
 			//console.log(filteredProducts);
-
+			console.log(products);
 			setProducts(filteredProducts);
 			setLoading(false); // Update loading state when data is fetched
 			//console.log(filteredProducts);
@@ -74,7 +75,7 @@ const Products = ({ archived }) => {
 		setLoading(true);
 		try {
 			const response = await updateProduct(id, data);
-			console.log(response);
+			//console.log(response);
 			if (
 				(response.status === 200 || response.status === 201) &&
 				(data.active || !data.active)
@@ -155,13 +156,17 @@ const Products = ({ archived }) => {
 						</Link>
 					</div>
 				</div>
-				{!products && (
+				{products.length === 0 && (
 					<p className='w-full text-center text-xl'>
 						No products have been found
 					</p>
 				)}
 
-				<div className='pb-4 pr-4 border-4 border-primary rounded-md'>
+				<div
+					className={`${
+						products.length === 0 && 'hidden'
+					} pb-4 pr-4 border-4 border-primary rounded-m`}
+				>
 					<table className='w-full'>
 						<thead className='border-b-4 border-primary text-xl font-bold'>
 							<tr className=''>
@@ -171,11 +176,11 @@ const Products = ({ archived }) => {
 								<th className='max-md:hidden'>ID</th>
 								<th>Name</th>
 								<th>Price</th>
-								<th>Quantity</th>
-								<th>Rating</th>
+								<th>Qty</th>
+								<th className='max-lg:hidden'>Rating</th>
 								<th className='max-lg:hidden'>Status</th>
 								<th className='max-lg:hidden'>Last Update</th>
-								<th className='max-lg:hidden text-right pr-2'>Actions</th>
+								<th className='text-right pr-2'>Actions</th>
 							</tr>
 						</thead>
 						<tbody className=''>
@@ -184,7 +189,7 @@ const Products = ({ archived }) => {
 									<td className='max-lg:hidden'>
 										<div className='flex justify-center py-2'>
 											<img
-												src={product.image}
+												src={product.image ? product.image : DefaultProductImg}
 												className='w-20 h-20 border-2 rounded-md hover:scale-150'
 											/>
 										</div>
@@ -194,13 +199,26 @@ const Products = ({ archived }) => {
 									</td>
 									<td>
 										<div className='flex justify-center gap-1'>
-											<p>{product.name}</p>
+											<button onClick={() => openModal(product)}>
+												{product.name}
+											</button>
 											<p className='max-lg:hidden'>{'- ' + product.type}</p>
 										</div>
 									</td>
-									<td className='text-center'>${product.price}</td>
+									<td className=' text-center'>
+										{product.sale > 0 ? (
+											<div className='flex gap-1'>
+												<p className=' line-through'>${product.price}</p>
+												<p className='text-red-600'>${product.sale}</p>
+											</div>
+										) : (
+											<p>${product.price}</p>
+										)}
+									</td>
 									<td className='text-center'>{product.inventory}</td>
-									<td className='text-center'>{product.rating}/5</td>
+									<td className='max-lg:hidden text-center'>
+										{product.rating}/5
+									</td>
 									<td className='max-lg:hidden'>
 										<div className='flex items-center justify-center space-x-2'>
 											{product.active ? (
@@ -239,7 +257,7 @@ const Products = ({ archived }) => {
 												: 'No Recent Update'}
 										</p>
 									</td>
-									<td className='max-lg:hidden'>
+									<td className=''>
 										<div className='flex flex-col items-end'>
 											<div className='flex items-center'>
 												<Link
