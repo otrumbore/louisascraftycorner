@@ -39,13 +39,8 @@ const AdminDashboard = () => {
 
 	const checkUser = async () => {
 		try {
-			let userRoleCheck;
+			let userRoleCheck = await userRole();
 			const token = Cookies.get('token');
-
-			while (!userRoleCheck) {
-				userRoleCheck = await userRole(); // Replace with the actual function that sets the user
-				await new Promise((resolve) => setTimeout(resolve, 1000)); // Adjust the timeout as needed
-			}
 
 			if (token && userRoleCheck) {
 				if (userRoleCheck < 2) {
