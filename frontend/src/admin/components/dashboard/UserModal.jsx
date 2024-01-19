@@ -74,6 +74,21 @@ const UserModal = ({ user, onClose }) => {
 							<p> (Maybe 😉)</p>
 						</div>
 					</div>
+					{user.shipAddress.line1 && (
+						<div className='flex flex-cols items-center justify-between'>
+							<p>
+								<strong>Shipping Address: </strong>
+								<p>{user.shipAddress.line1}</p>
+								<p>{user.shipAddress.line2}</p>
+								<p>
+									{user.shipAddress.city}, {user.shipAddress.state}{' '}
+									{user.shipAddress.postalCode}
+								</p>
+							</p>
+							<div></div>
+						</div>
+					)}
+
 					{/* {showModal === user._id && (
 								<userModal user={user} onClose={closeModal} />
 							)} */}
