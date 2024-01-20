@@ -21,9 +21,11 @@ const createOrder = async (event) => {
 			status: ['created'],
 		});
 
+		console.log(newOrder);
+
 		return newOrder;
 	} catch (error) {
-		console.error(error.message);
+		console.error('Create Order error: ' + error.message);
 		// Handle the error appropriately (maybe log and rethrow?)
 		throw new Error(`Server Error: ${error.message}`);
 	}

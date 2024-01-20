@@ -30,7 +30,7 @@ router.post(
 			return response.status(400).send(`Webhook Error: ${err.message}`);
 		}
 
-		console.log(event);
+		//console.log(event);
 
 		let intent = null;
 
@@ -38,13 +38,13 @@ router.post(
 			case 'payment_intent.succeeded':
 				intent = event.data.object;
 				console.log('Succeeded:', intent.id);
-				updateOrder(event);
+				//updateOrder(event);
 				break;
 			case 'payment_intent.payment_failed':
 				intent = event.data.object;
 				const message =
 					intent.last_payment_error && intent.last_payment_error.message;
-				updateOrder(event);
+				//updateOrder(event);
 				console.log('Failed:', intent.id, message);
 				break;
 		}
@@ -180,6 +180,7 @@ const sessionCreateOrder = (user, items) => {
 		cartItems: items,
 		userDetails: user,
 	};
+	console.log(data);
 	createOrder(data);
 };
 
