@@ -1,8 +1,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import stripe from 'stripe';
+import bodyParser from 'body-parser';
 
 const router = express.Router();
+router.use(express.json());
 
 dotenv.config();
 
@@ -10,37 +12,39 @@ const stripeApiKey = process.env.STRIPE_SECRET_TEST_KEY;
 const frontendURL = process.env.FRONT_END_URL;
 const stripeClient = new stripe(stripeApiKey);
 
-const webhookSecret = process.env.WEBHOOK_SECRET;
+const endpointSecret = process.env.WEBHOOK_SECRET;
 
-router.post(
+routerpost(
 	'/webhook',
-	express.raw({ type: 'application/json' }),
-	(req, res) => {
-		const sig = req.headers['stripe-signature'];
+	bodyParser.raw({ type: 'application/json' }),
+	(request, response) => {
+		const sig = request.headers['stripe-signature'];
 
 		let event;
+
+		// Verify webhook signature and extract the event.
+		// See https://stripe.com/docs/webhooks#verify-events for more information.
 		try {
-			event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+			event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
 		} catch (err) {
-			return res.status(400).send(`Webhook Error: ${err.message}`);
+			return response.status(400).send(`Webhook Error: ${err.message}`);
 		}
 
-		// Handle the event
-		switch (event.type) {
-			case 'payment_intent.succeeded':
-				// Handle successful payment
-				break;
-			case 'invoice.paid':
-				// Handle paid invoice
-				break;
-			// Handle other event types
+		if (event.type === 'payment_intent.succeeded') {
+			const paymentIntent = event.data.object;
+			const connectedAccountId = event.account;
+			handleSuccessfulPaymentIntent(connectedAccountId, paymentIntent);
 		}
 
-		console.log(event);
-
-		res.json({ received: true });
+		response.json({ received: true });
 	}
 );
+
+const handleSuccessfulPaymentIntent = (connectedAccountId, paymentIntent) => {
+	// Fulfill the purchase
+	console.log('Connected account ID: ' + connectedAccountId);
+	console.log(JSON.stringify(paymentIntent));
+};
 
 router.post('/', async (req, res) => {
 	const items = req.body.items;
@@ -152,11 +156,9 @@ router.post('/', async (req, res) => {
 	try {
 		const session = await stripeClient.checkout.sessions.create(sessionOptions);
 
-		res.send(
-			JSON.stringify({
-				url: session.url,
-			})
-		);
+		res.send({
+			url: session.url,
+		});
 	} catch (error) {
 		console.error('Error creating Checkout Session:', error);
 		res.status(500).send('Server Error');
