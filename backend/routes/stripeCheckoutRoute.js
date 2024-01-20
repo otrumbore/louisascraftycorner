@@ -14,7 +14,7 @@ const stripeClient = new stripe(stripeApiKey);
 
 const endpointSecret = process.env.WEBHOOK_SECRET;
 
-routerpost(
+router.post(
 	'/webhook',
 	bodyParser.raw({ type: 'application/json' }),
 	(request, response) => {
