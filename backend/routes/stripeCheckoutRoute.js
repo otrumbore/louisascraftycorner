@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import stripe from 'stripe';
 import bodyParser from 'body-parser';
-import createOrder, { updateOrder } from '../../frontend/src/api/orders.api';
+import createOrder, { updateOrder } from '../scripts/createOrder';
 
 const router = express.Router();
 
