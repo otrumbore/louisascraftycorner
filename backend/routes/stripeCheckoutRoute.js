@@ -38,6 +38,8 @@ router.post(
 			return response.status(400).send(`Webhook Error: ${err.message}`);
 		}
 
+		console.log(event);
+
 		if (event.type === 'payment_intent.succeeded') {
 			const paymentIntent = event.data.object;
 			const connectedAccountId = event.account;
