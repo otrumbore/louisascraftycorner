@@ -17,17 +17,18 @@ const stripeClient = new stripe(stripeApiKey);
 const endpointSecret =
 	'whsec_2e915ad429438ff6915b3d4b00c16bdeb73d4e26a8c35017ba880b47fb31d975';
 
-// Webhook endpoint to handle events
+// Use bodyParser.raw to parse the raw request body
 router.post(
 	'/webhook',
-	express.raw({ type: 'application/json' }),
+	bodyParser.raw({ type: 'application/json' }),
 	(request, response) => {
 		const sig = request.headers['stripe-signature'];
+		const rawBody = request.body; // Use the raw request body as provided by bodyParser.raw
 
 		let event;
 
 		try {
-			event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+			event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
 		} catch (err) {
 			response.status(400).send(`Webhook Error: ${err.message}`);
 			return;
@@ -37,26 +38,25 @@ router.post(
 		switch (event.type) {
 			case 'checkout.session.async_payment_failed':
 				const checkoutSessionAsyncPaymentFailed = event.data.object;
-				// Then define and call a function to handle the event checkout.session.async_payment_failed
+				// Define and call a function to handle the event checkout.session.async_payment_failed
 				console.log(checkoutSessionAsyncPaymentFailed);
 				break;
 			case 'checkout.session.async_payment_succeeded':
 				const checkoutSessionAsyncPaymentSucceeded = event.data.object;
-				// Then define and call a function to handle the event checkout.session.async_payment_succeeded
+				// Define and call a function to handle the event checkout.session.async_payment_succeeded
 				console.log(checkoutSessionAsyncPaymentSucceeded);
 				break;
 			case 'checkout.session.completed':
 				const checkoutSessionCompleted = event.data.object;
-				// Then define and call a function to handle the event checkout.session.completed
+				// Define and call a function to handle the event checkout.session.completed
 				break;
 			// ... handle other event types
 			default:
 				console.log(`Unhandled event type ${event.type}`);
 		}
 
-		res.status(200).end();
+		response.status(200).end();
 		// Return a 200 response to acknowledge receipt of the event
-		response.send();
 	}
 );
 
