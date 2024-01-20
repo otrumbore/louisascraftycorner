@@ -4,8 +4,6 @@ import stripe from 'stripe';
 
 const router = express.Router();
 
-router.use(bodyParser.json());
-
 dotenv.config();
 
 const stripeApiKey = process.env.STRIPE_SECRET_TEST_KEY;
@@ -17,43 +15,46 @@ const endpointSecret =
 	'whsec_2e915ad429438ff6915b3d4b00c16bdeb73d4e26a8c35017ba880b47fb31d975';
 
 // Use bodyParser.raw to parse the raw request body
-router.post('/webhook', { type: 'application/json' }, (request, response) => {
-	const sig = request.headers['stripe-signature'];
-	const rawBody = request.body; // Use the raw request body as provided by bodyParser.raw
+router.post(
+	'/webhook',
+	express.raw({ type: 'application/json' }),
+	(request, response) => {
+		const sig = request.headers['stripe-signature'];
 
-	let event;
+		let event;
 
-	try {
-		event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
-	} catch (err) {
-		response.status(400).send(`Webhook Error: ${err.message}`);
-		return;
+		try {
+			event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+		} catch (err) {
+			response.status(400).send(`Webhook Error: ${err.message}`);
+			return;
+		}
+
+		// Handle the event
+		switch (event.type) {
+			case 'checkout.session.async_payment_failed':
+				const checkoutSessionAsyncPaymentFailed = event.data.object;
+				// Define and call a function to handle the event checkout.session.async_payment_failed
+				console.log(checkoutSessionAsyncPaymentFailed);
+				break;
+			case 'checkout.session.async_payment_succeeded':
+				const checkoutSessionAsyncPaymentSucceeded = event.data.object;
+				// Define and call a function to handle the event checkout.session.async_payment_succeeded
+				console.log(checkoutSessionAsyncPaymentSucceeded);
+				break;
+			case 'checkout.session.completed':
+				const checkoutSessionCompleted = event.data.object;
+				// Define and call a function to handle the event checkout.session.completed
+				break;
+			// ... handle other event types
+			default:
+				console.log(`Unhandled event type ${event.type}`);
+		}
+
+		response.status(200).end();
+		// Return a 200 response to acknowledge receipt of the event
 	}
-
-	// Handle the event
-	switch (event.type) {
-		case 'checkout.session.async_payment_failed':
-			const checkoutSessionAsyncPaymentFailed = event.data.object;
-			// Define and call a function to handle the event checkout.session.async_payment_failed
-			console.log(checkoutSessionAsyncPaymentFailed);
-			break;
-		case 'checkout.session.async_payment_succeeded':
-			const checkoutSessionAsyncPaymentSucceeded = event.data.object;
-			// Define and call a function to handle the event checkout.session.async_payment_succeeded
-			console.log(checkoutSessionAsyncPaymentSucceeded);
-			break;
-		case 'checkout.session.completed':
-			const checkoutSessionCompleted = event.data.object;
-			// Define and call a function to handle the event checkout.session.completed
-			break;
-		// ... handle other event types
-		default:
-			console.log(`Unhandled event type ${event.type}`);
-	}
-
-	response.status(200).end();
-	// Return a 200 response to acknowledge receipt of the event
-});
+);
 
 router.post('/', async (req, res) => {
 	const items = req.body.items;
