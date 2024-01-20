@@ -13,6 +13,7 @@ import userFavoritesRoute from './routes/userFavoritesRoute.js';
 import errorLoggingRoute from './routes/errorLoggingRoute.js';
 import stripeCheckoutRoute from './routes/stripeCheckoutRoute.js';
 import activityLoggingRoute from './routes/activityLoggingRoute.js';
+import ordersRoute from './routes/ordersRoute.js';
 
 import crypto from 'crypto';
 
