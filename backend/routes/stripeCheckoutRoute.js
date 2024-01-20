@@ -19,6 +19,8 @@ router.post(
 	(request, response) => {
 		const sig = request.headers['stripe-signature'];
 
+		console.log('Received raw body: ', request.body);
+
 		let event;
 
 		try {
