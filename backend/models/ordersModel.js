@@ -71,7 +71,7 @@ const ordersSchema = mongoose.Schema(
 	}
 );
 // Pre-save middleware to generate 6-digit unique ID
-productSchema.pre('save', async function (next) {
+ordersSchema.pre('save', async function (next) {
 	try {
 		let generatedId;
 		do {
