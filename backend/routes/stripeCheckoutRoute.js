@@ -12,31 +12,35 @@ const stripeClient = new stripe(stripeApiKey);
 
 const webhookSecret = process.env.WEBHOOKSECRET;
 
-app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
-	const sig = req.headers['stripe-signature'];
+router.post(
+	'/webhook',
+	express.raw({ type: 'application/json' }),
+	(req, res) => {
+		const sig = req.headers['stripe-signature'];
 
-	let event;
-	try {
-		event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
-	} catch (err) {
-		return res.status(400).send(`Webhook Error: ${err.message}`);
+		let event;
+		try {
+			event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+		} catch (err) {
+			return res.status(400).send(`Webhook Error: ${err.message}`);
+		}
+
+		// Handle the event
+		switch (event.type) {
+			case 'payment_intent.succeeded':
+				// Handle successful payment
+				break;
+			case 'invoice.paid':
+				// Handle paid invoice
+				break;
+			// Handle other event types
+		}
+
+		console.log(event);
+
+		res.json({ received: true });
 	}
-
-	// Handle the event
-	switch (event.type) {
-		case 'payment_intent.succeeded':
-			// Handle successful payment
-			break;
-		case 'invoice.paid':
-			// Handle paid invoice
-			break;
-		// Handle other event types
-	}
-
-	console.log(event);
-
-	res.json({ received: true });
-});
+);
 
 router.post('/', async (req, res) => {
 	const items = req.body.items;
