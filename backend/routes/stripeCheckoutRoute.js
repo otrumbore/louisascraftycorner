@@ -54,6 +54,8 @@ router.post(
 	}
 );
 
+router.use(express.json());
+
 router.post('/', async (req, res) => {
 	const items = req.body.items;
 	const user = req.body.userData;
