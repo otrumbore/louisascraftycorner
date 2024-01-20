@@ -192,7 +192,7 @@ const Cart = () => {
 				{cartItemsCount > 0 && (
 					<div className='flex flex-col w-full items-center justify-center pr-2'>
 						<div className='flex w-full max-w-[1000px] items-center justify-end text-right'>
-							<div className='flex flex-col'>
+							<div className='mt-2 flex flex-col'>
 								<p>Subtotal: ${cartSubTotal().toFixed(2)}</p>
 								{cartSalesTotal() > 0 && (
 									<div className='flex w-full text-lg items-center justify-end gap-x-1'>
@@ -203,9 +203,9 @@ const Cart = () => {
 									</div>
 								)}
 
-								<div className='flex w-full items-start justify-end'>
+								<div className='mt-2 flex w-full items-start justify-end'>
 									<em className='text-md'>*</em>
-									<p className='font-bold text-xl'>
+									<p className='font-bold text-2xl'>
 										Total: ${cartTotal().toFixed(2)}
 									</p>
 								</div>
@@ -225,7 +225,7 @@ const Cart = () => {
 						</div>
 						<div className='flex w-full max-w-[1000px]'>
 							<p className='mt-4 w-full text-xs text-left'>
-								*Sales tax calculated at checkout
+								*Sales tax and shipping cost calculated at checkout
 							</p>
 						</div>
 					</div>
