@@ -10,7 +10,7 @@ const stripeApiKey = process.env.STRIPE_SECRET_TEST_KEY;
 const frontendURL = process.env.FRONT_END_URL;
 const stripeClient = new stripe(stripeApiKey);
 
-const webhookSecret = process.env.WEBHOOKSECRET;
+const webhookSecret = process.env.WEBHOOK_SECRET;
 
 router.post(
 	'/webhook',
