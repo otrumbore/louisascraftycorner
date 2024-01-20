@@ -3,9 +3,7 @@ import dotenv from 'dotenv';
 import stripe from 'stripe';
 import bodyParser from 'body-parser';
 
-const app = express();
 const router = express.Router();
-router.use(express.json());
 
 dotenv.config();
 
@@ -24,7 +22,7 @@ const endpointSecret = process.env.WEBHOOK_SECRET;
 // 	}
 // });
 
-app.post(
+router.post(
 	'/webhook',
 	bodyParser.raw({ type: 'application/json' }),
 	(request, response) => {
@@ -50,13 +48,13 @@ app.post(
 	}
 );
 
-app.use(express.json());
-
 const handleSuccessfulPaymentIntent = (connectedAccountId, paymentIntent) => {
 	// Fulfill the purchase
 	console.log('Connected account ID: ' + connectedAccountId);
 	console.log(JSON.stringify(paymentIntent));
 };
+
+router.use(express.json());
 
 router.post('/', async (req, res) => {
 	const items = req.body.items;
