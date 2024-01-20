@@ -14,6 +14,15 @@ const stripeClient = new stripe(stripeApiKey);
 
 const endpointSecret = process.env.WEBHOOK_SECRET;
 
+// Use JSON parser for all non-webhook routes
+app.use((req, res, next) => {
+	if (req.originalUrl === '/webhook') {
+		next();
+	} else {
+		bodyParser.json()(req, res, next);
+	}
+});
+
 router.post(
 	'/webhook',
 	bodyParser.raw({ type: 'application/json' }),
