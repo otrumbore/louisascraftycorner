@@ -29,14 +29,6 @@ const frontendURL = process.env.FRONT_END_URL;
 const JWTToken = process.env.JWT_SECRET_TOKEN;
 //const stripeClient = new stripe(stripeApiKey);
 
-// Middleware for parsing request body
-app.use(express.json({ limit: '10mb' }));
-app.use(express.static('public'));
-
-// Increase payload size limit (e.g., 10MB)
-app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
-
 // Allow requests only from your frontend URL
 const corsOptions = {
 	origin: frontendURL,
@@ -55,7 +47,15 @@ app.get('/', (req, res) => {
 	res.status(234).send('I see you!!');
 });
 app.use('/api/checkout', stripeCheckoutRoute);
-app.use(express.json());
+
+// Middleware for parsing request body
+app.use(express.json({ limit: '10mb' }));
+app.use(express.static('public'));
+
+// Increase payload size limit (e.g., 10MB)
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+
 app.use('/api/products', productsRoute);
 app.use('/api/admin/site_settings', siteSettingsRoute);
 app.use('/api/user', usersRoute);
