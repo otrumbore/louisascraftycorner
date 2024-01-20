@@ -2,13 +2,13 @@ import { Order } from '../models/ordersModel';
 
 const createOrder = async (event) => {
 	try {
-		const { userId, email, username, items, customerNotes, source } = event;
+		const { cartItems, userDetails } = event;
 
 		const newOrder = await Order.create({
-			userId,
-			email,
-			username,
-			items,
+			userId: userDetails._id,
+			email: userDetails.email,
+			username: userDetails.username,
+			items: cartItems,
 			customerNotes: customerNotes || '',
 			source: source || 'website',
 			status: ['created'],
