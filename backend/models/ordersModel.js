@@ -26,7 +26,7 @@ const returnSchema = new mongoose.Schema({
 	refundAmount: { type: String },
 });
 
-discountsSchema = new mongoose.Schema({
+const discountsSchema = new mongoose.Schema({
 	discountCode: { type: String },
 	promoCode: { type: String },
 });
@@ -35,8 +35,8 @@ const ordersSchema = mongoose.Schema(
 	{
 		email: { type: String },
 		username: { type: String },
-		userId: { type: String },
-		orderNum: { type: String },
+		userId: { type: String, unique: true },
+		orderId: { type: String },
 		items: [itemSchema],
 		shipping: shippingSchema,
 		billName: { type: String },
@@ -45,20 +45,19 @@ const ordersSchema = mongoose.Schema(
 			line2: { type: String },
 			city: { type: String },
 			state: { type: String },
-			zip: { type: Number },
-			country: { type: String, defualt: 'US' },
+			postalCode: { type: Number },
+			country: { type: String, default: 'US' },
 		},
 		shipName: { type: String },
 		shipAdd: {
-			streetAdd1: { type: String },
-			streetAdd2: { type: String },
+			line1: { type: String },
+			line2: { type: String },
 			city: { type: String },
 			state: { type: String },
-			zip: { type: Number },
-			country: { type: String, defualt: 'US' },
+			postalCode: { type: Number },
+			country: { type: String, default: 'US' },
 		},
 		phone: { type: String },
-		altEmail: { type: String },
 		status: [{ type: String }, { timestamps: true }],
 		prices: pricesSchema,
 		dicounts: discountsSchema,
@@ -70,5 +69,18 @@ const ordersSchema = mongoose.Schema(
 		timestamps: true,
 	}
 );
+// Pre-save middleware to generate 6-digit unique ID
+productSchema.pre('save', async function (next) {
+	try {
+		let generatedId;
+		do {
+			generatedId = Math.floor(10000000 + Math.random() * 90000000); // Generate a random 8-digit number
+		} while ((await this.constructor.findOne({ orderId: generatedId })) !== null); // Check if it already exists
+		this.orderId = generatedId; // Set the unique ID
+		next();
+	} catch (error) {
+		next(error);
+	}
+});
 
 export const Order = mongoose.model('orders', ordersSchema);

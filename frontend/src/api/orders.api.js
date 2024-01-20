@@ -22,13 +22,9 @@ export const getOrder = async (id) => {
 	}
 };
 
-export const newOrder = async (data) => {
+export const createOrder = async (data) => {
 	try {
-		const response = await axios.post(`${API_URL}/api/products/`, data, {
-			// headers: {
-			// 	'Content-Type': 'multipart/form-data',
-			// },
-		});
+		const response = await axios.post(`${API_URL}/api/orders/`, data);
 		return response;
 	} catch (error) {
 		console.error(error);
@@ -47,4 +43,4 @@ export const updateOrder = async (id, data) => {
 	}
 };
 
-export default getProducts;
+export default createOrder;

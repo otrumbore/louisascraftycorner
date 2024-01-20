@@ -62,6 +62,7 @@ app.use('/api/user', usersRoute);
 app.use('/api/user/favorites', userFavoritesRoute);
 app.use('/api/error_logging', errorLoggingRoute);
 app.use('/api/activity_logging', activityLoggingRoute);
+app.use('/api/orders', ordersRoute);
 
 mongoose
 	.connect(mongoDBURL)

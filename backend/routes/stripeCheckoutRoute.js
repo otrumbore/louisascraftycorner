@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import stripe from 'stripe';
 import bodyParser from 'body-parser';
+import createOrder, { updateOrder } from '../../frontend/src/api/orders.api';
 
 const router = express.Router();
 
@@ -12,15 +13,6 @@ const frontendURL = process.env.FRONT_END_URL;
 const stripeClient = new stripe(stripeApiKey);
 
 const endpointSecret = process.env.WEBHOOK_SECRET;
-
-// // Use JSON parser for all non-webhook routes
-// app.use((req, res, next) => {
-// 	if (req.originalUrl === '/webhook') {
-// 		next();
-// 	} else {
-// 		bodyParser.json()(req, res, next);
-// 	}
-// });
 
 router.post(
 	'/webhook',
@@ -40,21 +32,26 @@ router.post(
 
 		console.log(event);
 
-		if (event.type === 'payment_intent.succeeded') {
-			const paymentIntent = event.data.object;
-			const connectedAccountId = event.account;
-			handleSuccessfulPaymentIntent(connectedAccountId, paymentIntent);
+		let intent = null;
+
+		switch (event['type']) {
+			case 'payment_intent.succeeded':
+				intent = event.data.object;
+				console.log('Succeeded:', intent.id);
+				updateOrder(event);
+				break;
+			case 'payment_intent.payment_failed':
+				intent = event.data.object;
+				const message =
+					intent.last_payment_error && intent.last_payment_error.message;
+				updateOrder(event);
+				console.log('Failed:', intent.id, message);
+				break;
 		}
 
 		response.json({ received: true });
 	}
 );
-
-const handleSuccessfulPaymentIntent = (connectedAccountId, paymentIntent) => {
-	// Fulfill the purchase
-	console.log('Connected account ID: ' + connectedAccountId);
-	console.log(JSON.stringify(paymentIntent));
-};
 
 router.use(express.json());
 
@@ -96,7 +93,7 @@ router.post('/', async (req, res) => {
 		automatic_tax: { enabled: true },
 		billing_address_collection: 'auto',
 		shipping_address_collection: {
-			allowed_countries: ['US', 'CA'],
+			allowed_countries: ['US'],
 		},
 		mode: 'payment',
 		discounts: [
@@ -167,6 +164,7 @@ router.post('/', async (req, res) => {
 
 	try {
 		const session = await stripeClient.checkout.sessions.create(sessionOptions);
+		sessionCreateOrder(user, items);
 
 		res.send({
 			url: session.url,
@@ -176,5 +174,13 @@ router.post('/', async (req, res) => {
 		res.status(500).send('Server Error');
 	}
 });
+
+const sessionCreateOrder = (user, items) => {
+	const data = {
+		cartItems: items,
+		userDetails: user,
+	};
+	createOrder(data);
+};
 
 export default router;
