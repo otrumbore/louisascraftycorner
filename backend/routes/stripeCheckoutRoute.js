@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import stripe from 'stripe';
 import bodyParser from 'body-parser';
 
+const app = express();
 const router = express.Router();
 router.use(express.json());
 
@@ -23,7 +24,7 @@ app.use((req, res, next) => {
 	}
 });
 
-router.post(
+app.post(
 	'/webhook',
 	bodyParser.raw({ type: 'application/json' }),
 	(request, response) => {
