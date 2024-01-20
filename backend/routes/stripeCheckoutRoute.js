@@ -1,9 +1,11 @@
 import express from 'express';
-import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import stripe from 'stripe';
 
 const router = express.Router();
+
+router.use(bodyParser.json());
 
 dotenv.config();
 
@@ -11,10 +13,58 @@ const stripeApiKey = process.env.STRIPE_SECRET_TEST_KEY;
 const frontendURL = process.env.FRONT_END_URL;
 const stripeClient = new stripe(stripeApiKey);
 
+// This is your Stripe CLI webhook secret for testing your endpoint locally.
+const endpointSecret =
+	'whsec_2e915ad429438ff6915b3d4b00c16bdeb73d4e26a8c35017ba880b47fb31d975';
+
+// Webhook endpoint to handle events
+router.post(
+	'/webhook',
+	express.raw({ type: 'application/json' }),
+	(request, response) => {
+		const sig = request.headers['stripe-signature'];
+
+		let event;
+
+		try {
+			event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+		} catch (err) {
+			response.status(400).send(`Webhook Error: ${err.message}`);
+			return;
+		}
+
+		// Handle the event
+		switch (event.type) {
+			case 'checkout.session.async_payment_failed':
+				const checkoutSessionAsyncPaymentFailed = event.data.object;
+				// Then define and call a function to handle the event checkout.session.async_payment_failed
+				console.log(checkoutSessionAsyncPaymentFailed);
+				break;
+			case 'checkout.session.async_payment_succeeded':
+				const checkoutSessionAsyncPaymentSucceeded = event.data.object;
+				// Then define and call a function to handle the event checkout.session.async_payment_succeeded
+				console.log(checkoutSessionAsyncPaymentSucceeded);
+				break;
+			case 'checkout.session.completed':
+				const checkoutSessionCompleted = event.data.object;
+				// Then define and call a function to handle the event checkout.session.completed
+				break;
+			// ... handle other event types
+			default:
+				console.log(`Unhandled event type ${event.type}`);
+		}
+
+		res.status(200).end();
+		// Return a 200 response to acknowledge receipt of the event
+		response.send();
+	}
+);
+
 router.post('/', async (req, res) => {
 	const items = req.body.items;
 	const user = req.body.userData;
 	let lineItems = [];
+
 	items.forEach((item) => {
 		let price = item.sale ? item.sale : item.price;
 
@@ -46,24 +96,22 @@ router.post('/', async (req, res) => {
 	const sessionOptions = {
 		line_items: lineItems,
 		automatic_tax: { enabled: true },
-		billing_address_collection: 'required',
+		billing_address_collection: 'auto',
 		shipping_address_collection: {
-			allowed_countries: ['US', 'CA'], // Add other allowed countries as needed
+			allowed_countries: ['US', 'CA'],
 		},
 		mode: 'payment',
-		// discounts: [
-		// 	{
-		// 		//coupon: '',
-		// 		// id: '12345',
-		// 		// currency: 'USD',
-		// 		// percent_off: 10, //amount_off
-		// 		//max_redemptions: 1,
-		// 		//redeem_by
-		// 		//applies_to
-		// 	},
-		// ],
-
-		//allow_promotion_codes: true,
+		discounts: [
+			{
+				//coupon: coupon.name,
+				// id: '12345',
+				// currency: 'USD',
+				// percent_off: 10, //amount_off
+				//max_redemptions: 1,
+				//redeem_by
+				//applies_to
+			},
+		],
 		invoice_creation: {
 			enabled: true,
 		},
@@ -119,35 +167,18 @@ router.post('/', async (req, res) => {
 		sessionOptions.customer_email = user.email;
 	}
 
-	// if (user && user.name) {
-	// 	sessionOptions.shipping_address_collection = {
-	// 		allowed_countries: ['US', 'CA'],
-	// 		name: 'Odnel Trumbore', //user.name,
-	// 		line1: '4601 Commerce St',
-	// 		line2: 'Apt 103',
-	// 		city: 'Temple',
-	// 		state: 'PA',
-	// 		postal_code: '19560',
-	// 		country: 'US', //user.address.country,
-	// 	};
-	// }
-
-	// Prefill shipping address if available
-	// if (user && user.address) {
-	// 	sessionOptions.shipping_address_collection = {
-	// 		allowed_countries: ['US', 'CA'],
-	// 		...user.name,
-	// 		...user.address, // Add user's shipping address details
-	// 	};
-	// }
-
-	const session = await stripeClient.checkout.sessions.create(sessionOptions);
-
-	res.send(
-		JSON.stringify({
-			url: session.url,
-		})
-	);
+	try {
+		const session = await stripeClient.checkout.sessions.create(sessionOptions);
+		console.log('data: ' + session);
+		res.send(
+			JSON.stringify({
+				url: session.url,
+			})
+		);
+	} catch (error) {
+		console.error('Error creating Checkout Session:', error);
+		res.status(500).send('Server Error');
+	}
 });
 
 export default router;
