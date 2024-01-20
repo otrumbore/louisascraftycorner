@@ -11,8 +11,7 @@ const frontendURL = process.env.FRONT_END_URL;
 const stripeClient = new stripe(stripeApiKey);
 
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
-const endpointSecret =
-	'whsec_2e915ad429438ff6915b3d4b00c16bdeb73d4e26a8c35017ba880b47fb31d975';
+const endpointSecret = 'whsec_puvYbVchxcqWa7ePuebh91oW9Jo6ecs4'; //'whsec_2e915ad429438ff6915b3d4b00c16bdeb73d4e26a8c35017ba880b47fb31d975';
 
 router.post(
 	'/webhook',
