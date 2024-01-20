@@ -55,6 +55,7 @@ app.get('/', (req, res) => {
 	res.status(234).send('I see you!!');
 });
 app.use('/api/checkout', stripeCheckoutRoute);
+app.use(express.json());
 app.use('/api/products', productsRoute);
 app.use('/api/admin/site_settings', siteSettingsRoute);
 app.use('/api/user', usersRoute);

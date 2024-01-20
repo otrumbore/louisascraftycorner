@@ -50,6 +50,8 @@ app.post(
 	}
 );
 
+app.use(express.json());
+
 const handleSuccessfulPaymentIntent = (connectedAccountId, paymentIntent) => {
 	// Fulfill the purchase
 	console.log('Connected account ID: ' + connectedAccountId);
