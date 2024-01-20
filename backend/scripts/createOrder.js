@@ -4,21 +4,28 @@ const createOrder = async (event) => {
 	try {
 		const { cartItems, userDetails } = event;
 
+		const processedCartItems = cartItems.map((item) => ({
+			storeId: item.storeId,
+			price: item.price,
+			quantity: item.qty,
+			sale: item.sale,
+		}));
+
 		const newOrder = await Order.create({
 			userId: userDetails._id,
 			email: userDetails.email,
 			username: userDetails.username,
-			items: cartItems,
+			items: processedCartItems,
 			customerNotes: customerNotes || '',
 			source: source || 'website',
 			status: ['created'],
 		});
 
-		// Return the newly created product in the response
-		return response.status(201).send(newOrder);
+		return newOrder;
 	} catch (error) {
 		console.error(error.message);
-		response.status(500).send({ message: `Server Error, ${error.message}` });
+		// Handle the error appropriately (maybe log and rethrow?)
+		throw new Error(`Server Error: ${error.message}`);
 	}
 };
 

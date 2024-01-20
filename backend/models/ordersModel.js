@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const itemSchema = new mongoose.Schema({
 	storeId: { type: Number },
+	quantity: { type: Number },
 	price: { type: Number },
 	sale: { type: Number },
 });
