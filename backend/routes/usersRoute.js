@@ -46,7 +46,7 @@ router.post('/register', async (request, response) => {
 			dateOfBirth,
 			billAddress,
 			shipAddress,
-			emailVerificationToken,
+			//emailVerificationToken,
 			archived,
 		} = request.body;
 
@@ -69,7 +69,7 @@ router.post('/register', async (request, response) => {
 			dateOfBirth,
 			billAddress: billAddress || {},
 			shipAddress: shipAddress || {},
-			emailVerificationToken: verificationToken,
+			//emailVerificationToken: verificationToken,
 			archived,
 		});
 
