@@ -130,7 +130,7 @@ export const updateOrder = async (event, intent) => {
 				await Order.findOneAndUpdate({ orderId: orderId }, updatedOrder);
 				break;
 
-			case true:
+			case 'success':
 				console.log('Success: payment succeeded');
 
 				updatedOrder = {
@@ -140,7 +140,7 @@ export const updateOrder = async (event, intent) => {
 				await Order.findOneAndUpdate({ orderId: orderId }, updatedOrder);
 				break;
 
-			case false:
+			case 'fail':
 				console.log('Fail: Order payment failed');
 				updatedOrder = {
 					status: [{ type: 'payment_failed', timestamp: new Date() }],
