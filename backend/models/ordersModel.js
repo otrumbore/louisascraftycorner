@@ -67,6 +67,7 @@ const ordersSchema = mongoose.Schema(
 					enum: [
 						'created',
 						'processing',
+						'paid',
 						'crafting',
 						'shipped',
 						'delivered',

@@ -37,11 +37,13 @@ router.post(
 		switch (event['type']) {
 			case 'checkout.session.completed':
 				console.log('Completed');
+				intent = event.data.object;
 				updateOrder(intent, 'complete');
 				break;
 			case 'payment_intent.succeeded':
 				intent = event.data.object;
 				console.log('Succeeded:', intent.id);
+				updateOrder(intent, 'complete');
 				//updateOrder(intent, true);
 				break;
 			case 'payment_intent.payment_failed':
@@ -96,7 +98,7 @@ router.post('/', async (req, res) => {
 		// Check if adjustable quantity is needed
 		if (item.inventory > 1) {
 			lineItem.adjustable_quantity = {
-				enabled: true,
+				enabled: false,
 				minimum: 1,
 				maximum: item.inventory,
 			};
@@ -120,7 +122,7 @@ router.post('/', async (req, res) => {
 
 	const sessionOptions = {
 		line_items: lineItems,
-		metadata: { order_id: '111111' },
+		metadata: { order_id: orderId },
 		automatic_tax: { enabled: true },
 		billing_address_collection: 'auto',
 		shipping_address_collection: {
