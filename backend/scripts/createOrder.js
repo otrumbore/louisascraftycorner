@@ -26,7 +26,10 @@ const createOrder = async (event) => {
 
 		updateInventory(processedCartItems);
 
-		return newOrder;
+		// Access orderId directly from the newOrder object
+		const orderId = newOrder.orderId;
+
+		return orderId;
 	} catch (error) {
 		console.error('Create Order error: ' + error.message);
 		// Handle the error appropriately (maybe log and rethrow?)

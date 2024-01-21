@@ -63,6 +63,16 @@ router.use(express.json());
 router.post('/', async (req, res) => {
 	const items = req.body.items;
 	const user = req.body.userData;
+
+	const data = {
+		cartItems: items,
+		userDetails: user,
+	};
+
+	const orderId = await createOrder(data);
+
+	console.log(orderId);
+
 	let lineItems = [];
 
 	items.forEach((item) => {
@@ -111,6 +121,7 @@ router.post('/', async (req, res) => {
 
 	const sessionOptions = {
 		line_items: lineItems,
+		metadata: { orderId: orderId },
 		automatic_tax: { enabled: true },
 		billing_address_collection: 'auto',
 		shipping_address_collection: {
@@ -185,7 +196,7 @@ router.post('/', async (req, res) => {
 
 	try {
 		const session = await stripeClient.checkout.sessions.create(sessionOptions);
-		sessionCreateOrder(user, items);
+		//sessionCreateOrder(user, items);
 
 		res.send({
 			url: session.url,
@@ -196,13 +207,6 @@ router.post('/', async (req, res) => {
 	}
 });
 
-const sessionCreateOrder = (user, items) => {
-	const data = {
-		cartItems: items,
-		userDetails: user,
-	};
-	//console.log(data);
-	createOrder(data);
-};
+const sessionCreateOrder = (user, items) => {};
 
 export default router;
