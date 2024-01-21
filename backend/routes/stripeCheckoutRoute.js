@@ -36,14 +36,13 @@ router.post(
 
 		switch (event['type']) {
 			case 'checkout.session.completed':
-				intent = event.data.object;
-				console.log('Completed:', intent.id);
+				console.log('Completed');
 				updateOrder(intent, 'complete');
 				break;
 			case 'payment_intent.succeeded':
 				intent = event.data.object;
 				console.log('Succeeded:', intent.id);
-				updateOrder(intent, true);
+				//updateOrder(intent, true);
 				break;
 			case 'payment_intent.payment_failed':
 				intent = event.data.object;
@@ -121,7 +120,7 @@ router.post('/', async (req, res) => {
 
 	const sessionOptions = {
 		line_items: lineItems,
-		metadata: { orderId: orderId },
+		metadata: { order_id: '111111' },
 		automatic_tax: { enabled: true },
 		billing_address_collection: 'auto',
 		shipping_address_collection: {
