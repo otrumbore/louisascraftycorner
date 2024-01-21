@@ -7,7 +7,7 @@ export default function Banner({ style }) {
 		>
 			<div className='flex flex-wrap w-full max-w-[1200px] items-center justify-center gap-x-4 gap-y-2'>
 				<p className='text-sm leading-6 text-gray-900'>
-					<strong className='font-semibold'>Free Shipping</strong>
+					<strong className='font-semibold'>Website Under Development</strong>
 					<svg
 						viewBox='0 0 2 2'
 						className='mx-2 inline h-01 w-1 fill-current'
@@ -15,7 +15,7 @@ export default function Banner({ style }) {
 					>
 						<circle cx={1} cy={1} r={1} />
 					</svg>
-					On orders over $25 in the USA
+					Feel free to browse!
 				</p>
 				{/* <a
 					href='#'
