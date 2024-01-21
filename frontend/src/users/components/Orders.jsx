@@ -3,44 +3,42 @@ import { Link } from 'react-router-dom';
 import ViewOrder from './ViewOrder';
 import { MdOutlineLocalShipping } from 'react-icons/md';
 import { GrOverview } from 'react-icons/gr';
+import getOrders from '../../api/orders.api';
+import { useUser } from '../../context/UserContext';
 
 const Orders = () => {
 	const [viewOrder, setViewOrder] = useState('');
-	const [orders, setOrders] = useState([
-		{
-			date: '12/22/23',
-			itemCount: 6,
-			orderNum: 4728367,
-			total: '28.76',
-			status: 'shipped',
-		},
-		{
-			date: '12/23/23',
-			itemCount: 6,
-			orderNum: 4728332,
-			total: '104.06',
-			status: 'crafting',
-		},
-		{
-			date: '12/24/23',
-			itemCount: 6,
-			orderNum: 4728309,
-			total: '198.39',
-			status: 'placed',
-		},
-		{
-			date: '12/28/23',
-			itemCount: 6,
-			orderNum: 4728316,
-			total: '18.72',
-			status: 'shipped',
-		},
-		// Add more orders as needed...
-	]);
+	const [orders, setOrders] = useState([]);
+	const { userDetails } = useUser();
+	const [loading, setLoading] = useState(false);
+
+	const fetchOrders = async () => {
+		setLoading(true);
+		try {
+			const orders = await getOrders(userDetails._id);
+			console.log(orders);
+			setOrders(orders);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	useEffect(() => {
+		fetchOrders();
 		setViewOrder(''); // Reset viewOrder whenever the component re-renders
 	}, []);
+
+	// enum: [
+	// 	'created',
+	// 	'processing',
+	// 	'paid',
+	// 	'crafting',
+	// 	'shipped',
+	// 	'delivered',
+	// 	'payment_failed',
+	// ],
 
 	return (
 		<>
@@ -54,7 +52,7 @@ const Orders = () => {
 							<h5 className='text-lg'>HMMM...No purchases yet 😔</h5>
 						</div>
 					) : (
-						<div className='mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full gap-4'>
+						<div className='mt-8 grid grid-cols-1 lg:grid-cols-2 w-full gap-4'>
 							{orders.map((item, i) => (
 								<div
 									key={i}
@@ -65,33 +63,64 @@ const Orders = () => {
 											Status:{' '}
 											<p
 												className={`${
-													item.status === 'shipped'
-														? 'text-green-400'
-														: item.status === 'crafting' ||
-														  item.status === 'placed'
-														? 'text-orange-400'
+													item.status.length > 0
+														? item.status[item.status.length - 1].type ===
+																'shipped' ||
+														  item.status[item.status.length - 1].type ===
+																'paid' ||
+														  item.status[item.status.length - 1].type ===
+																'delivered'
+															? 'text-green-600'
+															: item.status[item.status.length - 1].type ===
+																	'crafting' ||
+															  item.status[item.status.length - 1].type ===
+																	'created' ||
+															  item.status[item.status.length - 1].type ===
+																	'processing'
+															? 'text-orange-400'
+															: item.status[item.status.length - 1].type ===
+															  'payment_failed'
+															? 'text-red-600'
+															: ''
 														: ''
 												}`}
 											>
-												{item.status}
+												{item.status.length > 0
+													? item.status[
+															item.status.length - 1
+													  ].type.toUpperCase()
+													: 'No Status'}
 											</p>
 										</div>
 									</div>
 									<div className='flex flex-wrap w-full items-center justify-between'>
-										<p>Date: {item.date}</p>
-										<p>Items: {item.itemCount}</p>
+										<p>
+											Date:{' '}
+											{new Date(item.createdAt).toLocaleString('en-US', {
+												year: 'numeric',
+												month: 'numeric',
+												day: 'numeric',
+												hour: 'numeric',
+												minute: 'numeric',
+												hour12: true,
+											})}
+										</p>
+										<p>
+											Items:{' '}
+											{item.items.reduce((acc, curr) => acc + curr.quantity, 0)}
+										</p>
 										<p className='flex space-x-2 items-center justify-center text-gray-600'>
 											<span className='hidden lg:block'>Track</span>
 											<MdOutlineLocalShipping size={30} />
 										</p>
 									</div>
 									<div className='flex flex-wrap w-full items-center justify-between'>
-										<p>Order# {item.orderNum}</p>
-										<p>Total: ${item.total}</p>
+										<p>Order# {item.orderId}</p>
+										<p>Total: ${item.prices.total / 100}</p>
 										<button
 											className='cursor-pointer'
 											onClick={() => {
-												setViewOrder(item.orderNum);
+												setViewOrder(item.orderId);
 											}}
 										>
 											<p className='flex space-x-2 items-center justify-center text-gray-600'>

@@ -1,10 +1,28 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const API_URL = import.meta.env.VITE_SERVER_API_URL;
+const token = Cookies.get('token');
 
-export const getOrders = async () => {
+//requires admin
+export const getAllOrders = async () => {
 	try {
-		const response = await axios.get(`${API_URL}/api/products`);
+		const response = await axios.get(`${API_URL}/api/orders`);
+		return response.data.data;
+	} catch (error) {
+		console.log(error);
+		return [];
+	}
+};
+
+//user get orders
+export const getOrders = async (id) => {
+	try {
+		const response = await axios.get(`${API_URL}/api/orders/${id}`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
 		return response.data.data;
 	} catch (error) {
 		console.log(error);
@@ -14,7 +32,7 @@ export const getOrders = async () => {
 
 export const getOrder = async (id) => {
 	try {
-		const response = await axios.get(`${API_URL}/api/products/${id}`);
+		const response = await axios.get(`${API_URL}/api/orders/${id}`);
 		return response.data.data;
 	} catch (error) {
 		console.error(error);
@@ -43,4 +61,4 @@ export const updateOrder = async (id, data) => {
 	}
 };
 
-export default createOrder;
+export default getOrders;
