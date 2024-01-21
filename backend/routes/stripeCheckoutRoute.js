@@ -95,14 +95,14 @@ router.post('/', async (req, res) => {
 			quantity: item.qty,
 		};
 
-		// Check if adjustable quantity is needed
-		if (item.inventory > 1) {
-			lineItem.adjustable_quantity = {
-				enabled: false,
-				minimum: 1,
-				maximum: item.inventory,
-			};
-		}
+		// // Check if adjustable quantity is needed
+		// if (item.inventory > 1) {
+		// 	lineItem.adjustable_quantity = {
+		// 		enabled: true,
+		// 		minimum: 1,
+		// 		maximum: item.inventory,
+		// 	};
+		// }
 
 		lineItems.push(lineItem);
 	});
