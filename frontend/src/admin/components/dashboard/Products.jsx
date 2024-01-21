@@ -148,10 +148,10 @@ const Products = ({ archived }) => {
 	}
 
 	// Calculate counts of active and inactive products
-	const activeCount = products.filter(
+	const activeCount = allProducts.filter(
 		(product) => product.active === true
 	).length;
-	const inactiveCount = products.filter(
+	const inactiveCount = allProducts.filter(
 		(product) => product.active === false
 	).length;
 
@@ -170,12 +170,12 @@ const Products = ({ archived }) => {
 							<p key={i}>{i + 1 + ': ' + item.text}</p>
 						))}
 					</div>
-					<div className='lg:w-[10%] lg:my-0 my-4 flex flex-col p-4 border-4 items-center border-primary border-dashed rounded-md'>
-						<p>Total: {products.length}</p>
+					<div className='lg:w-[12%] lg:my-0 my-4 flex flex-col p-4 border-4 border-primary border-dashed rounded-md'>
+						<p>Total: {allProducts.length}</p>
 						<p>Active: {activeCount}</p>
 						<p>Inactive: {inactiveCount}</p>
 					</div>
-					<div className='flex flex-col lg:flex-row lg:w-[40%] lg:my-0 p-4 border-4 border-primary border-dashed items-center justify-between rounded-md mb-5'>
+					<div className='flex flex-col lg:flex-row lg:w-[38%] lg:my-0 p-4 border-4 border-primary border-dashed items-center justify-between rounded-md mb-5'>
 						<input
 							type='text'
 							className='input p-2 lg:w-[50%]'
