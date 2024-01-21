@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 import getProducts from '../api/products.api.js';
-import { MdCheckBox } from 'react-icons/md';
+import { MdCheckBox, MdClose } from 'react-icons/md';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import getSettings from '../api/siteSettings.api.js';
 import LoadingModal from '../components/LoadingModal.jsx';
@@ -88,14 +88,17 @@ const Shop = () => {
 	};
 
 	const handleSearchChange = (event) => {
+		setCurrentPage(1);
 		setSearchText(event.target.value);
 	};
 
 	const handleCollectionChange = (event) => {
+		setCurrentPage(1);
 		setSelectedCollection(event.target.value);
 	};
 
 	const handleOnSaleChange = (event) => {
+		setCurrentPage(1);
 		setOnSaleOnly(event.target.checked);
 	};
 
@@ -103,9 +106,11 @@ const Shop = () => {
 		setSearchText('');
 		setSelectedCollection('');
 		setOnSaleOnly(false);
+		setCurrentPage(1);
 	};
 
 	const handleKeyDown = (event) => {
+		//setCurrentPage(1);
 		if (event.key === 'Enter') {
 			fetchData();
 		}
@@ -152,14 +157,24 @@ const Shop = () => {
 					<h3 className='text-3xl lg:text-4xl'>Lets get shopping...</h3>
 					<div className='mt-8 gap-4 w-[90%] flex flex-col lg:flex-row items-center justify-between bg-slate-300 p-4 rounded-md'>
 						<div className='flex w-full flex-col lg:flex-row items-center justify-between gap-4'>
-							<input
-								type='text'
-								className='p-2.5 input-ghost lg:w-[30%] focus:lg:w-full transform duration-700'
-								placeholder='Search...'
-								value={searchText}
-								onChange={handleSearchChange}
-								onKeyDown={handleKeyDown}
-							/>
+							<div className='relative lg:w-[30%] focus-within:w-full focus-within:transform ease-in-out duration-700'>
+								<input
+									type='text'
+									className='p-2.5 input-ghost w-full'
+									placeholder='Search...'
+									value={searchText}
+									onChange={handleSearchChange}
+									onKeyDown={handleKeyDown}
+								/>
+								{searchText && (
+									<MdClose
+										size={30}
+										className='absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer'
+										onClick={() => setSearchText('')} // Reset the searchText on close icon click
+									/>
+								)}
+							</div>
+
 							<select
 								className='p-[.80rem] w-full lg:min-w-fit lg:max-w-[20%] input-ghost'
 								value={selectedCollection}
