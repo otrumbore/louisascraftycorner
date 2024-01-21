@@ -28,7 +28,7 @@ const nodePass = process.env.pass;
 router.post('/register', async (request, response) => {
 	try {
 		// Generate a verification token (you can use a library like `crypto` for this)
-		const verificationToken = generateVerificationToken();
+		//const verificationToken = generateVerificationToken();
 
 		const {
 			name,
@@ -74,7 +74,7 @@ router.post('/register', async (request, response) => {
 		});
 
 		// Send a verification email
-		sendVerificationEmail(email, verificationToken);
+		//sendVerificationEmail(email, verificationToken);
 
 		return response.status(201).send(newUser);
 	} catch (error) {
