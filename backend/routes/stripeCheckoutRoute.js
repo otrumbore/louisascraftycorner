@@ -36,17 +36,17 @@ router.post(
 
 		switch (event['type']) {
 			case 'checkout.session.completed':
-				console.log('Completed');
+				//console.log('Completed');
 				intent = event.data.object;
 				updateOrder(intent, 'completed');
 				break;
 			case 'payment_intent.succeeded':
 				intent = event.data.object;
-				console.log('Succeeded:', intent.id);
+				//console.log('Succeeded:', intent.id);
 				updateOrder(intent, 'success');
 				break;
 			case 'payment_intent.payment_failed':
-				console.log('Failed:', intent.id, message);
+				//console.log('Failed:', intent.id, message);
 				intent = event.data.object;
 				const message =
 					intent.last_payment_error && intent.last_payment_error.message;

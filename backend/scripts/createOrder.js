@@ -85,10 +85,12 @@ export const updateOrder = async (event, intent) => {
 	try {
 		let updatedOrder = null;
 
+		const orderId = event?.metadata?.order_id || '';
+
 		switch (intent) {
 			case 'completed':
 				console.log('Success: session completed');
-				const orderId = event.metadata.order_id;
+
 				const shippingData = {
 					tracking: '',
 					carrier: 'USPS',
