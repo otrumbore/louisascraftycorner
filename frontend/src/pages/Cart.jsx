@@ -8,6 +8,7 @@ import { MdOutlineDeleteForever, MdEdit } from 'react-icons/md';
 import { FaRegHeart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import createOrder from '../api/orders.api';
 
 const Cart = () => {
 	const [loading, setLoading] = useState(false);
@@ -59,7 +60,7 @@ const Cart = () => {
 
 	return (
 		<>
-			<div className='p-4 mt-[8rem] h-full lg:mt-[10rem]'>
+			<div className='p-4 mt-[8rem] min-h-[60vh] lg:mt-[10rem]'>
 				<LoadingModal loading={loading} />
 				<div className='flex justify-center'>
 					<h1 className='text-2xl'>Shopping Cart</h1>

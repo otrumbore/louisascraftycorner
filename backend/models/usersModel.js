@@ -106,6 +106,9 @@ const userSchema = mongoose.Schema(
 			},
 			postalCode: String,
 		},
+		emailVerificationToken: {
+			type: String,
+		},
 		failedAttempts: {
 			type: Number,
 			default: 0,

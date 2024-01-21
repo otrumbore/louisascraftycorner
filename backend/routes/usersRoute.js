@@ -3,6 +3,7 @@ import { User } from '../models/usersModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import nodemailer from 'nodemailer';
 
 const router = express.Router();
 
@@ -20,9 +21,15 @@ const JWTToken = process.env.JWT_SECRET_TOKEN;
 // 	}
 //   };
 
+const nodeEmail = process.env.email;
+const nodePass = process.env.pass;
+
 // Creating user
 router.post('/register', async (request, response) => {
 	try {
+		// Generate a verification token (you can use a library like `crypto` for this)
+		const verificationToken = generateVerificationToken();
+
 		const {
 			name,
 			username,
@@ -39,6 +46,7 @@ router.post('/register', async (request, response) => {
 			dateOfBirth,
 			billAddress,
 			shipAddress,
+			emailVerificationToken,
 			archived,
 		} = request.body;
 
@@ -61,14 +69,58 @@ router.post('/register', async (request, response) => {
 			dateOfBirth,
 			billAddress: billAddress || {},
 			shipAddress: shipAddress || {},
+			emailVerificationToken: verificationToken,
 			archived,
 		});
+
+		// Send a verification email
+		sendVerificationEmail(email, verificationToken);
 
 		return response.status(201).send(newUser);
 	} catch (error) {
 		console.error(error.message);
 		response.status(500).send({ message: 'Server Error' });
 	}
+});
+
+// Function to send a verification email
+function sendVerificationEmail(email, verificationToken) {
+	const transporter = nodemailer.createTransport({
+		// Configure your email service provider here (SMTP settings)
+		service: 'gmail',
+		auth: {
+			user: nodeEmail, //needs setup
+			pass: nodePass,
+		},
+	});
+
+	const mailOptions = {
+		from: 'noreply@louisascraftycorner.com',
+		to: email,
+		subject: 'Verify Your Email',
+		text: `Click the following link to verify your email: http://www.louisascraftycorner.com/user/verify/${verificationToken}`,
+	};
+
+	transporter.sendMail(mailOptions, (error, info) => {
+		if (error) {
+			console.error('Error sending verification email:', error);
+		} else {
+			console.log('Verification email sent:', info.response);
+		}
+	});
+}
+
+// Your verification route
+router.get('/verify/:token', async (req, res) => {
+	// Extract the verification token from the URL parameters
+	const verificationToken = req.params.token;
+
+	// Check if the verification token is valid (compare with the token stored in your database)
+
+	// If valid, mark the user's email as verified in the database
+
+	// Redirect the user to a page indicating successful verification
+	res.redirect('/verification-success');
 });
 
 // Login route
