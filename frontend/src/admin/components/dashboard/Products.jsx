@@ -19,11 +19,12 @@ const Products = ({ archived }) => {
 	const [products, setProducts] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const { enqueueSnackbar } = useSnackbar();
+	const [searchQuery, setSearchQuery] = useState('');
 
 	const [showModal, setShowModal] = useState(null);
 	const [showDeleteModal, setShowDeleteModal] = useState(null);
 
-	const fetchProducts = async (archived) => {
+	const fetchProducts = async (archived, searchQuery) => {
 		setLoading(true);
 		try {
 			const fetchedProducts = await getProducts(); // Await the asynchronous function
@@ -52,6 +53,12 @@ const Products = ({ archived }) => {
 					return 0;
 				});
 			}
+
+			filteredProducts = filteredProducts.filter(
+				(product) =>
+					product.storeId.toString().includes(searchQuery) || // Check if storeId includes the search query
+					product.name.toLowerCase().includes(searchQuery.toLowerCase()) // Check if name includes the search query (case-insensitive)
+			);
 
 			//console.log(filteredProducts);
 			console.log(products);
@@ -94,6 +101,10 @@ const Products = ({ archived }) => {
 		}
 	};
 
+	const handleChange = (e) => {
+		setSearchQuery(e.target.value);
+	};
+
 	const openModal = (product) => {
 		//console.log(productId);
 		setShowModal(product);
@@ -113,8 +124,8 @@ const Products = ({ archived }) => {
 	};
 
 	useEffect(() => {
-		fetchProducts(archived);
-	}, [archived, showModal]);
+		fetchProducts(archived, searchQuery);
+	}, [archived, showModal, searchQuery]);
 
 	const adminNotifications = [
 		{ text: '111111 - low inventory' },
@@ -145,12 +156,18 @@ const Products = ({ archived }) => {
 							<p key={i}>{i + 1 + ': ' + item.text}</p>
 						))}
 					</div>
-					<div className='lg:w-[25%] lg:my-0 my-4 flex items-center justify-between p-4 border-4 border-primary border-dashed rounded-md'>
+					<div className='lg:w-[10%] lg:my-0 my-4 flex flex-col p-4 border-4 items-center border-primary border-dashed rounded-md'>
 						<p>Total: {products.length}</p>
 						<p>Active: {activeCount}</p>
 						<p>Inactive: {inactiveCount}</p>
 					</div>
-					<div className='hidden lg:flex lg:w-[25%] p-4 border-4 border-primary border-dashed items-center justify-end rounded-md'>
+					<div className='hidden lg:flex lg:w-[40%] p-4 border-4 border-primary border-dashed items-center justify-between rounded-md'>
+						<input
+							type='text'
+							className='input p-2 w-[50%]'
+							placeholder='Search...'
+							onChange={handleChange}
+						/>
 						<Link to={'/admin/addproduct'} className='btn-outline px-0 py-0'>
 							<MdAdd className='text-5xl' />
 						</Link>
