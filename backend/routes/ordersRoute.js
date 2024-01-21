@@ -68,11 +68,7 @@ router.get('/:userId', verifyToken, async (request, response) => {
 		const { userId } = request.params;
 		let orders = '';
 
-		if (
-			userId === request.user.userId ||
-			request.user.role === 'admin' ||
-			request.user.role === 'moderator'
-		) {
+		if (userId === request.user.userId) {
 			orders = await Order.find({});
 		} else {
 			return response.status(401).json({ message: 'Unauthorized' });
