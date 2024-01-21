@@ -181,7 +181,7 @@ const ProductPage = () => {
 				<LoadingModal loading={loading} />
 				<div className='flex justify-center'>
 					<div className='w-full grid grid-cols-1 lg:grid-cols-2 max-w-[1400px] items-start justify-start'>
-						<div className='h-[500px] flex justify-center'>
+						<div className='h-[500px] flex flex-col justify-center'>
 							<img
 								src={product.image ? product.image : DefaultProductImg}
 								alt={
@@ -195,6 +195,9 @@ const ProductPage = () => {
 								}}
 								className='h-full w-fit object-cover rounded-2xl shadow-2xl shadow-gray-400 lg:hover:scale-110'
 							/>
+							<div className='flex ml-4 w-full items-center text-sm mt-4'>
+								Measurements: {product.measurements}
+							</div>
 						</div>
 						<div className='p-4 h-full items-center'>
 							<div className='w-full mb-10 flex items-center justify-between'>
@@ -274,7 +277,7 @@ const ProductPage = () => {
 									</button>
 								)}
 							</div>
-							<div className='mt-10 grid grid-cols-2 w-full items-center'>
+							<div className='mt-6 grid grid-cols-2 w-full items-center'>
 								<div className='mlg:mt-0 flex items-center justify-start'>
 									<button
 										onClick={() => {
@@ -353,7 +356,7 @@ const ProductPage = () => {
 									</div>
 								</div>
 							</div>
-							<div className='w-full mt-4 flex justify-center'>
+							<div className='w-full mt-2 flex justify-center'>
 								<button
 									className='flex items-center justify-center py-4 lg:py-3 text-xl btn w-full'
 									onClick={updateCartQty}
