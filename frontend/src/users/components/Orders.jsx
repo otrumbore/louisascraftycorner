@@ -15,15 +15,14 @@ const Orders = () => {
 	const fetchOrders = async () => {
 		setLoading(true);
 		try {
-			const waitForUserId = async () => {
-				while (!userDetails._id) {
-					// Wait for 100 milliseconds before checking again
-					await new Promise((resolve) => setTimeout(resolve, 100));
-				}
-			};
-
-			// Wait for userDetails._id to be set
-			await waitForUserId();
+			await new Promise((resolve) => {
+				const checkUserIdInterval = setInterval(() => {
+					if (userDetails._id) {
+						clearInterval(checkUserIdInterval);
+						resolve();
+					}
+				}, 100);
+			});
 
 			const orders = await getOrders(userDetails._id);
 			console.log(orders);
