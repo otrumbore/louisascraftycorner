@@ -99,13 +99,14 @@ const Products = ({ archived }) => {
 					variant: 'success',
 				});
 			}
-			fetchProducts(archived);
+			fetchProducts(archived, '');
 		} catch (error) {
 			console.error(error);
-			setLoading(false);
 			enqueueSnackbar('Could not set product to inactive', {
 				variant: 'error',
 			});
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -119,7 +120,7 @@ const Products = ({ archived }) => {
 	};
 
 	const closeModal = () => {
-		fetchProducts(archived);
+		fetchProducts(archived, '');
 		setShowModal(null);
 	};
 
@@ -133,6 +134,7 @@ const Products = ({ archived }) => {
 
 	useEffect(() => {
 		fetchProducts(archived, searchQuery);
+		window.scroll(0, 0);
 	}, [archived, showModal, searchQuery, currentPage, productsPerPage]);
 
 	const adminNotifications = [
@@ -309,6 +311,7 @@ const Products = ({ archived }) => {
 													onClick={() => {
 														const data = { active: !product.active };
 														sendProductUpdate(product._id, data, product.name);
+														//fetchProducts(archived);
 													}}
 												>
 													{product.active ? (

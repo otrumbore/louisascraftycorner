@@ -2,14 +2,18 @@ import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 import getProducts from '../api/products.api.js';
 import { MdCheckBox } from 'react-icons/md';
+import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import getSettings from '../api/siteSettings.api.js';
 import LoadingModal from '../components/LoadingModal.jsx';
 import { useUser } from '../context/UserContext.jsx';
 
 const Shop = () => {
 	const [products, setProducts] = useState([]);
+	const [allProducts, setAllProducts] = useState([]);
 	const [collections, setCollections] = useState([]);
 	const [loading, setLoading] = useState(false);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [productsPerPage] = useState(9);
 	const [searchText, setSearchText] = useState('');
 	const [selectedCollection, setSelectedCollection] = useState('');
 	const [onSaleOnly, setOnSaleOnly] = useState(false);
@@ -57,13 +61,22 @@ const Shop = () => {
 				);
 			});
 
-			setProducts(filteredProducts);
+			const indexOfLastProduct = currentPage * productsPerPage;
+			const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+			const currentProducts = filteredProducts.slice(
+				indexOfFirstProduct,
+				indexOfLastProduct
+			);
+			setAllProducts(filteredProducts);
+			setProducts(currentProducts);
 		} catch (error) {
 			console.error('Error fetching products:', error);
 		} finally {
 			setLoading(false);
 		}
 	};
+
+	const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
 	const fetchSettings = async () => {
 		try {
@@ -107,7 +120,14 @@ const Shop = () => {
 			// If all filters are cleared, fetch all products immediately
 			fetchFilteredData();
 		}
-	}, [searchText, selectedCollection, onSaleOnly]);
+		window.scroll(0, 0);
+	}, [
+		searchText,
+		selectedCollection,
+		onSaleOnly,
+		currentPage,
+		productsPerPage,
+	]);
 
 	// useEffect(() => {
 	// 	fetchData();
@@ -118,6 +138,11 @@ const Shop = () => {
 		fetchSettings();
 		window.scroll(0, 0);
 	}, []);
+
+	const pageNumbers = [];
+	for (let i = 1; i <= Math.ceil(allProducts.length / productsPerPage); i++) {
+		pageNumbers.push(i);
+	}
 
 	return (
 		<div className='p-4 mt-[8rem] w-full flex justify-center'>
@@ -211,12 +236,62 @@ const Shop = () => {
 								</div>
 							))}
 						{!loading && products.length > 0 ? (
-							<ProductCard products={products} numProducts={20} />
+							<ProductCard products={products} numProducts={productsPerPage} />
 						) : (
 							<div className='flex w-full justify-center'>
 								<h3 className='text-2xl'>No products found...😔</h3>
 							</div>
 						)}
+					</div>
+					{/* Pagination */}
+
+					<div className='flex w-[90%] px-2 items-center justify-between mt-8'>
+						<div className=''>
+							<p>
+								Page {currentPage} of {pageNumbers.length}
+							</p>
+						</div>
+						<ul className='flex gap-2'>
+							{currentPage > 1 && (
+								<li className=''>
+									<button
+										onClick={() => paginate(currentPage - 1)}
+										className='btn-outline px-2'
+									>
+										<FaChevronLeft size={25} />
+									</button>
+								</li>
+							)}
+
+							{pageNumbers.map((number) => (
+								<li
+									key={number}
+									//className={}
+								>
+									<button
+										onClick={() => paginate(number)}
+										className={` text-lg ${
+											number === currentPage
+												? 'btn px-4'
+												: 'btn-ghost py-2 px-4'
+										}`}
+									>
+										{number}
+									</button>
+								</li>
+							))}
+
+							{currentPage < pageNumbers.length && (
+								<li className=''>
+									<button
+										onClick={() => paginate(currentPage + 1)}
+										className='btn-outline px-2'
+									>
+										<FaChevronRight className='text-2xl' />
+									</button>
+								</li>
+							)}
+						</ul>
 					</div>
 				</div>
 			</div>
