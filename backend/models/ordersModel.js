@@ -36,8 +36,8 @@ const ordersSchema = mongoose.Schema(
 	{
 		email: { type: String },
 		username: { type: String },
-		userId: { type: String, unique: true },
-		orderId: { type: String },
+		userId: { type: String },
+		orderId: { type: String, unique: true },
 		stripePaymentId: { type: String },
 		items: [itemSchema],
 		shipping: shippingSchema,
