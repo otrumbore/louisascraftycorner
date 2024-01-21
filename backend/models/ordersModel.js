@@ -36,7 +36,7 @@ const ordersSchema = mongoose.Schema(
 	{
 		email: { type: String },
 		username: { type: String },
-		userId: { type: String },
+		userId: { type: String, unique: false },
 		orderId: { type: String, unique: true },
 		stripePaymentId: { type: String },
 		items: [itemSchema],
@@ -80,7 +80,7 @@ const ordersSchema = mongoose.Schema(
 			},
 		],
 		prices: pricesSchema,
-		dicounts: discountsSchema,
+		discounts: discountsSchema,
 		customerNotes: { type: String },
 		return: returnSchema,
 		source: { type: String },
