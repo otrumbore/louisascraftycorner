@@ -35,25 +35,6 @@ const AddProduct = () => {
 
 	const { userDetails } = useUser();
 
-	const handleImageChange = (e) => {
-		const selectedImage = e.target.files[0];
-
-		// Check if an image is selected
-		if (selectedImage) {
-			// Check image type (optional)
-			if (selectedImage.type.startsWith('image/')) {
-				// Update the image state
-				setImage(selectedImage);
-			} else {
-				// Show an error message or provide feedback to the user
-				console.error('Invalid file type. Please choose an image file.');
-				enqueueSnackbar('Invalid file type. Please choose an image file.', {
-					variant: 'error',
-				});
-			}
-		}
-	};
-
 	useEffect(() => {
 		window.scroll(0, 0);
 	}, []);
