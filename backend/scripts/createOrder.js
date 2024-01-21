@@ -126,7 +126,7 @@ export const updateOrder = async (event, intent) => {
 					shipName: data.shipName,
 					shipAdd: data.shipAdd,
 					phone: data.phone,
-					status: [{ type: 'processing', timestamp: new Date() }],
+					$push: { status: { type: 'paid', timestamp: new Date() } },
 				};
 
 				await Order.findOneAndUpdate({ orderId: orderId }, updatedOrder);
@@ -136,7 +136,7 @@ export const updateOrder = async (event, intent) => {
 				console.log('Success: payment succeeded');
 
 				updatedOrder = {
-					status: [{ type: 'paid', timestamp: new Date() }],
+					$push: { status: { type: 'processing', timestamp: new Date() } },
 				};
 
 				await Order.findOneAndUpdate({ orderId: orderId }, updatedOrder);
@@ -145,7 +145,7 @@ export const updateOrder = async (event, intent) => {
 			case 'fail':
 				console.log('Fail: Order payment failed');
 				updatedOrder = {
-					status: [{ type: 'payment_failed', timestamp: new Date() }],
+					$push: { status: { type: 'payment_failed', timestamp: new Date() } },
 				};
 
 				await Order.findOneAndUpdate({ orderId: orderId }, updatedOrder);
