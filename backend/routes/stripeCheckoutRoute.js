@@ -43,7 +43,7 @@ router.post(
 			case 'payment_intent.succeeded':
 				intent = event.data.object;
 				console.log('Succeeded:', intent.id);
-				updateOrder(intent, 'complete');
+				//updateOrder(intent, 'complete');
 				//updateOrder(intent, true);
 				break;
 			case 'payment_intent.payment_failed':

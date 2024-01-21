@@ -83,36 +83,39 @@ const updateInventory = async (cartItems) => {
 
 export const updateOrder = async (event, intent) => {
 	try {
-		const shippingData = {
-			tracking: '',
-			carrier: 'USPS',
-			method: event.shipping_cost.amount_total === 0 ? 'standard' : '2day',
-		};
-
-		const priceData = {
-			discounts: event.total_details.amount_discount,
-			subtotal: event.amount_subtotal,
-			shipping: event.total_details.amount_shipping,
-			tax: event.total_details.amount_tax,
-			total: event.amount_total,
-		};
-
-		const data = {
-			email: event.customer_email,
-			stripePaymentId: event.payment_intent,
-			shipping: shippingData,
-			prices: priceData,
-			discounts: [],
-			shipName: event.shipping_details.name,
-			shipAdd: event.shipping_details.address,
-			phone: event.customer_details ? event.customer_details.phone || '' : '',
-		};
-
 		let updatedOrder = null;
 
 		switch (intent) {
 			case 'completed':
-				updatedOrder = await Order.create({
+				const orderId = event.metadata.order_id;
+				const shippingData = {
+					tracking: '',
+					carrier: 'USPS',
+					method: event.shipping_cost.amount_total === 0 ? 'standard' : '2day',
+				};
+
+				const priceData = {
+					discounts: event.total_details.amount_discount,
+					subtotal: event.amount_subtotal,
+					shipping: event.total_details.amount_shipping,
+					tax: event.total_details.amount_tax,
+					total: event.amount_total,
+				};
+
+				const data = {
+					email: event.customer_email,
+					stripePaymentId: event.payment_intent,
+					shipping: shippingData,
+					prices: priceData,
+					discounts: [],
+					shipName: event.shipping_details.name,
+					shipAdd: event.shipping_details.address,
+					phone: event.customer_details
+						? event.customer_details.phone || ''
+						: '',
+				};
+
+				updatedOrder = {
 					stripePaymentId: data.stripePaymentId,
 					shipping: data.shipping,
 					prices: data.prices,
@@ -121,12 +124,34 @@ export const updateOrder = async (event, intent) => {
 					shipAdd: data.shipAdd,
 					phone: data.phone,
 					status: [{ type: 'processing', timestamp: new Date() }],
-				});
+				};
+
+				await Order.findOneAndUpdate({ orderId: orderId }, updatedOrder);
+
 				console.log('Success: session completed');
+				break;
+
 			case true:
-				console.log('Success: payment suceeded');
+				console.log('Success: payment succeeded');
+
+				updatedOrder = {
+					status: [{ type: 'paid', timestamp: new Date() }],
+				};
+
+				await Order.findOneAndUpdate({ orderId: orderId }, updatedOrder);
+				break;
+
 			case false:
+				updatedOrder = {
+					status: [{ type: 'payment_failed', timestamp: new Date() }],
+				};
+
+				await Order.findOneAndUpdate({ orderId: orderId }, updatedOrder);
 				console.log('Fail: Order payment failed');
+				break;
+
+			default:
+				console.log('Invalid intent value');
 		}
 
 		console.log('updated order data: ', updatedOrder);
