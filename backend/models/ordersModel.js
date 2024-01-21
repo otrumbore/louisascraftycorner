@@ -14,7 +14,7 @@ const shippingSchema = new mongoose.Schema({
 });
 
 const pricesSchema = new mongoose.Schema({
-	discounts: { type: String },
+	discounts: { type: Number },
 	subtotal: { type: Number },
 	shipping: { type: Number },
 	tax: { type: Number },
@@ -38,6 +38,7 @@ const ordersSchema = mongoose.Schema(
 		username: { type: String },
 		userId: { type: String, unique: true },
 		orderId: { type: String },
+		stripePaymentId: { type: String },
 		items: [itemSchema],
 		shipping: shippingSchema,
 		billName: { type: String },
@@ -55,11 +56,28 @@ const ordersSchema = mongoose.Schema(
 			line2: { type: String },
 			city: { type: String },
 			state: { type: String },
-			postalCode: { type: Number },
+			postal_code: { type: Number },
 			country: { type: String, default: 'US' },
 		},
 		phone: { type: String },
-		status: [{ type: String }, { timestamps: true }],
+		status: [
+			{
+				type: {
+					type: String,
+					enum: [
+						'created',
+						'processing',
+						'crafting',
+						'shipped',
+						'delivered',
+						'payment_failed',
+					], // Add your status types
+				},
+				timestamp: {
+					type: Date,
+				},
+			},
+		],
 		prices: pricesSchema,
 		dicounts: discountsSchema,
 		customerNotes: { type: String },
