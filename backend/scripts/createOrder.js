@@ -87,6 +87,7 @@ export const updateOrder = async (event, intent) => {
 
 		switch (intent) {
 			case 'completed':
+				console.log('Success: session completed');
 				const orderId = event.metadata.order_id;
 				const shippingData = {
 					tracking: '',
@@ -127,8 +128,6 @@ export const updateOrder = async (event, intent) => {
 				};
 
 				await Order.findOneAndUpdate({ orderId: orderId }, updatedOrder);
-
-				console.log('Success: session completed');
 				break;
 
 			case true:
@@ -142,12 +141,12 @@ export const updateOrder = async (event, intent) => {
 				break;
 
 			case false:
+				console.log('Fail: Order payment failed');
 				updatedOrder = {
 					status: [{ type: 'payment_failed', timestamp: new Date() }],
 				};
 
 				await Order.findOneAndUpdate({ orderId: orderId }, updatedOrder);
-				console.log('Fail: Order payment failed');
 				break;
 
 			default:
