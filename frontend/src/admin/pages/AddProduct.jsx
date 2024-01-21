@@ -19,11 +19,13 @@ const AddProduct = () => {
 	const [price, setPrice] = useState('');
 	const [type, setType] = useState('');
 	const [category, setCategory] = useState('');
-	const [tags, setTags] = useState('handmade');
+	const [tags, setTags] = useState('Home Decor, Handmade');
 	const [inventory, setInventory] = useState('');
 	const [image, setImage] = useState(null);
 	const [sale, setSale] = useState(0);
 	const [rating, setRating] = useState(0);
+	const [manCost, setManCost] = useState(0);
+	const [measurements, setMeasurements] = useState('');
 	const active = false;
 	const archived = false;
 
@@ -53,10 +55,6 @@ const AddProduct = () => {
 	};
 
 	useEffect(() => {
-		console.log(image);
-	}, [image]);
-
-	useEffect(() => {
 		window.scroll(0, 0);
 	}, []);
 
@@ -72,6 +70,8 @@ const AddProduct = () => {
 			category,
 			rating,
 			tags,
+			measurements,
+			manCost,
 			inventory,
 			image: img,
 			active,
@@ -214,7 +214,7 @@ const AddProduct = () => {
 							</div>
 						</div>
 
-						<div className='mt-7 mb-5'>
+						<div className='mt-4'>
 							<label className='text-xl mr-4 text-gray-500'>
 								Tags (separate with commas)
 							</label>
@@ -225,7 +225,35 @@ const AddProduct = () => {
 								className='input'
 							/>
 						</div>
-						<div className='w-full flex justify-end'>
+
+						<div className='flex gap-2 mt-4'>
+							<div>
+								<label className='text-xl mr-4 text-gray-500'>
+									Manufacturing Cost
+								</label>
+								<input
+									type='text'
+									value={manCost}
+									onChange={(e) => setManCost(e.target.value)}
+									placeholder=''
+									className='input'
+								/>
+							</div>
+
+							<div>
+								<label className='text-xl mr-4 text-gray-500'>
+									Measurements (L x W x H)
+								</label>
+								<input
+									type='text'
+									value={measurements}
+									onChange={(e) => setMeasurements(e.target.value)}
+									placeholder=''
+									className='input'
+								/>
+							</div>
+						</div>
+						<div className='w-full mt-5 flex justify-end'>
 							<button className='btn w-[35%]' onClick={handleAddProduct}>
 								Save
 							</button>

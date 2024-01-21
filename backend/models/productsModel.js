@@ -62,6 +62,12 @@ const productSchema = mongoose.Schema(
 			required: true,
 			trim: true,
 		},
+		measurements: {
+			type: String,
+		},
+		manCost: {
+			type: Number,
+		},
 		inventory: {
 			type: Number,
 			required: true,

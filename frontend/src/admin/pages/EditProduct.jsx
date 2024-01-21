@@ -21,6 +21,8 @@ const EditProduct = () => {
 	const [inventory, setInventory] = useState('');
 	const [image, setImage] = useState('');
 	const [sale, setSale] = useState(0);
+	const [manCost, setManCost] = useState(0);
+	const [measurements, setMeasurements] = useState('');
 	const [rating, setRating] = useState('');
 	const [active, setActive] = useState(false);
 	const archived = false;
@@ -50,6 +52,8 @@ const EditProduct = () => {
 			setInventory(response.inventory);
 			setImage(response.image);
 			setActive(response.active);
+			setManCost(response.manCost);
+			setMeasurements(response.measurements);
 
 			setLoading(false);
 		} else {
@@ -80,6 +84,8 @@ const EditProduct = () => {
 			category,
 			rating,
 			tags,
+			manCost,
+			measurements,
 			inventory,
 			image: !img ? image : img,
 			active,
@@ -199,6 +205,33 @@ const EditProduct = () => {
 						onChange={(e) => setTags(e.target.value)}
 						className='border-2 border-gray-500 px-4 py-2 w-full'
 					/>
+				</div>
+				<div className='flex gap-2 mt-4'>
+					<div>
+						<label className='text-xl mr-4 text-gray-500'>
+							Manufacturing Cost
+						</label>
+						<input
+							type='text'
+							value={manCost}
+							onChange={(e) => setManCost(e.target.value)}
+							placeholder=''
+							className='input'
+						/>
+					</div>
+
+					<div>
+						<label className='text-xl mr-4 text-gray-500'>
+							Measurements (L x W x H)
+						</label>
+						<input
+							type='text'
+							value={measurements}
+							onChange={(e) => setMeasurements(e.target.value)}
+							placeholder=''
+							className='input'
+						/>
+					</div>
 				</div>
 				<div className='my-4'>
 					<label className='text-xl mr-4 text-gray-500'>Rating</label>
