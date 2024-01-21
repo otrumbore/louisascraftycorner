@@ -69,7 +69,7 @@ router.get('/:userId', verifyToken, async (request, response) => {
 		let orders = '';
 
 		if (userId === request.user.userId) {
-			orders = await Order.find({});
+			orders = await Order.find({ userId: userId });
 		} else {
 			return response.status(401).json({ message: 'Unauthorized' });
 		}
