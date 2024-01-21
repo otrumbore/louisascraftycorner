@@ -60,7 +60,7 @@ const Dashboard = () => {
 						{userDetails.name
 							? ' ' + userDetails.name.split(' ')[0] || userDetails.name
 							: ''}
-						{userRole() && (
+						{userRole() > 1 && (
 							<FaStar size={30} className='text-yellow-400 ml-2' />
 						)}
 					</h2>
