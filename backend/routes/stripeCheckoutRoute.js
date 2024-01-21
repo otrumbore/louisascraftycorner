@@ -35,6 +35,11 @@ router.post(
 		let intent = null;
 
 		switch (event['type']) {
+			case 'checkout.session.completed':
+				intent = event.data.object;
+				console.log('Completed:', intent.id);
+				updateOrder(intent, 'complete');
+				break;
 			case 'payment_intent.succeeded':
 				intent = event.data.object;
 				console.log('Succeeded:', intent.id);

@@ -9,7 +9,7 @@ const itemSchema = new mongoose.Schema({
 
 const shippingSchema = new mongoose.Schema({
 	tracking: { type: String },
-	vendor: { type: String },
+	carrier: { type: String },
 	method: { type: String },
 });
 

@@ -82,7 +82,7 @@ export const updateOrder = async (event, intent) => {
 	try {
 		const shippingData = {
 			tracking: '',
-			vendor: 'USPS',
+			carrier: 'USPS',
 			method: event.shipping_cost.amount_total === 0 ? 'standard' : '2day',
 		};
 
@@ -107,24 +107,26 @@ export const updateOrder = async (event, intent) => {
 
 		let updatedOrder = null;
 
-		if (intent) {
-			updatedOrder = await Order.create({
-				stripePaymentId: data.stripePaymentId,
-				shipping: data.shipping,
-				prices: data.prices,
-				discounts: data.discounts,
-				shipName: data.shipName,
-				shipAdd: data.shipAdd,
-				phone: data.phone,
-				status: [{ type: 'processing', timestamp: new Date() }],
-			});
-			console.log('Success: Order updated');
-		} else {
-			// You can add logic here for cases where intent is not provided (else block)
-			console.log('Intent not provided, handle accordingly');
+		switch (intent) {
+			case 'completed':
+				updatedOrder = await Order.create({
+					stripePaymentId: data.stripePaymentId,
+					shipping: data.shipping,
+					prices: data.prices,
+					discounts: data.discounts,
+					shipName: data.shipName,
+					shipAdd: data.shipAdd,
+					phone: data.phone,
+					status: [{ type: 'processing', timestamp: new Date() }],
+				});
+				console.log('Success: session completed');
+			case true:
+				console.log('Success: payment suceeded');
+			case false:
+				console.log('Fail: Order payment failed');
 		}
 
-		console.log(updatedOrder);
+		console.log('updated order data: ', updatedOrder);
 	} catch (error) {
 		console.error('Error updating order:', error.message);
 		// Consider sending a more specific error response
