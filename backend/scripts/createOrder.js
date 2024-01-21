@@ -116,7 +116,7 @@ export const updateOrder = async (event, intent) => {
 				shipName: data.shipName,
 				shipAdd: data.shipAdd,
 				phone: data.phone,
-				status: ['processing'],
+				status: [{ type: 'processing', timestamp: new Date() }],
 			});
 			console.log('Success: Order updated');
 		} else {

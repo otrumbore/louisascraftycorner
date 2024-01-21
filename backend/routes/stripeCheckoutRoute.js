@@ -38,13 +38,13 @@ router.post(
 			case 'payment_intent.succeeded':
 				intent = event.data.object;
 				console.log('Succeeded:', intent.id);
-				//updateOrder(event);
+				updateOrder(intent, true);
 				break;
 			case 'payment_intent.payment_failed':
 				intent = event.data.object;
 				const message =
 					intent.last_payment_error && intent.last_payment_error.message;
-				//updateOrder(event);
+				updateOrder(intent, false);
 				console.log('Failed:', intent.id, message);
 				break;
 		}
@@ -68,7 +68,10 @@ router.post('/', async (req, res) => {
 				currency: 'usd',
 				product_data: {
 					name: item.name,
-					images: [item.image],
+					images: [
+						item.image ||
+							'https://res.cloudinary.com/dedinrpix/image/upload/v1705796629/product-images/orqxgg7sbw9hmdh7b8i8.png',
+					],
 					description: item.description,
 				},
 				unit_amount: price * 100, //2 * 100 = $2 use cents
@@ -87,6 +90,19 @@ router.post('/', async (req, res) => {
 
 		lineItems.push(lineItem);
 	});
+
+	const lineItemsTotal = lineItems.reduce(
+		(total, item) => total + item.price_data.unit_amount * item.quantity,
+		0
+	);
+
+	let shipAmount = '';
+
+	if (lineItemsTotal > 5000) {
+		shipAmount = 0;
+	} else {
+		shipAmount = 1500;
+	}
 
 	const sessionOptions = {
 		line_items: lineItems,
@@ -116,10 +132,10 @@ router.post('/', async (req, res) => {
 				shipping_rate_data: {
 					type: 'fixed_amount',
 					fixed_amount: {
-						amount: 0,
+						amount: shipAmount,
 						currency: 'usd',
 					},
-					display_name: 'Free shipping',
+					display_name: 'Standard shipping',
 					delivery_estimate: {
 						minimum: {
 							unit: 'business_day',
@@ -136,10 +152,10 @@ router.post('/', async (req, res) => {
 				shipping_rate_data: {
 					type: 'fixed_amount',
 					fixed_amount: {
-						amount: 1500,
+						amount: 3000,
 						currency: 'usd',
 					},
-					display_name: 'Overnight',
+					display_name: '2 Day (Not for personalized products)',
 					delivery_estimate: {
 						minimum: {
 							unit: 'business_day',
@@ -147,7 +163,7 @@ router.post('/', async (req, res) => {
 						},
 						maximum: {
 							unit: 'business_day',
-							value: 1,
+							value: 2,
 						},
 					},
 				},
@@ -180,7 +196,7 @@ const sessionCreateOrder = (user, items) => {
 		cartItems: items,
 		userDetails: user,
 	};
-	console.log(data);
+	//console.log(data);
 	createOrder(data);
 };
 
