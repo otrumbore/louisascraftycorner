@@ -31,7 +31,7 @@ const verifyToken = (request, response, next) => {
 
 	jwt.verify(token, JWTToken, (err, decoded) => {
 		if (err) {
-			return request.status(403).json({ message: 'Invalid token' });
+			return response.status(403).json({ message: 'Invalid token' });
 		}
 		request.user = decoded; // Attach user details to request object
 		next();

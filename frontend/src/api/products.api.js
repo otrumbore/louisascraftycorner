@@ -25,9 +25,7 @@ export const getProduct = async (id) => {
 export const addProduct = async (data) => {
 	try {
 		const response = await axios.post(`${API_URL}/api/products/`, data, {
-			// headers: {
-			// 	'Content-Type': 'multipart/form-data',
-			// },
+			//add token for admin only check
 		});
 		return response;
 	} catch (error) {
@@ -39,7 +37,7 @@ export const addProduct = async (data) => {
 export const updateProduct = async (id, data) => {
 	try {
 		const response = await axios.put(`${API_URL}/api/products/${id}`, data);
-
+		// add token for admin only check
 		return response;
 	} catch (error) {
 		console.error(error);
