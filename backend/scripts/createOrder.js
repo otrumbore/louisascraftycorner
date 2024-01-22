@@ -127,6 +127,7 @@ export const updateOrder = async (event, intent) => {
 					shipAdd: data.shipAdd,
 					phone: data.phone,
 					$push: { status: { type: 'paid', timestamp: new Date() } },
+					active: true,
 				};
 
 				await Order.findOneAndUpdate({ orderId: orderId }, updatedOrder);

@@ -79,6 +79,10 @@ const ordersSchema = mongoose.Schema(
 				},
 			},
 		],
+		active: {
+			type: Boolean,
+			default: false,
+		},
 		prices: pricesSchema,
 		discounts: discountsSchema,
 		customerNotes: { type: String },

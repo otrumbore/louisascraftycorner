@@ -10,8 +10,11 @@ const Orders = () => {
 		setLoading(true);
 		try {
 			const fetchedOrders = await getAllOrders();
-			setOrders(fetchedOrders);
-			console.log(fetchedOrders);
+			const filteredOrders = fetchedOrders.filter(
+				(order) => order.active === true
+			);
+			setOrders(filteredOrders);
+			//console.log(fetchedOrders);
 		} catch (error) {
 			console.log(error);
 		} finally {

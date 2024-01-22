@@ -16,9 +16,17 @@ const Orders = () => {
 	const fetchOrders = async () => {
 		setLoading(true);
 		try {
-			const orders = await getOrders(userDetails._id);
-			console.log(orders);
-			setOrders(orders);
+			if (!userDetails._id) {
+				return;
+			}
+			const fetchedOrders = await getOrders(userDetails._id);
+
+			const filteredOrders = fetchedOrders.filter(
+				(order) => order.active === true
+			);
+
+			console.log(fetchedOrders);
+			setOrders(filteredOrders);
 		} catch (error) {
 			console.log(error);
 		} finally {
