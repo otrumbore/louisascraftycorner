@@ -172,12 +172,23 @@ const Products = ({ archived }) => {
 							<p key={i}>{i + 1 + ': ' + item.text}</p>
 						))}
 					</div>
-					<div className='lg:w-[12%] lg:my-0 my-4 flex flex-col p-4 border-4 border-primary border-dashed rounded-md'>
-						<p>Total: {allProducts.length}</p>
-						<p>Active: {activeCount}</p>
-						<p>Inactive: {inactiveCount}</p>
+					<div className='lg:w-[15%] lg:my-0 my-4 flex flex-col p-4 border-4 border-primary border-dashed rounded-md'>
+						<div className='flex items-center'>
+							<strong>Total:</strong>
+							<div className='w-full flex justify-end'>
+								{allProducts.length}
+							</div>
+						</div>
+						<div className='flex items-center'>
+							<strong className='text-sm'>Active:</strong>
+							<div className='w-full flex justify-end'>{activeCount}</div>
+						</div>
+						<div className='flex items-center'>
+							<strong className='text-sm'>Inactive:</strong>
+							<div className='w-full flex justify-end'>{inactiveCount}</div>
+						</div>
 					</div>
-					<div className='flex flex-col lg:flex-row lg:w-[38%] lg:my-0 p-4 border-4 border-primary border-dashed items-center justify-between rounded-md mb-5'>
+					<div className='flex flex-col lg:flex-row lg:w-[40%] lg:my-0 p-4 border-4 border-primary border-dashed items-center justify-between rounded-md mb-5'>
 						<input
 							type='text'
 							className='input p-2 lg:w-[50%]'
@@ -216,7 +227,7 @@ const Products = ({ archived }) => {
 								<th className='max-lg:hidden'>Rating</th>
 								<th className='max-lg:hidden'>Status</th>
 								<th className='max-lg:hidden'>Last Update</th>
-								<th className='text-right pr-2'>Actions</th>
+								<th className='text-right'>Actions</th>
 							</tr>
 						</thead>
 						<tbody className=''>
