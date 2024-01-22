@@ -157,7 +157,7 @@ const Shop = () => {
 					<h3 className='text-3xl lg:text-4xl'>Lets get shopping...</h3>
 					<div className='mt-8 gap-4 w-[90%] flex flex-col lg:flex-row items-center justify-between bg-slate-300 p-4 rounded-md'>
 						<div className='flex w-full flex-col lg:flex-row items-center justify-between gap-4'>
-							<div className='relative lg:w-[30%] focus-within:w-full focus-within:transform ease-in-out duration-700'>
+							<div className='relative w-full lg:w-[30%] focus-within:w-full focus-within:transform ease-in-out duration-700'>
 								<input
 									type='text'
 									className='p-2.5 input-ghost w-full'
