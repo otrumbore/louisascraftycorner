@@ -23,7 +23,7 @@ const Dashboard = () => {
 	// Function to extract the hash fragment from the location pathname
 	const getPageFromHash = () => {
 		const hash = location.hash.substring(1); // Remove the '#' from the hash
-		return hash || 'orders'; // Return 'default' if hash is empty
+		return hash || 'settings'; // Return 'default' if hash is empty
 	};
 
 	// Determine the "page" based on the hash fragment
