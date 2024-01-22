@@ -5,6 +5,7 @@ import { MdOutlineLocalShipping } from 'react-icons/md';
 import { GrOverview } from 'react-icons/gr';
 import getOrders from '../../api/orders.api';
 import { useUser } from '../../context/UserContext';
+import LoadingModal from '../../components/LoadingModal';
 
 const Orders = () => {
 	const [viewOrder, setViewOrder] = useState('');
@@ -15,15 +16,6 @@ const Orders = () => {
 	const fetchOrders = async () => {
 		setLoading(true);
 		try {
-			await new Promise((resolve) => {
-				const checkUserIdInterval = setInterval(() => {
-					if (userDetails._id) {
-						clearInterval(checkUserIdInterval);
-						resolve();
-					}
-				}, 100);
-			});
-
 			const orders = await getOrders(userDetails._id);
 			console.log(orders);
 			setOrders(orders);
@@ -51,12 +43,13 @@ const Orders = () => {
 
 	return (
 		<>
+			<LoadingModal loading={loading} />
 			{!viewOrder ? (
 				<div className='w-full'>
 					<div className='flex w-full justify-center'>
 						<h3 className='text-2xl lg:text-3xl'>Your Purchases</h3>
 					</div>
-					{orders.length <= 0 ? (
+					{orders.length <= 0 && !loading ? (
 						<div className='flex w-full items-center justify-center mt-4'>
 							<h5 className='text-lg'>HMMM...No purchases yet 😔</h5>
 						</div>
