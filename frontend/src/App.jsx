@@ -27,7 +27,7 @@ import AdminDashboard from './admin/AdminDashboard';
 
 const App = () => {
 	return (
-		<>
+		<div className='w-full'>
 			<Navbar />
 			<Routes>
 				{/* Regular Website Routes */}
@@ -55,7 +55,7 @@ const App = () => {
 				<Route path='/user/logout' element={<Logout />} />
 			</Routes>
 			<Footer />
-		</>
+		</div>
 	);
 };
 export default App;
