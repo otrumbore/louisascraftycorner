@@ -16,7 +16,6 @@ import Information from './pages/Information';
 import NotFound from './pages/errors/NotFound';
 
 //admin pages
-import AdminHome from './admin/AdminHome';
 import AddProduct from './admin/pages/AddProduct';
 import EditProduct from './admin/pages/EditProduct';
 import ProductPage from './pages/ProductPage';
