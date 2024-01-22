@@ -9,13 +9,13 @@ const ViewOrder = ({ orderNum, setViewOrder }) => {
 				onClick={() => {
 					setViewOrder('');
 				}}
-				className='text-gray-600 flex items-center space-x-2 cursor-pointer'
+				className='btn-outline w-fit px-3 py-1 flex items-center space-x-2 cursor-pointer'
 			>
 				<FaArrowLeft size={30} />
-				<span>Back</span>
+				<span className='hidden lg:block'>Back</span>
 			</div>
-			<div className='mt-4 w-full flex justify-center'>
-				<h3 className='text-2xl'>Order {orderNum}</h3>
+			<div className='w-full flex justify-center'>
+				<h3 className='text-2xl'>Order #{orderNum}</h3>
 			</div>
 		</div>
 	);
