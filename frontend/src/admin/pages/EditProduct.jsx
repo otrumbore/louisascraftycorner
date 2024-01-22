@@ -9,6 +9,7 @@ import { useUser } from '../../context/UserContext';
 import { sendActivityLog } from '../../api/admin/logging.api';
 import ImageUpload, { sendImageURL } from '../components/ImageUpload';
 import DefaultProductImg from '../../assets/product-img/default.png';
+import getSettings from '../../api/siteSettings.api';
 
 const EditProduct = () => {
 	const [storeId, setStoreId] = useState('');
@@ -17,6 +18,7 @@ const EditProduct = () => {
 	const [price, setPrice] = useState('');
 	const [type, setType] = useState('');
 	const [category, setCategory] = useState('');
+	const [collections, setCollections] = useState([]);
 	const [tags, setTags] = useState('');
 	const [inventory, setInventory] = useState('');
 	const [image, setImage] = useState('');
@@ -66,8 +68,14 @@ const EditProduct = () => {
 		}
 	};
 
+	const fetchCollections = async () => {
+		const fetchedCollections = await getSettings();
+		setCollections(fetchedCollections.collections);
+	};
+
 	useEffect(() => {
 		fetchProducts();
+		fetchCollections();
 		window.scroll(0, 0);
 	}, []);
 
@@ -91,6 +99,7 @@ const EditProduct = () => {
 			active,
 			archived,
 		};
+		//console.log(data);
 		setLoading(true);
 		//console.log(id);
 		const response = await updateProduct(id, data);
@@ -213,13 +222,33 @@ const EditProduct = () => {
 								/>
 							</div>
 							<div className='flex flex-col w-full'>
-								<label className='text-xl text-gray-500'>Category</label>
-								<input
+								<label className='text-xl text-gray-500'>Collection</label>
+								<select
+									value={
+										category
+										// collections.some((item) => item.name === category)
+										// 	? category
+										// 	: ''
+									}
+									onChange={(e) => setCategory(e.target.value)}
+									className='border-4 border-primary text-lg focus:border-6 py-5 rounded-md px-2'
+								>
+									{collections.map((item, i) => (
+										<option key={i} value={item.name}>
+											{item.name}
+										</option>
+									))}
+									{!collections.some((item) => item.name === category) && (
+										<option value={category}>OG: {category}</option>
+									)}
+									{/* delete above line of code once OGs are added! */}
+								</select>
+								{/* <input
 									type='text'
 									value={category}
 									onChange={(e) => setCategory(e.target.value)}
 									className='input'
-								/>
+								/> */}
 							</div>
 						</div>
 

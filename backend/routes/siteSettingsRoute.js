@@ -75,12 +75,14 @@ router.put('/:id', async (request, response) => {
 		);
 		//console.log(request.body.storeId);
 		if (!updatedSiteSettings) {
-			return response.status(404).send({ message: 'Product not found' });
+			return response.status(404).send({ message: 'Settings not found' });
 		}
+
+		//console.log('updated settings with ', request.body);
 
 		return response
 			.status(200)
-			.send({ message: 'Product updated successfully' });
+			.send({ message: 'Settings updated successfully' });
 	} catch (error) {
 		console.error(error.message);
 		response.status(500).send({ message: 'Server Error' });

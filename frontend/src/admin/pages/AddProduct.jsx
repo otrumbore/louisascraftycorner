@@ -8,8 +8,8 @@ import { addProduct } from '../../api/products.api';
 import errorLogging, { sendActivityLog } from '../../api/admin/logging.api';
 import { useUser } from '../../context/UserContext';
 import ImageUpload, { sendImageURL } from '../components/ImageUpload';
-
 import { MdAttachMoney } from 'react-icons/md';
+import getSettings from '../../api/siteSettings.api';
 
 const AddProduct = () => {
 	const [name, setName] = useState('');
@@ -19,12 +19,13 @@ const AddProduct = () => {
 	const [price, setPrice] = useState('');
 	const [type, setType] = useState('');
 	const [category, setCategory] = useState('');
+	const [collections, setCollections] = useState([]);
 	const [tags, setTags] = useState('Home Decor, Handmade');
 	const [inventory, setInventory] = useState('');
 	const [image, setImage] = useState(null);
 	const [sale, setSale] = useState(0);
 	const [rating, setRating] = useState(0);
-	const [manCost, setManCost] = useState(0);
+	const [manCost, setManCost] = useState('');
 	const [measurements, setMeasurements] = useState('');
 	const active = false;
 	const archived = false;
@@ -35,7 +36,17 @@ const AddProduct = () => {
 
 	const { userDetails } = useUser();
 
+	const fetchSettings = async () => {
+		try {
+			const fetchedSettings = await getSettings();
+			setCollections(fetchedSettings.collections);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	useEffect(() => {
+		fetchSettings();
 		window.scroll(0, 0);
 	}, []);
 
@@ -186,12 +197,22 @@ const AddProduct = () => {
 									onChange={(e) => setType(e.target.value)}
 									className='input'
 								/>
-								<input
+								<select
+									onChange={(e) => setCategory(e.target.value)}
+									className='w-full py-5 px-2 border-4 border-primary focus:border-6 rounded-md text-lg'
+								>
+									{collections.map((item, i) => (
+										<option key={i} value={item.name}>
+											{item.name}
+										</option>
+									))}
+								</select>
+								{/* <input
 									type='text'
 									value={category}
 									onChange={(e) => setCategory(e.target.value)}
 									className='input'
-								/>
+								/> */}
 							</div>
 						</div>
 
@@ -207,8 +228,8 @@ const AddProduct = () => {
 							/>
 						</div>
 
-						<div className='flex gap-2 mt-4'>
-							<div>
+						<div className='flex gap-4 mt-4'>
+							<div className='w-full'>
 								<label className='text-xl mr-4 text-gray-500'>
 									Manufacturing Cost
 								</label>
@@ -221,7 +242,7 @@ const AddProduct = () => {
 								/>
 							</div>
 
-							<div>
+							<div className='w-full'>
 								<label className='text-xl mr-4 text-gray-500'>
 									Measurements (L x W x H)
 								</label>

@@ -25,7 +25,8 @@ export const getSetting = async (id) => {
 	}
 };
 
-export const updateSetting = async (id, data) => {
+export const updateSetting = async (data) => {
+	const id = '658722f06968a772f2cdde55';
 	try {
 		const response = await axios.put(
 			`${API_URL}/api/admin/site_settings/${id}`,
