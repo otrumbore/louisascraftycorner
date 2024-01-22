@@ -52,6 +52,10 @@ export function CartProvider({ children }) {
 		}
 	};
 
+	const updateAllCartItems = (allItems) => {
+		setCartItems(allItems);
+	};
+
 	const removeFromCart = (itemId) => {
 		const updatedCart = cartItems.filter((item) => item._id !== itemId);
 		setCartItems(updatedCart);
@@ -122,6 +126,7 @@ export function CartProvider({ children }) {
 				updateCartItem,
 				cartSalesTotal,
 				cartTotal,
+				updateAllCartItems,
 			}}
 		>
 			{children}

@@ -3,15 +3,17 @@ import LoadingModal from '../components/LoadingModal';
 import { useCart } from '../context/CartContext';
 import { useUser } from '../context/UserContext';
 import DefaultProductImg from '../assets/product-img/default.png';
-import SantaHat from '../assets/product-img/santa-hat-ordiment.png';
 import { MdOutlineDeleteForever, MdEdit } from 'react-icons/md';
 import { FaRegHeart } from 'react-icons/fa';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import createOrder from '../api/orders.api';
+import { getProduct } from '../api/products.api';
 
 const Cart = () => {
 	const [loading, setLoading] = useState(false);
+	const [stripeLoading, setStripeLoading] = useState(false);
 	const { enqueueSnackbar } = useSnackbar();
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
 	//cart stuff
@@ -23,6 +25,7 @@ const Cart = () => {
 		cartTotal,
 		cartSalesTotal,
 		cartSubTotal,
+		updateAllCartItems,
 	} = useCart();
 
 	const { addToFavorites, userFavorites, userDetails, userRole } = useUser();
@@ -31,31 +34,63 @@ const Cart = () => {
 
 	const cartItemsCount = cartItems.length;
 
+	const updateCartPrices = async () => {
+		setLoading(true);
+
+		try {
+			const newCart = await Promise.all(
+				cartItems.map(async (item) => {
+					const product = await getProduct(item._id);
+					return {
+						...item,
+						price: product.price, // Update the price in the cart item
+						sale: product.sale,
+					};
+				})
+			);
+
+			// Assuming you have an updateAllCartItems function
+			updateAllCartItems(newCart);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	useEffect(() => {
-		console.log(cartItems);
+		//console.log(cartItems);
+		updateCartPrices();
 		window.scrollTo(0, 0);
-	}, [cartItems]);
+	}, []);
 
 	useEffect(() => {
 		userDetails._id ? setLoggedIn(true) : setLoggedIn(false);
 	}, [userDetails, loggedIn]);
 
 	const checkout = async () => {
-		await fetch(`${API_URL}/api/checkout`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ items: cartItems, userData: userDetails }),
-		})
-			.then((response) => {
-				return response.json();
+		setStripeLoading(true);
+		try {
+			await fetch(`${API_URL}/api/checkout`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ items: cartItems, userData: userDetails }),
 			})
-			.then((response) => {
-				if (response.url) {
-					window.location.assign(response.url);
-				}
-			});
+				.then((response) => {
+					return response.json();
+				})
+				.then((response) => {
+					if (response.url) {
+						window.location.assign(response.url);
+					}
+				});
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setStripeLoading(false);
+		}
 	};
 
 	return (
@@ -212,11 +247,20 @@ const Cart = () => {
 								</div>
 								<div className='mt-4'>
 									<button
-										className='btn py-3 w-full'
+										className={`btn py-3 w-full ${
+											stripeLoading && 'cursor-not-allowed'
+										}`}
 										onClick={checkout}
-										disabled={userRole() < 2}
+										disabled={userRole() < 2 || stripeLoading}
 									>
-										Checkout
+										{stripeLoading ? (
+											<span className='flex gap-2'>
+												<AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
+												Processing...
+											</span>
+										) : (
+											'Checkout'
+										)}
 									</button>
 									{userRole() < 2 && (
 										<h2 className='text-xl'>Checkout is disabled currently!</h2>
