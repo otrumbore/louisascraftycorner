@@ -186,12 +186,16 @@ const Settings = () => {
 								))}
 								<option value='new'>Add New...</option>
 							</select>
-							<button
-								className='btn-ghost p-2 text-red-600'
-								onClick={handleDeleteCollection}
-							>
-								<MdDeleteForever size={30} />
-							</button>
+							<div>
+								{collectionSelect !== '' && (
+									<button
+										className='btn-ghost p-2 text-red-600'
+										onClick={handleDeleteCollection}
+									>
+										<MdDeleteForever size={30} />
+									</button>
+								)}
+							</div>
 						</div>
 						{collectionSelect !== '' && (
 							<div className='flex gap-2'>
