@@ -20,7 +20,6 @@ import AdminHome from './admin/AdminHome';
 import AddProduct from './admin/pages/AddProduct';
 import EditProduct from './admin/pages/EditProduct';
 import ProductPage from './pages/ProductPage';
-import SiteSettings from './admin/pages/SiteSettings';
 
 //user pages
 import Dashbord from './users/Dashbord';
@@ -47,10 +46,8 @@ const App = () => {
 
 				{/* Admin Product Routes */}
 				<Route path='/admin' element={<AdminDashboard />} />
-				<Route path='/beta_admin' element={<AdminHome />} />
 				<Route path='/admin/addproduct' element={<AddProduct />} />
 				<Route path='/admin/editproduct/:id' element={<EditProduct />} />
-				<Route path='/admin/site_settings' element={<SiteSettings />} />
 
 				{/* Admin Users Routes */}
 
