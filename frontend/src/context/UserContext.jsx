@@ -257,6 +257,7 @@ export function UserProvider({ children }) {
 				removeFromFavorites,
 				addToFavorites,
 				getUserDetails,
+				loading,
 			}}
 		>
 			<LoadingModal loading={loading} />
