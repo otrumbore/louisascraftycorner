@@ -23,6 +23,7 @@ import Users from './components/dashboard/Users';
 import LoadingModal from '../components/LoadingModal';
 import ActivityLogs from './components/dashboard/ActivityLogs';
 import ErrorLogs from './components/dashboard/ErrorLogs';
+import Settings from './components/dashboard/Settings';
 
 const AdminDashboard = () => {
 	const { userRole } = useUser();
@@ -231,7 +232,7 @@ const AdminDashboard = () => {
 			) : dashView === 'archived' ? (
 				<Products archived={true} />
 			) : dashView === 'settings' ? (
-				<Dashboard />
+				<Settings />
 			) : dashView === 'activityLogs' ? (
 				<ActivityLogs />
 			) : dashView === 'errorLogs' ? (

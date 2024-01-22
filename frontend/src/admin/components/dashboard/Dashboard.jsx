@@ -7,7 +7,7 @@ const Dashboard = () => {
 				<div className='border-4 w-full border-primary p-4 rounded-md lg:w-[50%]'>
 					<h5 className='text-lg'>Overview</h5>
 					<div className='border-2 my-2'></div>
-					<div>No Dats</div>
+					<div>No Data</div>
 				</div>
 				<div className='border-4 w-full border-primary p-4 rounded-md lg:w-[50%]'>
 					<div className='flex w-full justify-between items-center'>
