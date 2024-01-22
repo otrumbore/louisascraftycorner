@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_SERVER_API_URL;
 const getSettings = async () => {
 	try {
 		const response = await axios.get(`${API_URL}/api/admin/site_settings`);
-		console.log(response.data.data[0]);
+		//console.log(response.data.data[0]);
 		return response.data.data[0];
 	} catch (error) {
 		console.log(error);
@@ -32,7 +32,7 @@ export const updateSetting = async (data) => {
 			`${API_URL}/api/admin/site_settings/${id}`,
 			data
 		);
-		console.log(response);
+		//console.log(response);
 		return response;
 	} catch (error) {
 		console.error(error);
