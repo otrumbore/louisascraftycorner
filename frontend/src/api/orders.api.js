@@ -7,7 +7,11 @@ const token = Cookies.get('token');
 //requires admin
 export const getAllOrders = async () => {
 	try {
-		const response = await axios.get(`${API_URL}/api/orders`);
+		const response = await axios.get(`${API_URL}/api/orders`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
 		return response.data.data;
 	} catch (error) {
 		console.log(error);
