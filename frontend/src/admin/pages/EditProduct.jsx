@@ -73,9 +73,25 @@ const EditProduct = () => {
 		setCollections(fetchedCollections.collections);
 	};
 
+	const checkUser = async () => {
+		setLoading(true);
+		try {
+			if (userDetails._id && userRole() < 2) {
+				navigate('/user/dashboard');
+				return;
+			}
+			fetchProducts();
+			fetchCollections();
+		} catch (error) {
+			console.error('Admin user: ', error.message);
+			navigate('/');
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	useEffect(() => {
-		fetchProducts();
-		fetchCollections();
+		checkUser();
 		window.scroll(0, 0);
 	}, []);
 
@@ -99,9 +115,7 @@ const EditProduct = () => {
 			active,
 			archived,
 		};
-		//console.log(data);
 		setLoading(true);
-		//console.log(id);
 		const response = await updateProduct(id, data);
 		if (response.status === 201 || response.status === 200) {
 			enqueueSnackbar('Product ' + data.name + ' updated', {
@@ -129,24 +143,25 @@ const EditProduct = () => {
 			enqueueSnackbar('Could not update product', {
 				variant: 'error',
 			});
-			//console.log(error);
 		}
 	};
 
 	return (
 		<div className='p-4 mt-[8rem]'>
 			<LoadingModal loading={loading} />
-			<div className='flex flex-col border-2 border-primary rounded-xl w-[1200px] p-4 mx-auto'>
+			<div className='flex flex-col border-2 border-primary rounded-xl max-w-[1200px] p-4 mx-auto'>
 				<div className='flex items-center'>
 					<div>
-						<BackButton />
+						<BackButton destination='/admin#products' />
 					</div>
 
-					<h1 className='text-3xl my-4 w-full text-center'>Edit Product</h1>
+					<h1 className='text-3xl my-4 w-full text-center'>
+						Edit Product - ID#{storeId}
+					</h1>
 				</div>
 				<div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
 					<div className='flex flex-col gap-2'>
-						<div>
+						<div className={`${userRole() < 3 && 'hidden'}`}>
 							<label className='text-xl mr-4 text-gray-500'>Store ID</label>
 							<input
 								type='text'

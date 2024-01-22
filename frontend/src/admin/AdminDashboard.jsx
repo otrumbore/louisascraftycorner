@@ -26,7 +26,7 @@ import ErrorLogs from './components/dashboard/ErrorLogs';
 import Settings from './components/dashboard/Settings';
 
 const AdminDashboard = () => {
-	const { userRole } = useUser();
+	const { userRole, userDetails } = useUser();
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
 	const [dashView, setDashView] = useState('home');
@@ -40,21 +40,16 @@ const AdminDashboard = () => {
 	}, [location, setDashView]);
 
 	const checkUser = async () => {
+		setLoading(true);
 		try {
-			let userRoleCheck = await userRole();
-			const token = Cookies.get('token');
-
-			if (token && userRoleCheck) {
-				if (userRoleCheck < 2) {
-					navigate('/user/dashboard');
-				}
-				return;
+			if (userDetails._id && userRole() < 2) {
+				navigate('/user/dashboard');
 			}
-
-			navigate('/login');
 		} catch (error) {
 			console.error('Admin user: ', error.message);
 			navigate('/');
+		} finally {
+			setLoading(false);
 		}
 	};
 

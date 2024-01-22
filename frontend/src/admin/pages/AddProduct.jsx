@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import BackButton from '../components/BackButton';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import LoadingModal from '../../components/LoadingModal';
 import { addProduct } from '../../api/products.api';
@@ -30,11 +29,13 @@ const AddProduct = () => {
 	const active = false;
 	const archived = false;
 
+	const [inputError, setInputError] = useState([]);
+
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const { enqueueSnackbar } = useSnackbar();
 
-	const { userDetails } = useUser();
+	const { userDetails, userRole } = useUser();
 
 	const fetchSettings = async () => {
 		try {
@@ -45,75 +46,143 @@ const AddProduct = () => {
 		}
 	};
 
+	const checkUser = async () => {
+		setLoading(true);
+		try {
+			if (userDetails._id && userRole() < 2) {
+				navigate('/user/dashboard');
+				return;
+			}
+			fetchSettings();
+		} catch (error) {
+			console.error('Admin user: ', error.message);
+			navigate('/');
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	useEffect(() => {
-		fetchSettings();
+		checkUser();
 		window.scroll(0, 0);
 	}, []);
 
 	const handleAddProduct = async () => {
 		let img = sendImageURL();
-		console.log(img);
-		const data = {
-			name,
-			description,
-			price,
-			sale,
-			type,
-			category,
-			rating,
-			tags,
-			measurements,
-			manCost,
-			inventory,
-			image: img,
-			active,
-			archived,
+
+		setInputError([]);
+
+		const validateInput = (input, inputName) => {
+			const trimmedInput = String(input).trim();
+			if (trimmedInput === '') {
+				setInputError((prevErrors) => [...prevErrors, inputName]);
+				return false;
+			}
+			return true;
 		};
 
-		const formData = new FormData();
-		for (const key in data) {
-			formData.append(key, data[key]);
-		}
-
-		//console.log('image log 2: ', image);
-		setLoading(true);
-		try {
-			const response = await addProduct(data); // Await the asynchronous function
-			if (response.status === 201 || response.status === 200) {
-				setLoading(false); // Update loading state when data is fetched
-				enqueueSnackbar(`Product ${data.name} added`, {
-					variant: 'success',
-				});
-				try {
-					const data2 = {
-						user: { username: userDetails.username, userId: userDetails._id },
-						activityData: {
-							activity: 'added product ' + data.name,
-							page: 'admin/addproduct',
-						},
-						browser: '',
-					};
-
-					const res = await sendActivityLog(data2);
-				} catch (error) {
-					console.error('could not send actvity log:', error);
-				}
-
-				navigate('/admin#products');
-			} else {
-				setLoading(false);
-				enqueueSnackbar('Could not add product', {
-					variant: 'error',
-				});
+		const validateInputNumber = (input, inputName) => {
+			const trimmedInput = String(input).trim();
+			if (trimmedInput === '' || isNaN(Number(trimmedInput))) {
+				setInputError((prevErrors) => [...prevErrors, inputName]);
+				return false;
 			}
-		} catch (error) {
-			console.error(error);
-			setLoading(false); // Update loading state in case of error
-			return (
-				<div className='mt-8 w-full justify-center text-xl'>
-					Could not load product refresh to try again.
-				</div>
-			);
+			return true;
+		};
+
+		const isValidName = validateInput(name, 'name');
+		const isValidDescription = validateInput(description, 'description');
+		const isValidPrice = validateInputNumber(price, 'price');
+		const isValidSale = validateInputNumber(sale, 'sale');
+		const isValidType = validateInput(type, 'type');
+		const isValidCategory = validateInput(category, 'category');
+		const isValidRating = validateInputNumber(rating, 'rating');
+		const isValidTags = validateInput(tags, 'tags');
+		const isValidMeasurements = validateInput(measurements, 'measurements');
+		const isValidManCost = validateInputNumber(manCost, 'manCost');
+		const isValidInventory = validateInputNumber(inventory, 'inventory');
+
+		console.log(inputError);
+
+		if (
+			isValidName &&
+			isValidDescription &&
+			isValidPrice &&
+			isValidSale &&
+			isValidType &&
+			isValidCategory &&
+			isValidRating &&
+			isValidTags &&
+			isValidMeasurements &&
+			isValidManCost &&
+			isValidInventory
+		) {
+			const data = {
+				name: name.trim(),
+				description: description.trim(),
+				price: price.trim(),
+				sale: sale.trim(),
+				type: type.trim(),
+				category: category.trim(),
+				rating: rating.trim(),
+				tags: tags.trim(),
+				measurements: measurements.trim(),
+				manCost: manCost.trim(),
+				inventory: inventory.trim(),
+				image: img,
+				active,
+				archived,
+			};
+
+			const formData = new FormData();
+			for (const key in data) {
+				formData.append(key, data[key]);
+			}
+
+			//console.log('image log 2: ', image);
+			setLoading(true);
+			try {
+				const response = await addProduct(data); // Await the asynchronous function
+				if (response.status === 201 || response.status === 200) {
+					setLoading(false); // Update loading state when data is fetched
+					enqueueSnackbar(`Product ${data.name} added`, {
+						variant: 'success',
+					});
+					try {
+						const data2 = {
+							user: { username: userDetails.username, userId: userDetails._id },
+							activityData: {
+								activity: 'added product ' + data.name,
+								page: 'admin/addproduct',
+							},
+							browser: '',
+						};
+
+						const res = await sendActivityLog(data2);
+					} catch (error) {
+						console.error('could not send actvity log:', error);
+					}
+
+					navigate('/admin#products');
+				} else {
+					setLoading(false);
+					enqueueSnackbar('Could not add product', {
+						variant: 'error',
+					});
+				}
+			} catch (error) {
+				console.error(error);
+				setLoading(false); // Update loading state in case of error
+				return (
+					<div className='mt-8 w-full justify-center text-xl'>
+						Could not load product refresh to try again.
+					</div>
+				);
+			}
+		} else {
+			enqueueSnackbar('Errors are marked below, please fix!', {
+				variant: 'error',
+			});
 		}
 	};
 
@@ -121,9 +190,9 @@ const AddProduct = () => {
 		<div className='mt-[8rem] p-4'>
 			<LoadingModal loading={loading} />
 
-			<div className='flex flex-col border-2 border-primary rounded-xl w-[1200px] p-4 mx-auto'>
+			<div className='flex flex-col border-4 border-primary rounded-xl max-w-[1200px] p-4 mx-auto'>
 				<div className=' mb-2 flex'>
-					<BackButton />
+					<BackButton destination='/admin#products' />
 					<h1 className='text-3xl w-full text-center'>Add Product</h1>
 				</div>
 				<div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
@@ -134,7 +203,9 @@ const AddProduct = () => {
 								type='text'
 								value={name}
 								onChange={(e) => setName(e.target.value)}
-								className='input'
+								className={`input ${
+									inputError.includes('name') && 'border-red-600'
+								}`}
 								placeholder='Name'
 							/>
 						</div>
@@ -145,7 +216,9 @@ const AddProduct = () => {
 								type='text'
 								value={description}
 								onChange={(e) => setDescription(e.target.value)}
-								className='input px-4 py-2 w-full resize-none'
+								className={`input px-4 py-2 w-full resize-none ${
+									inputError.includes('description') && 'border-red-600'
+								}`}
 								rows={6}
 							/>
 						</div>
@@ -165,7 +238,9 @@ const AddProduct = () => {
 										type='text'
 										value={price}
 										onChange={(e) => setPrice(e.target.value)}
-										className='input text-xl pl-6'
+										className={`input text-xl pl-6 ${
+											inputError.includes('price') && 'border-red-600'
+										}`}
 										placeholder='0.00'
 									/>
 									<MdAttachMoney
@@ -178,7 +253,9 @@ const AddProduct = () => {
 										type='text'
 										value={inventory}
 										onChange={(e) => setInventory(e.target.value)}
-										className='input'
+										className={`input ${
+											inputError.includes('inventory') && 'border-red-600'
+										}`}
 									/>
 								</div>
 							</div>
@@ -195,24 +272,23 @@ const AddProduct = () => {
 									type='text'
 									value={type}
 									onChange={(e) => setType(e.target.value)}
-									className='input'
+									className={`input py-3 ${
+										inputError.includes('type') && 'border-red-600'
+									}`}
 								/>
 								<select
 									onChange={(e) => setCategory(e.target.value)}
-									className='w-full py-5 px-2 border-4 border-primary focus:border-6 rounded-md text-lg'
+									className={`w-full py-3 px-2 border-4 border-primary focus:border-6 rounded-md text-lg bg-gray-100 ${
+										inputError.includes('category') && 'border-red-600'
+									}`}
 								>
+									<option value=''>Choose Collection...</option>
 									{collections.map((item, i) => (
 										<option key={i} value={item.name}>
 											{item.name}
 										</option>
 									))}
 								</select>
-								{/* <input
-									type='text'
-									value={category}
-									onChange={(e) => setCategory(e.target.value)}
-									className='input'
-								/> */}
 							</div>
 						</div>
 
@@ -224,7 +300,9 @@ const AddProduct = () => {
 								type='text'
 								value={tags}
 								onChange={(e) => setTags(e.target.value)}
-								className='input'
+								className={`input ${
+									inputError.includes('tags') && 'border-red-600'
+								}`}
 							/>
 						</div>
 
@@ -237,51 +315,38 @@ const AddProduct = () => {
 									type='text'
 									value={manCost}
 									onChange={(e) => setManCost(e.target.value)}
-									placeholder=''
-									className='input'
+									placeholder='0.00'
+									className={`input ${
+										inputError.includes('manCost') && 'border-red-600'
+									}`}
 								/>
 							</div>
 
 							<div className='w-full'>
 								<label className='text-xl mr-4 text-gray-500'>
-									Measurements (L x W x H)
+									Measurements (W x H)
 								</label>
 								<input
 									type='text'
 									value={measurements}
 									onChange={(e) => setMeasurements(e.target.value)}
 									placeholder=''
-									className='input'
+									className={`input ${
+										inputError.includes('measurements') && 'border-red-600'
+									}`}
 								/>
 							</div>
 						</div>
-						<div className='w-full mt-5 flex justify-end'>
+						<div className='w-full mt-5 flex justify-end gap-4'>
+							<Link className='btn-outline' to={'/admin#settings'}>
+								Add a Collection?
+							</Link>
 							<button className='btn w-[35%]' onClick={handleAddProduct}>
 								Save
 							</button>
 						</div>
 					</div>
 				</div>
-
-				{/* <div className='my-4'>
-					<label className='text-xl mr-4 text-gray-500'>Image</label>
-					<input
-						type='file'
-						name='image'
-						accept='image/*'
-						onChange={handleImageChange}
-						className='border-2 border-gray-500 px-4 py-2 w-full'
-					/>
-					<div className='flex justify-center'>
-						{image && (
-							<img
-								src={URL.createObjectURL(image)}
-								alt='Selected Preview'
-								style={{ maxWidth: '50%', marginTop: '8px' }}
-							/>
-						)}
-					</div>
-				</div> */}
 			</div>
 		</div>
 	);
