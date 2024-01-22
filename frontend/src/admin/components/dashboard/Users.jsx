@@ -132,8 +132,8 @@ const Users = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{users.map((user) => (
-							<tr className='border-b-2'>
+						{users.map((user, i) => (
+							<tr key={i} className='border-b-2'>
 								<td className='pl-2 text-left py-2'>
 									<button onClick={() => openModal(user)}>{user.name}</button>
 								</td>
