@@ -25,7 +25,7 @@ const Orders = () => {
 				(order) => order.active === true
 			);
 
-			console.log(fetchedOrders);
+			//console.log(fetchedOrders.status[1].type);
 			setOrders(filteredOrders);
 		} catch (error) {
 			console.log(error);
@@ -126,7 +126,7 @@ const Orders = () => {
 									</div>
 									<div className='flex flex-wrap w-full items-center justify-between'>
 										<p>Order# {item.orderId}</p>
-										<p>Total: ${item.prices.total / 100}</p>
+										<p>Total: ${(item.prices.total / 100).toFixed(2)}</p>
 										<button
 											className='cursor-pointer'
 											onClick={() => {
