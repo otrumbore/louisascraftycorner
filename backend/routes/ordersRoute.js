@@ -104,16 +104,19 @@ router.get('/:orderId', async (request, response) => {
 });
 
 // Update a order by orderID
-router.put('/:orderId', async (request, response) => {
+router.put('/:orderId', verifyToken, async (request, response) => {
 	try {
 		const { orderId } = request.params;
-		const updatedOrder = await Order.findOneAndUpdate(
-			{ orderId: orderId },
-			request.body,
-			{
-				new: true,
-			}
-		);
+		let updatedOrder = null;
+		if (request.user.role === 'admin' || request.user.role === 'moderator') {
+			updatedOrder = await Order.findOneAndUpdate(
+				{ orderId: orderId },
+				request.body,
+				{
+					new: true,
+				}
+			);
+		}
 
 		if (!updatedOrder) {
 			return response.status(404).send({ message: 'Order not found' });
