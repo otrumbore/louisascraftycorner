@@ -7,19 +7,16 @@ import Cookies from 'js-cookie'; // Import the js-cookie library
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
 import sendErrorLog, { sendActivityLog } from '../api/admin/logging.api';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const Login = () => {
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
-
+	const [loading, setLoading] = useState(false);
 	const [formData, setFormData] = useState({
 		username: '',
 		password: '',
 	});
-
-	// Pattern for username: Alphanumeric with optional period, underscore, hyphen, and exclamation mark
 	const [usernamePattern, setUsernamePattern] = useState('');
-
-	// Pattern for password: At least 8 characters with at least one uppercase, one lowercase, one number, and one special character
 	const [passwordPattern, setPasswordPattern] = useState('');
 
 	const {
@@ -160,6 +157,8 @@ const Login = () => {
 			};
 			sendErrorLog(errorData);
 			enqueueSnackbar('Failed to fetch user data', { variant: 'error' });
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -183,7 +182,7 @@ const Login = () => {
 
 	const onSubmit = (e) => {
 		e.preventDefault();
-
+		setLoading(true);
 		setShowPassword(false);
 
 		setUsernamePattern(
@@ -301,8 +300,16 @@ const Login = () => {
 								type='submit'
 								className='btn px-14 py-2 w-full lg:w-auto mt-4'
 								tabIndex={3}
+								disabled={loading}
 							>
-								Login
+								{loading ? (
+									<span className='flex'>
+										<AiOutlineLoading3Quarters className='h-5 w-5 mr-2 animate-spin' />
+										Processing...
+									</span>
+								) : (
+									'Login'
+								)}
 							</button>
 						</div>
 					</form>
