@@ -56,7 +56,11 @@ export const createOrder = async (data) => {
 
 export const updateOrder = async (id, data) => {
 	try {
-		const response = await axios.put(`${API_URL}/api/products/${id}`, data);
+		const response = await axios.put(`${API_URL}/api/orders/${id}`, data, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
 
 		return response;
 	} catch (error) {
