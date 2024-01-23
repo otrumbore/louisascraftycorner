@@ -36,7 +36,6 @@ const Cart = () => {
 
 	const updateCartPrices = async () => {
 		setLoading(true);
-
 		try {
 			const newCart = await Promise.all(
 				cartItems.map(async (item) => {
@@ -49,7 +48,9 @@ const Cart = () => {
 				})
 			);
 
-			// Assuming you have an updateAllCartItems function
+			// localStorage.setItem('cartItems', JSON.stringify(newCart));
+			// localStorage.setItem('lastUpdatedTime', Date.now());
+
 			updateAllCartItems(newCart);
 		} catch (error) {
 			console.log(error);
