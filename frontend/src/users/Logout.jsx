@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import Cookies from 'js-cookie'; // Import the js-cookie library
 import { useUser } from '../context/UserContext';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_SERVER_API_URL;
 
 const Logout = () => {
 	const navigate = useNavigate();
@@ -12,6 +15,12 @@ const Logout = () => {
 	useEffect(() => {
 		const handleLogout = async () => {
 			try {
+				const token = Cookies.get('token');
+				// const logoutRequest = await axios.post(`${API_URL}/api/user/logout`, {
+				// 	headers: {
+				// 		Authorization: `Bearer ${token}`,
+				// 	},
+				// });
 				sendActivityStatus(false);
 				// Clear the token cookie using js-cookie
 				Cookies.remove('token', { path: '/' });

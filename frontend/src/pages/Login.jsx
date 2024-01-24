@@ -306,7 +306,9 @@ const Login = () => {
 							</button>
 							<button
 								type='submit'
-								className='btn px-14 py-2 w-full lg:w-auto mt-4'
+								className={`btn ${
+									loading ? 'px-2' : 'px-14'
+								}  py-2 w-full lg:w-auto mt-4`}
 								tabIndex={3}
 								disabled={loading}
 							>
