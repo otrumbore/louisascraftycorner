@@ -48,36 +48,104 @@ const OrderModal = ({ order, onClose }) => {
 						{orderDetails.status[order.status.length - 1].type.toUpperCase()}
 					</h4>
 					<div className='grid grid-cols-3'>
-						<div className='flex gap-2'>
-							{!orderDetails.status.some(
-								(status) => status.type === 'crafting'
-							) ? (
-								<button
-									className='btn'
-									onClick={() => sendStatusUpdate('crafting')}
-								>
-									Crafting?
-								</button>
-							) : !orderDetails.status.some(
-									(status) => status.type === 'shipped'
-							  ) ? (
-								<button
-									className='btn'
-									onClick={() => sendStatusUpdate('shipped')}
-								>
-									Shipped?
-								</button>
-							) : !orderDetails.status.some(
-									(status) => status.type === 'delivered'
-							  ) ? (
-								<button
-									className='btn'
-									onClick={() => sendStatusUpdate('delivered')}
-								>
-									Delivered?
-								</button>
-							) : null}
+						<div className='flex flex-col gap-2'>
+							<div>
+								<strong>Ship to Name:</strong>
+								<p>{order.shipName}</p>
+							</div>
+							<div>
+								<strong>Shipping Address:</strong>
+								<p>{order.shipAdd.line1}</p>
+								<p>{order.shipAdd.line2}</p>
+								<p>
+									{order.shipAdd.city}, {order.shipAdd.state}{' '}
+									{order.shipAdd.postal_code}
+								</p>
+							</div>
 						</div>
+						<div className='flex justify-center'>
+							<div>
+								<strong>Prices:</strong>
+								<p>
+									Subtotal:{' '}
+									{order.prices.subtotal.toLocaleString('en-US', {
+										style: 'currency',
+										currency: 'USD',
+									})}
+								</p>
+								<p>
+									Discounts:{' '}
+									{order.prices.discounts.toLocaleString('en-US', {
+										style: 'currency',
+										currency: 'USD',
+									})}
+								</p>
+								<p>
+									Shipping:{' '}
+									{order.prices.shipping.toLocaleString('en-US', {
+										style: 'currency',
+										currency: 'USD',
+									})}
+								</p>
+								<p>
+									Tax:{' '}
+									{order.prices.tax.toLocaleString('en-US', {
+										style: 'currency',
+										currency: 'USD',
+									})}
+								</p>
+								<p>
+									<strong>Total: </strong>
+									{order.prices.total.toLocaleString('en-US', {
+										style: 'currency',
+										currency: 'USD',
+									})}
+								</p>
+							</div>
+						</div>
+						<div className='flex flex-col items-end'>
+							<strong>Items Purchased:</strong>
+							{order.items.map((item, i) => (
+								<p key={i}>
+									{i + 1 + ': '}
+									{item.storeId} - QTY: {item.quantity}
+								</p>
+							))}
+						</div>
+					</div>
+					<div>
+						<strong>Customer Notes:</strong>
+						<p>{order.customerNotes || 'None'}</p>
+					</div>
+					<div className='flex gap-2 justify-end'>
+						{!orderDetails.status.some(
+							(status) => status.type === 'crafting'
+						) ? (
+							<button
+								className='btn'
+								onClick={() => sendStatusUpdate('crafting')}
+							>
+								Crafting?
+							</button>
+						) : !orderDetails.status.some(
+								(status) => status.type === 'shipped'
+						  ) ? (
+							<button
+								className='btn'
+								onClick={() => sendStatusUpdate('shipped')}
+							>
+								Shipped?
+							</button>
+						) : !orderDetails.status.some(
+								(status) => status.type === 'delivered'
+						  ) ? (
+							<button
+								className='btn'
+								onClick={() => sendStatusUpdate('delivered')}
+							>
+								Delivered?
+							</button>
+						) : null}
 					</div>
 				</div>
 			</div>
