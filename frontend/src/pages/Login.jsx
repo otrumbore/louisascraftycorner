@@ -8,6 +8,7 @@ import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
 import sendErrorLog, { sendActivityLog } from '../api/admin/logging.api';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { updateUser } from '../api/admin/users.api';
 
 const Login = () => {
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
@@ -70,6 +71,8 @@ const Login = () => {
 			};
 			sendErrorLog(errorData);
 			setLoginError('Wrong username or password');
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -78,6 +81,7 @@ const Login = () => {
 			const token = Cookies.get('token');
 			if (!token) {
 				enqueueSnackbar('No token', { variant: 'error' });
+				setLoading(false);
 				return;
 			}
 
@@ -175,6 +179,7 @@ const Login = () => {
 				setLoginError(
 					'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character, and be at least 8 characters long.'
 				);
+			setLoading(false);
 			return false;
 		}
 		return true;
@@ -196,7 +201,10 @@ const Login = () => {
 			setLoginError(''); // Clear the login error message if both fields meet the pattern requirements
 			// Proceed with login if validation passes
 			loginUser();
+			return;
 		}
+
+		setLoading(false);
 	};
 
 	useEffect(() => {
