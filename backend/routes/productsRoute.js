@@ -1,5 +1,6 @@
 import express from 'express';
 import { Product } from '../models/productsModel.js';
+import verifyToken from '../middleware/tokenChecks.js';
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ const router = express.Router();
 // 	}
 //   };
 
-router.post('/', async (request, response) => {
+router.post('/', verifyToken, async (request, response) => {
 	try {
 		const {
 			name,
@@ -31,6 +32,10 @@ router.post('/', async (request, response) => {
 			active,
 			archived,
 		} = request.body;
+
+		if (request.user.role !== 'admin' && request.user.role !== 'moderator') {
+			return response.status(401).send({ message: 'Unauthorized' });
+		}
 
 		const newProduct = await Product.create({
 			name,
@@ -92,9 +97,13 @@ router.get('/:id', async (request, response) => {
 });
 
 // Update a product by ID
-router.put('/:id', async (request, response) => {
+router.put('/:id', verifyToken, async (request, response) => {
 	try {
 		const { id } = request.params;
+		if (request.user.role !== 'admin' && request.user.role !== 'moderator') {
+			return response.status(401).send({ message: 'Unauthorized' });
+		}
+
 		const updatedProduct = await Product.findByIdAndUpdate(id, request.body, {
 			new: true,
 		});
@@ -113,9 +122,12 @@ router.put('/:id', async (request, response) => {
 });
 
 // Delete a product by ID
-router.delete('/:id', async (request, response) => {
+router.delete('/:id', verifyToken, async (request, response) => {
 	try {
 		const { id } = request.params;
+		if (request.user.role !== 'admin' && request.user.role !== 'moderator') {
+			return response.status(401).send({ message: 'Unauthorized' });
+		}
 		const deletedProduct = await Product.findByIdAndDelete(id);
 
 		if (!deletedProduct) {

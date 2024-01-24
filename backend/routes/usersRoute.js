@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
 
+import verifyToken from '../middleware/tokenChecks.js';
+
 const router = express.Router();
 
 dotenv.config();
@@ -123,6 +125,11 @@ router.get('/verify/:token', async (req, res) => {
 	res.redirect('/verification-success');
 });
 
+// Express route for handling user logout
+router.post('/logout', verifyToken, (req, res) => {
+	res.status(200).json({ message: 'Logout successful' });
+});
+
 // Login route
 router.post('/login', async (request, response) => {
 	try {
@@ -161,25 +168,6 @@ router.post('/login', async (request, response) => {
 		response.status(500).send({ message: 'Server Error' });
 	}
 });
-
-// Middleware to verify JWT token and extract user details
-const verifyToken = (req, res, next) => {
-	const authHeader = req.headers.authorization;
-
-	if (!authHeader || !authHeader.startsWith('Bearer ')) {
-		return res.status(401).json({ message: 'Unauthorized' });
-	}
-
-	const token = authHeader.split(' ')[1];
-
-	jwt.verify(token, JWTToken, (err, decoded) => {
-		if (err) {
-			return res.status(403).json({ message: 'Invalid token' });
-		}
-		req.user = decoded; // Attach user details to request object
-		next();
-	});
-};
 
 // Assuming you have an endpoint to fetch user data after successful login
 router.get('/getUser', verifyToken, async (req, res) => {

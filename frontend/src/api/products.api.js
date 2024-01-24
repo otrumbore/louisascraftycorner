@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const API_URL = import.meta.env.VITE_SERVER_API_URL;
 
@@ -24,8 +25,11 @@ export const getProduct = async (id) => {
 
 export const addProduct = async (data) => {
 	try {
+		const token = Cookies.get('token');
 		const response = await axios.post(`${API_URL}/api/products/`, data, {
-			//add token for admin only check
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
 		});
 		return response;
 	} catch (error) {
@@ -36,8 +40,12 @@ export const addProduct = async (data) => {
 
 export const updateProduct = async (id, data) => {
 	try {
-		const response = await axios.put(`${API_URL}/api/products/${id}`, data);
-		// add token for admin only check
+		const token = Cookies.get('token');
+		const response = await axios.put(`${API_URL}/api/products/${id}`, data, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
 		return response;
 	} catch (error) {
 		console.error(error);

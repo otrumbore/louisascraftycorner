@@ -1,42 +1,8 @@
 import express from 'express';
 import { Order } from '../models/ordersModel.js';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import verifyToken from '../middleware/tokenChecks.js';
 
 const router = express.Router();
-
-// Middleware function to check if the user has admin privileges
-// const isAdmin = (req, res, next) => {
-// 	// Check if the user is an admin based on the authenticated user's role or any other criteria
-// 	if (/* Check admin role */) {
-// 	  next(); // Allow the request to proceed
-// 	} else {
-// 	  res.status(403).json({ message: 'Access denied. Requires admin privileges.' });
-// 	}
-//   };
-
-dotenv.config();
-
-const JWTToken = process.env.JWT_SECRET_TOKEN;
-
-// Middleware to verify JWT token and extract user details
-const verifyToken = (request, response, next) => {
-	const authHeader = request.headers.authorization;
-
-	if (!authHeader || !authHeader.startsWith('Bearer ')) {
-		return response.status(401).json({ message: 'Unauthorized' });
-	}
-
-	const token = authHeader.split(' ')[1];
-
-	jwt.verify(token, JWTToken, (err, decoded) => {
-		if (err) {
-			return response.status(403).json({ message: 'Invalid token' });
-		}
-		request.user = decoded; // Attach user details to request object
-		next();
-	});
-};
 
 router.post('/', async (request, response) => {
 	//createOrder()
@@ -85,13 +51,21 @@ router.get('/:userId', verifyToken, async (request, response) => {
 });
 
 // Get order by ID
-router.get('/:orderId', async (request, response) => {
+router.get('/:orderId', verifyToken, async (request, response) => {
 	try {
 		const { orderId } = request.params;
 		const order = await Order.findOne({ orderId: orderId });
 
 		if (!order) {
 			return response.status(404).send({ message: 'Order not found' });
+		}
+
+		if (
+			order.userId !== request.user.userId ||
+			request.user.role !== 'admin' ||
+			request.user.role !== 'moderator'
+		) {
+			return response.status(401).send({ message: 'Unauthorized' });
 		}
 
 		return response.status(200).json({
