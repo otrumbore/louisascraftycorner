@@ -16,17 +16,13 @@ const AppWithProviders = () => {
 	const { userDetails, loading } = useUser();
 
 	// Check if user details are loaded
-	if (loading) {
+	if (loading && !userDetails._id) {
 		// Render a loading state or component
 		return <LoadingModal loading={loading} />;
 	}
 
 	// If user details are available, render the App and its providers
-	return (
-		<CartProvider>
-			<App />
-		</CartProvider>
-	);
+	return <App />;
 };
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -43,7 +39,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 			preventDuplicate={true}
 		>
 			<UserProvider>
-				<AppWithProviders />
+				<CartProvider>
+					<AppWithProviders />
+				</CartProvider>
 			</UserProvider>
 		</SnackbarProvider>
 	</BrowserRouter>

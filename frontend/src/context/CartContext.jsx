@@ -33,6 +33,7 @@ export function CartProvider({ children }) {
 		const currentTime = Date.now();
 		if (lastUpdatedTime && currentTime - lastUpdatedTime > MAX_TIME_DIFF) {
 			setCartItems([]);
+			setLastUpdatedTime(null);
 			localStorage.removeItem('cartItems');
 			localStorage.removeItem('lastUpdatedTime');
 		}
@@ -110,7 +111,7 @@ export function CartProvider({ children }) {
 			setCartItems([...updatedCartItems, { ...productToUpdate, qty: newQty }]);
 		} else {
 			// If the item was not found, retain the existing cart items
-			setCartItems(cartItems);
+			setCartItems(updatedCartItems);
 		}
 	};
 
