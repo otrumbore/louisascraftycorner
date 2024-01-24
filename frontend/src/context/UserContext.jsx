@@ -229,7 +229,7 @@ export function UserProvider({ children }) {
 			const token = Cookies.get('token');
 			const updatedFavorites = [...userFavorites, { itemId: storeId }];
 			setUserFavorites(updatedFavorites);
-			const dataToSend = { items: updatedFavorites };
+			const dataToSend = { email: userDetails.email, items: updatedFavorites };
 			const favoritesResponse = await axios.put(
 				`${API_URL}/api/user/favorites/${userDetails._id}`,
 				dataToSend,
@@ -239,6 +239,7 @@ export function UserProvider({ children }) {
 					},
 				}
 			);
+			console.log(favoritesResponse);
 			getUserFavorites();
 		} catch (error) {
 			console.error('Error adding to favorites:', error);

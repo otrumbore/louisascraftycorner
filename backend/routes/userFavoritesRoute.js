@@ -30,7 +30,7 @@ const verifyToken = (req, res, next) => {
 };
 
 // Create a favorite
-router.post('/', async (request, response) => {
+router.post('/', verifyToken, async (request, response) => {
 	try {
 		const { userId, email, items } = request.body;
 
@@ -104,7 +104,7 @@ router.get('/product/:id', async (request, response) => {
 router.put('/:id', verifyToken, async (request, response) => {
 	try {
 		const { id } = request.params;
-		const { items } = request.body;
+		const { email, items } = request.body;
 
 		const updatedFavorite = await Favorites.findOneAndUpdate(
 			{ userId: id },
@@ -113,7 +113,15 @@ router.put('/:id', verifyToken, async (request, response) => {
 		);
 
 		if (!updatedFavorite) {
-			return response.status(404).send({ message: 'Favorite not found' });
+			try {
+				createFavorite(id, email, items);
+			} catch (error) {
+				console.log(error);
+			}
+
+			return response
+				.status(404)
+				.send({ message: 'Favorite not found, could not add...' });
 		}
 
 		return response
@@ -125,8 +133,25 @@ router.put('/:id', verifyToken, async (request, response) => {
 	}
 });
 
+const createFavorite = async (userId, email, items) => {
+	try {
+		//const { userId, email, items } = request.body;
+
+		const newFavorite = await Favorites.create({
+			userId,
+			email,
+			items,
+		});
+		console.log('added new favorite');
+		//return response.status(201).send(newFavorite);
+	} catch (error) {
+		console.error(error.message);
+		//response.status(500).send({ message: 'Server Error' });
+	}
+};
+
 // Delete a favorite by ID
-router.delete('/:id', async (request, response) => {
+router.delete('/:id', verifyToken, async (request, response) => {
 	try {
 		const { id } = request.params;
 		const deletedFavorite = await Favorites.findByIdAndDelete(id);
