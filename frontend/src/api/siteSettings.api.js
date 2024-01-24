@@ -26,8 +26,9 @@ export const getSetting = async (id) => {
 };
 
 export const updateSetting = async (data) => {
-	const id = '658722f06968a772f2cdde55';
+	const id = '658722f06968a772f2cdde55'; //sitesettings id temp needs fix
 	try {
+		const token = Cookies.get('token');
 		const response = await axios.put(
 			`${API_URL}/api/admin/site_settings/${id}`,
 			data

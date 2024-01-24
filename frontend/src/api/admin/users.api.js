@@ -3,10 +3,9 @@ import Cookies from 'js-cookie';
 
 const API_URL = import.meta.env.VITE_SERVER_API_URL;
 
-const token = Cookies.get('token');
-
 const getUsers = async () => {
 	try {
+		const token = Cookies.get('token');
 		const response = await axios.get(`${API_URL}/api/user/getUsers`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -22,6 +21,7 @@ const getUsers = async () => {
 
 export const getUser = async (token) => {
 	try {
+		const token = Cookies.get('token');
 		const response = await axios.get(`${API_URL}/api/user/getUser`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -48,11 +48,11 @@ export const getUserByUsernameAndEmail = async (usernameEmail) => {
 
 export const updateUser = async (id, data) => {
 	try {
+		const token = Cookies.get('token');
 		if (!token) {
 			console.error('Authorization token is missing.');
 			return [];
 		}
-
 		const response = await axios.put(
 			`${API_URL}/api/user/updateUser/${id}`,
 			data,

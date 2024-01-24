@@ -15,6 +15,7 @@ const sendErrorLog = async (data) => {
 
 export const getErrorLogs = async () => {
 	try {
+		const token = Cookies.get('token');
 		const response = await axios.get(`${API_URL}/api/error_logging`);
 		return response.data.data;
 	} catch (error) {
@@ -35,6 +36,7 @@ export const sendActivityLog = async (data) => {
 
 export const getActivityLogs = async () => {
 	try {
+		const token = Cookies.get('token');
 		const response = await axios.get(`${API_URL}/api/activity_logging`);
 		return response.data.data;
 	} catch (error) {
