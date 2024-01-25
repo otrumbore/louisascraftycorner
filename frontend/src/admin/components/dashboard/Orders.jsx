@@ -82,7 +82,10 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 		setShippedOrders(shippedOrders);
 		setPastOrders(pastOrders);
 		setProgressOrders(progressOrders);
-		setshowProgressOrders(true);
+
+		if (paidOrders.length > 1) {
+			setshowProgressOrders(true);
+		}
 	};
 
 	useEffect(() => {

@@ -46,7 +46,6 @@ const AdminDashboard = () => {
 				(order) => order.active === true
 			);
 			setOrders(activeOrders);
-			getDashData();
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -85,6 +84,10 @@ const AdminDashboard = () => {
 		fetchOrders();
 		window.scroll(0, 0);
 	}, []);
+
+	useEffect(() => {
+		getDashData();
+	}, [orders]);
 
 	const getDashData = () => {
 		const lastMonthDate = new Date();
