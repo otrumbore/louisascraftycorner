@@ -48,7 +48,7 @@ const ActivityLogs = () => {
 							<th className='text-left'>User</th>
 							<th className='text-left'>Activity</th>
 							<th className='text-left'>Page</th>
-							<th className='max-md:hidden text-right'>Operations</th>
+							<th className='max-md:hidden text-right hidden'>Operations</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -71,7 +71,7 @@ const ActivityLogs = () => {
 									{item.activityData?.activity ?? 'No Data'}
 								</td>
 								<td className=''>{item.activityData?.page ?? 'No Data'}</td>
-								<td className='max-md:hidden text-right'>Buttons</td>
+								<td className='max-md:hidden text-right hidden'>Buttons</td>
 							</tr>
 						))}
 					</tbody>

@@ -10,7 +10,9 @@ const ErrorLogs = () => {
 	const fetchErrors = async () => {
 		try {
 			const res = await getErrorLogs();
-			setErrors(res);
+			res.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+			const slicedLogs = res.slice(0, 20);
+			setErrors(slicedLogs);
 		} catch (error) {
 			console.log(error);
 			setLoading(false);
@@ -40,11 +42,11 @@ const ErrorLogs = () => {
 					<thead className=''>
 						<tr>
 							<th className='text-left'>Date/Time</th>
-							<th className='text-left'>User</th>
-							<th className='text-left'>Activity</th>
-							<th className='text-left'>Page</th>
-							<th className='text-left'>Browser</th>
-							<th className='text-right'>Operations</th>
+							<th className='text-left px-4'>User</th>
+							<th className='text-left px-4'>Activity</th>
+							<th className='text-left px-4'>Page</th>
+							<th className='text-left max-lg:hidden px-4'>Browser</th>
+							<th className='text-right hidden'>Operations</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -62,11 +64,11 @@ const ErrorLogs = () => {
 										  })
 										: 'No Recent Update'}
 								</td>
-								<td className=''>{item.user.username}</td>
-								<td className='text-wrap'>{item.errorData.error}</td>
-								<td className=''>{item.errorData.page}</td>
-								<td className=''>{item.browser}</td>
-								<td className='text-right'>Buttons</td>
+								<td className='px-4'>{item.user.username}</td>
+								<td className='text-wrap px-4'>{item.errorData.error}</td>
+								<td className='px-4'>{item.errorData.page}</td>
+								<td className='max-lg:hidden px-4'>{item.browser}</td>
+								<td className='text-right hidden'>Buttons</td>
 							</tr>
 						))}
 					</tbody>
