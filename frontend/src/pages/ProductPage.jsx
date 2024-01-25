@@ -181,7 +181,7 @@ const ProductPage = () => {
 				<LoadingModal loading={loading} />
 				<div className='flex justify-center'>
 					<div className='w-full grid grid-cols-1 lg:grid-cols-2 max-w-[1400px] items-start justify-start'>
-						<div className='h-[500px] flex flex-col justify-center'>
+						<div className='h-[500px] flex flex-col justify-center items-center'>
 							<img
 								src={product.image ? product.image : DefaultProductImg}
 								alt={
