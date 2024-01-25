@@ -26,7 +26,7 @@ const OrderModal = ({ order, onClose }) => {
 	};
 
 	useEffect(() => {
-		console.log(order);
+		//console.log(order);
 	}, []);
 
 	return (
@@ -68,35 +68,35 @@ const OrderModal = ({ order, onClose }) => {
 								<strong>Prices:</strong>
 								<p>
 									Subtotal:{' '}
-									{order.prices.subtotal.toLocaleString('en-US', {
+									{(order.prices.subtotal / 100).toLocaleString('en-US', {
 										style: 'currency',
 										currency: 'USD',
 									})}
 								</p>
 								<p>
 									Discounts:{' '}
-									{order.prices.discounts.toLocaleString('en-US', {
+									{(order.prices.discounts / 100).toLocaleString('en-US', {
 										style: 'currency',
 										currency: 'USD',
 									})}
 								</p>
 								<p>
 									Shipping:{' '}
-									{order.prices.shipping.toLocaleString('en-US', {
+									{(order.prices.shipping / 100).toLocaleString('en-US', {
 										style: 'currency',
 										currency: 'USD',
 									})}
 								</p>
 								<p>
 									Tax:{' '}
-									{order.prices.tax.toLocaleString('en-US', {
+									{(order.prices.tax / 100).toLocaleString('en-US', {
 										style: 'currency',
 										currency: 'USD',
 									})}
 								</p>
 								<p>
 									<strong>Total: </strong>
-									{order.prices.total.toLocaleString('en-US', {
+									{(order.prices.total / 100).toLocaleString('en-US', {
 										style: 'currency',
 										currency: 'USD',
 									})}
@@ -112,6 +112,15 @@ const OrderModal = ({ order, onClose }) => {
 								</p>
 							))}
 						</div>
+					</div>
+					<div>
+						<p>
+							<strong>Shipping Carrier:</strong> {order.shipping.carrier}
+						</p>
+						<p>
+							<strong>Tracking # </strong>
+							{order.shipping.tracking || 'N/A'}
+						</p>
 					</div>
 					<div>
 						<strong>Customer Notes:</strong>
