@@ -33,11 +33,7 @@ const Dashboard = () => {
 		try {
 			const token = Cookies.get('token');
 			if (!token) {
-				navigate('/user/logout');
 				navigate('/login');
-			} else {
-				!userDetails && Cookies.remove('token');
-				//navigate('/login');
 			}
 		} catch (error) {
 			console.error(error);
