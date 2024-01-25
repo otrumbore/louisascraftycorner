@@ -21,7 +21,11 @@ const Orders = () => {
 			}
 			const fetchedOrders = await getOrders(userDetails._id);
 
-			const filteredOrders = fetchedOrders.filter(
+			const sortedOrders = fetchedOrders.sort(
+				(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+			);
+
+			const filteredOrders = sortedOrders.filter(
 				(order) => order.active === true
 			);
 

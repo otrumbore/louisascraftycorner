@@ -71,7 +71,7 @@ router.post('/', async (req, res) => {
 
 	const orderId = await createOrder(data);
 
-	console.log(orderId);
+	//console.log(orderId);
 
 	let lineItems = [];
 
@@ -185,8 +185,8 @@ router.post('/', async (req, res) => {
 				},
 			},
 		],
-		success_url: `${frontendURL}/order/sucess/12345678`,
-		cancel_url: `${frontendURL}/cart`,
+		success_url: `${frontendURL}/order/success/${orderId}`,
+		cancel_url: `${frontendURL}/order/cancel/${orderId}`,
 	};
 
 	// Prefill email if user is logged in
