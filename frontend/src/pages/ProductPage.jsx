@@ -193,13 +193,13 @@ const ProductPage = () => {
 									e.target.src = DefaultProductImg; // Fallback to default image on error
 									e.target.alt = 'Default Product Image';
 								}}
-								className='h-full w-fit object-cover rounded-2xl shadow-2xl shadow-gray-400 lg:hover:scale-110'
+								className='h-full w-fit aspect-auto rounded-2xl shadow-2xl shadow-gray-400 lg:hover:scale-110'
 							/>
-							<div className='flex ml-4 w-full items-center text-sm mt-4'>
+							<div className='flex w-full items-center text-sm mt-4 justify-center'>
 								Measurements: {product.measurements}
 							</div>
 						</div>
-						<div className='p-4 h-full items-center'>
+						<div className='px-4 h-full items-center mt-12 lg:mt-0'>
 							<div className='w-full mb-10 flex items-center justify-between'>
 								<div className='text-sm'>Store ID: {product.storeId}</div>
 

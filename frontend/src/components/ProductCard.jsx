@@ -118,7 +118,7 @@ const ProductCard = ({
 									e.target.src = DefaultProductImg; // Fallback to default image on error
 									e.target.alt = 'Default Product Image';
 								}}
-								className='object-cover min-h-full min-w-full'
+								className='aspect-auto min-h-full min-w-full'
 							/>
 						</div>
 						<div
