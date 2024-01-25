@@ -24,18 +24,45 @@ import LoadingModal from '../components/LoadingModal';
 import ActivityLogs from './components/dashboard/ActivityLogs';
 import ErrorLogs from './components/dashboard/ErrorLogs';
 import Settings from './components/dashboard/Settings';
+import { getAllOrders } from '../api/orders.api';
 
 const AdminDashboard = () => {
 	const { userRole, userDetails } = useUser();
+	const [orders, setOrders] = useState([]);
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
 	const [dashView, setDashView] = useState('home');
 	const location = useLocation();
 
+	const [revenue, setRevenue] = useState(0);
+	const [sales, setSales] = useState(0);
+	const [unfulOrders, setUnfulOrders] = useState(0);
+
+	const fetchOrders = async () => {
+		setLoading(true);
+		try {
+			const fetchedOrders = await getAllOrders();
+			const activeOrders = fetchedOrders.filter(
+				(order) => order.active === true
+			);
+			setOrders(activeOrders);
+			getDashData();
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	useEffect(() => {
 		if (location.hash) {
 			const hashWithoutSymbol = location.hash.substring(1);
 			setDashView(hashWithoutSymbol);
+		}
+		const token = Cookies.get('token');
+		if (!token) {
+			navigate('/login');
+			return;
 		}
 	}, [location, setDashView]);
 
@@ -55,8 +82,38 @@ const AdminDashboard = () => {
 
 	useEffect(() => {
 		checkUser();
+		fetchOrders();
 		window.scroll(0, 0);
 	}, []);
+
+	const getDashData = () => {
+		const lastMonthDate = new Date();
+		lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+
+		const lastMonthOrders = orders.filter(
+			(order) => new Date(order.createdAt) > lastMonthDate
+		);
+
+		const paidOrders = orders
+			.filter((order) => order.status.some((status) => status.type === 'paid'))
+			.filter(
+				(order) => !order.status.some((status) => status.type === 'shipped')
+			);
+
+		const totalRevenue = paidOrders.reduce(
+			(total, order) => total + order.prices.total,
+			0
+		);
+		const paidOrdersCount = paidOrders.length;
+
+		const thisMonthSales = lastMonthOrders.filter((order) =>
+			order.status.some((status) => status.type.includes('paid'))
+		).length;
+
+		setRevenue(totalRevenue);
+		setSales(thisMonthSales);
+		setUnfulOrders(paidOrdersCount);
+	};
 
 	return (
 		<div className='p-8 mt-[8rem] w-full'>
@@ -181,8 +238,13 @@ const AdminDashboard = () => {
 							<MdAttachMoney size={30} />
 						</div>
 
-						<p className='text-2xl'>$1000</p>
-						<p className='text-sm'>+20% from last month</p>
+						<p className='text-2xl'>
+							{(revenue / 100).toLocaleString('en-US', {
+								style: 'currency',
+								currency: 'USD',
+							})}
+						</p>
+						<p className='text-sm'></p>
 					</div>
 					<div className='flex flex-col border-4 border-primary p-4 rounded-md'>
 						<div className='flex items-center justify-between'>
@@ -190,8 +252,8 @@ const AdminDashboard = () => {
 							<IoIosPricetag size={30} />
 						</div>
 
-						<p className='text-2xl'>132</p>
-						<p className='text-sm'>+10% from last month</p>
+						<p className='text-2xl'>{sales}</p>
+						<p className='text-sm'></p>
 					</div>
 					<div className='flex flex-col border-4 border-primary p-4 rounded-md'>
 						<div className='flex items-center justify-between'>
@@ -199,17 +261,17 @@ const AdminDashboard = () => {
 							<TbShipOff size={30} />
 						</div>
 
-						<p className='text-2xl'>3</p>
+						<p className='text-2xl'>{unfulOrders}</p>
 						<p className='text-sm'>Not marked shipped</p>
 					</div>
 					<div className='flex flex-col border-4 border-primary p-4 rounded-md'>
 						<div className='flex items-center justify-between'>
-							<h5 className='text-lg'>Active Users</h5>
+							<h5 className='text-lg'>More Data?</h5>
 							<FaUsers size={30} />
 						</div>
 
-						<p className='text-2xl'>36</p>
-						<p className='text-sm'>+5% from yesterday</p>
+						<p className='text-2xl'>0</p>
+						<p className='text-sm'></p>
 					</div>
 				</div>
 			</div>
@@ -217,7 +279,7 @@ const AdminDashboard = () => {
 			{dashView === 'home' ? (
 				<Dashboard />
 			) : dashView === 'orders' ? (
-				<Orders />
+				<Orders apiOrders={orders} fetchOrders={fetchOrders} />
 			) : dashView === 'products' ? (
 				<Products />
 			) : dashView === 'pages' ? (

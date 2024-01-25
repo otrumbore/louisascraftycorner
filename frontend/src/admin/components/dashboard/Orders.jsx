@@ -1,36 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { getAllOrders, updateOrder } from '../../../api/orders.api';
+import { MdRefresh } from 'react-icons/md';
 import LoadingModal from '../../../components/LoadingModal';
 import OrderModal from './OrderModal';
 
-const Orders = () => {
-	const [orders, setOrders] = useState([]);
+const Orders = ({ apiOrders, fetchOrders }) => {
+	const [orders, setOrders] = useState(apiOrders);
 	const [loading, setLoading] = useState(false);
 	const [showModal, setShowModal] = useState('');
 	const [showProgressOrders, setshowProgressOrders] = useState(false);
 	const [progressOrdersMap, setProgressOrdersMap] = useState([]);
 	const [unfulText, setUnfulText] = useState('');
 
-	const fetchOrders = async () => {
-		setLoading(true);
-		try {
-			const fetchedOrders = await getAllOrders();
-			const activeOrders = fetchedOrders.filter(
-				(order) => order.active === true
-			);
-			setOrders(activeOrders);
-			setshowProgressOrders(true);
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setLoading(false);
-		}
-	};
+	const [paidOrders, setPaidOrders] = useState([]);
+	const [recentOrders, setRecentOrders] = useState([]);
+	const [shippedOrders, setShippedOrders] = useState([]);
+	const [pastOrders, setPastOrders] = useState([]);
+	const [progressOrders, setProgressOrders] = useState([]);
 
 	useEffect(() => {
 		fetchOrders();
 		window.scroll(0, 0);
 	}, []);
+
+	useEffect(() => {
+		setOrders(apiOrders);
+		filteredData();
+	}, [apiOrders]);
 
 	const openModal = (orderId) => {
 		setShowModal(orderId);
@@ -41,42 +37,53 @@ const Orders = () => {
 		fetchOrders();
 	};
 
-	const paidOrders = orders
-		.filter((order) => order.status.some((status) => status.type === 'paid'))
-		.filter(
-			(order) => !order.status.some((status) => status.type === 'shipped')
-		)
-		.filter((order) => {
-			return !unfulText || order.orderId.includes(unfulText);
-		})
-		.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+	const filteredData = () => {
+		const paidOrders = orders
+			.filter((order) => order.status.some((status) => status.type === 'paid'))
+			.filter(
+				(order) => !order.status.some((status) => status.type === 'shipped')
+			)
+			.filter((order) => {
+				return !unfulText || order.orderId.includes(unfulText);
+			})
+			.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-	const recentOrders = orders
-		.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-		.slice(0, 10); //add 30 day limit
+		const recentOrders = orders
+			.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+			.slice(0, 10); //add 30 day limit
 
-	const shippedOrders = orders
-		.filter((order) => order.status.some((status) => status.type === 'paid'))
-		.filter((order) => order.status.some((status) => status.type === 'shipped'))
-		.filter(
-			(order) => !order.status.some((status) => status.type === 'delivered')
-		)
-		.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+		const shippedOrders = orders
+			.filter((order) => order.status.some((status) => status.type === 'paid'))
+			.filter((order) =>
+				order.status.some((status) => status.type === 'shipped')
+			)
+			.filter(
+				(order) => !order.status.some((status) => status.type === 'delivered')
+			)
+			.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-	const pastOrders = orders
-		.filter((order) =>
-			order.status.some((status) => status.type === 'delivered')
-		)
-		.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+		const pastOrders = orders
+			.filter((order) =>
+				order.status.some((status) => status.type === 'delivered')
+			)
+			.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-	const progressOrders = orders
-		.filter((order) =>
-			order.status.some((status) => status.type === 'crafting')
-		)
-		.filter(
-			(order) => !order.status.some((status) => status.type === 'shipped')
-		)
-		.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+		const progressOrders = orders
+			.filter((order) =>
+				order.status.some((status) => status.type === 'crafting')
+			)
+			.filter(
+				(order) => !order.status.some((status) => status.type === 'shipped')
+			)
+			.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+		setPaidOrders(paidOrders);
+		setRecentOrders(recentOrders);
+		setShippedOrders(shippedOrders);
+		setPastOrders(pastOrders);
+		setProgressOrders(progressOrders);
+		setshowProgressOrders(true);
+	};
 
 	useEffect(() => {
 		if (showProgressOrders) {
@@ -89,6 +96,13 @@ const Orders = () => {
 	return (
 		<>
 			<LoadingModal loading={loading} />
+
+			<div
+				className='absolute mt-7 flex gap-4 -ml-20 left-0 py-2 px-3 text-white bg-secondary hover:ml-0 transform duration-500 rounded-r-md cursor-pointer'
+				onClick={fetchOrders}
+			>
+				Refresh <MdRefresh size={25} />
+			</div>
 			<div className='mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4'>
 				<div className='border-4 w-full border-primary p-4 rounded-md'>
 					<div className='flex w-full justify-between items-center border-b-4 pb-3 mb-2'>
@@ -215,6 +229,7 @@ const Orders = () => {
 							<tbody>
 								{progressOrdersMap.map((order, i) => (
 									<tr
+										onClick={() => openModal(order)}
 										key={i}
 										className={`border-b-2 border-primary ${
 											order.status[order.status.length - 1].type === 'crafting'
@@ -295,6 +310,7 @@ const Orders = () => {
 							<tbody>
 								{shippedOrders.map((order, i) => (
 									<tr
+										onClick={() => openModal(order)}
 										key={i}
 										className={`border-b-2 border-primary bg-blue-200`}
 									>
@@ -363,7 +379,11 @@ const Orders = () => {
 						</thead>
 						<tbody>
 							{pastOrders.map((order, i) => (
-								<tr key={i} className={`border-b-2 border-primary bg-gray-200`}>
+								<tr
+									key={i}
+									className={`border-b-2 border-primary bg-gray-200`}
+									onClick={() => openModal(order)}
+								>
 									<td className='py-2 pl-1'>
 										<div className='flex flex-col'>
 											<div>{order.orderId}</div>
