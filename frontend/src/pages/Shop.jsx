@@ -29,6 +29,7 @@ const Shop = () => {
 				// Additional filters to exclude archived and inactive products
 				const excludeArchived = product.archived !== true;
 				const excludeInactive = product.active !== false;
+				const excludeTest = product.type !== 'Test' && product.type !== 'test';
 
 				const isNumericSearch = !isNaN(searchText);
 
@@ -55,6 +56,7 @@ const Shop = () => {
 				return (
 					excludeArchived &&
 					excludeInactive &&
+					excludeTest &&
 					matchesSearch &&
 					matchesCollection &&
 					matchesOnSale
@@ -221,9 +223,9 @@ const Shop = () => {
 							</button>
 						</div>
 					</div>
-
+					{/* <div className='mt-4'>Results: {products.length}</div> */}
 					<div
-						className={`mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-[90%]`}
+						className={`mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-[90%]`}
 					>
 						{loading &&
 							Array.from({ length: 6 }).map((_, index) => (
@@ -266,6 +268,7 @@ const Shop = () => {
 								Page {currentPage} of {pageNumbers.length}
 							</p>
 						</div>
+						<div className='mt-4'>Total Products: {products.length}</div>
 						<ul className='flex gap-2'>
 							{currentPage > 1 && (
 								<li className=''>
