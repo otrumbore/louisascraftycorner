@@ -14,6 +14,7 @@ import Shop from './pages/Shop';
 import Contact from './pages/Contact';
 import Information from './pages/Information';
 import NotFound from './pages/errors/NotFound';
+import Success from './pages/cart/Success';
 
 //admin pages
 import AddProduct from './admin/pages/AddProduct';
@@ -41,6 +42,8 @@ const App = () => {
 				<Route path='/info/:section' element={<Information />} />
 				<Route path='/info/:section' element={<Information />} />
 				<Route path='/info/:section' element={<Information />} />
+				<Route path='/order/success/:orderId' element={<Success />} />
+
 				<Route path='*' element={<NotFound />} />
 
 				{/* Admin Product Routes */}

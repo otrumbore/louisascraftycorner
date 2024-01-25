@@ -185,7 +185,7 @@ router.post('/', async (req, res) => {
 				},
 			},
 		],
-		success_url: `${frontendURL}/cart/sucess`,
+		success_url: `${frontendURL}/order/sucess/12345678`,
 		cancel_url: `${frontendURL}/cart`,
 	};
 
