@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useCart } from '../../context/CartContext';
+import { useUser } from '../../context/UserContext';
 
 const Success = () => {
 	const { orderId } = useParams();
+	const { clearCart } = useCart();
+	const { userDetails } = useUser();
+
+	useEffect(() => {
+		clearCart();
+	}, []);
 
 	return (
 		<div className='flex flex-col items-center justify-center min-h-[75vh]'>
@@ -22,15 +30,25 @@ const Success = () => {
 				<h1 className='text-2xl font-semibold mb-2'>
 					Order Successfully Placed!
 				</h1>
-				<h3 className='mb-2 text-xl'>Thank You!</h3>
+				<h3 className='mb-2 text-xl'>
+					Thank You, {userDetails.name.split(' ')[0]}
+				</h3>
 				<p className='text-gray-600 mb-4'>
-					Your order with ID {orderId} has been successfully processed.
+					Your order, under #{orderId}, has been successfully processed.
 				</p>
 				<div className='flex justify-center'>
 					<Link to={'/shop'} className='btn'>
 						Continue Shopping
 					</Link>
 				</div>
+				<div className='flex justify-center'>
+					<Link to={'/user/dashboard#orders'} className='btn-outline'>
+						View My Orders
+					</Link>
+				</div>
+				<p className='text-gray-600 mt-4'>
+					Thank you for your support and business!!
+				</p>
 			</div>
 		</div>
 	);
