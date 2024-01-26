@@ -16,22 +16,22 @@
 
 @layer components {
 	.btn {
-		@apply flex items-center justify-center gap-x-2 bg-primary text-white py-2 px-8 rounded-md hover:bg-dark_primary transition duration-300;
+		@apply flex items-center justify-center gap-x-2 bg-primary text-white py-2 px-8 rounded-md hover:bg-dark_primary hover:ring-2 hover:ring-primary hover:ring-offset-4 hover:ring-offset-slate-200 transition-all duration-500;
 	}
 
 	.btn-outline {
-		@apply flex border-2 items-center justify-center gap-x-2 border-primary py-2 px-8 bg-transparent rounded-md hover:bg-primary hover:text-white transition duration-300;
+		@apply flex border-2 items-center justify-center gap-x-2 border-primary py-2 px-8 bg-transparent rounded-md hover:bg-primary hover:text-white hover:ring-2 hover:ring-primary hover:ring-offset-4 hover:ring-offset-slate-200 transition-all duration-500;
 	}
 
 	.btn-ghost {
-		@apply flex items-center justify-center gap-x-2 py-2 px-8 rounded-md hover:bg-primary hover:text-white transition duration-300;
+		@apply flex items-center justify-center gap-x-2 py-2 px-8 rounded-md hover:bg-primary hover:text-white hover:ring-2 hover:ring-primary hover:ring-offset-4 hover:ring-offset-slate-200 transition-all duration-500;
 	}
 
 	.input {
-		@apply p-4 w-full text-lg bg-slate-50 border-4 border-primary focus:border-[6px] focus:border-primary rounded-md shadow-md;
+		@apply p-4 w-full text-lg bg-slate-50 border-4 border-primary focus:border-[6px] transition-all duration-100 rounded-md shadow-md;
 	}
 
 	.input-ghost {
-		@apply p-4 w-full text-lg bg-slate-50 focus:border-4 focus:border-primary rounded-md shadow-md;
+		@apply p-4 w-full text-lg bg-slate-50 focus:border-4 focus:border-primary transition-all duration-100 rounded-md shadow-md;
 	}
 }
