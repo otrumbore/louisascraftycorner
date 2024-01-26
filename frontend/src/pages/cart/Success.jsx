@@ -8,12 +8,20 @@ const Success = () => {
 	const { clearCart } = useCart();
 	const { userDetails } = useUser();
 
+	const getName = () => {
+		if (!userDetails.name) {
+			return '';
+		} else {
+			return userDetails.name.split(' ')[0];
+		}
+	};
+
 	useEffect(() => {
 		clearCart();
 	}, []);
 
 	return (
-		<div className='flex flex-col items-center justify-center min-h-[75vh]'>
+		<div className='mt-[6rem] flex flex-col items-center justify-center min-h-[75vh]'>
 			<div className='bg-slate-200 p-8 border-4 border-dotted border-primary rounded-md shadow-2xl w-96 text-center'>
 				<svg
 					className='text-green-500 w-16 h-16 mx-auto mb-4'
@@ -30,24 +38,22 @@ const Success = () => {
 				<h1 className='text-2xl font-semibold mb-2'>
 					Order Successfully Placed!
 				</h1>
-				<h3 className='mb-2 text-xl'>
-					Thank You, {userDetails.name.split(' ')[0]}
-				</h3>
+				<h3 className='mb-2 text-xl'>Thank You, {getName()}</h3>
 				<p className='text-gray-600 mb-4'>
-					Your order, under #{orderId}, has been successfully processed.
+					Your order, #{orderId}, has been successfully processed.
 				</p>
 				<div className='flex justify-center'>
 					<Link to={'/shop'} className='btn'>
 						Continue Shopping
 					</Link>
 				</div>
-				<div className='flex justify-center'>
+				<div className='flex mt-4 justify-center'>
 					<Link to={'/user/dashboard#orders'} className='btn-outline'>
 						View My Orders
 					</Link>
 				</div>
 				<p className='text-gray-600 mt-4'>
-					Thank you for your support and business!!
+					Thank you for your support and business!
 				</p>
 			</div>
 		</div>
