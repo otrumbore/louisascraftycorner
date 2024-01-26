@@ -86,7 +86,7 @@ export const updateOrder = async (event, intent) => {
 	try {
 		let updatedOrder = null;
 
-		const orderId = event?.metadata?.order_id || '';
+		const orderId = event?.metadata?.order_id;
 
 		switch (intent) {
 			case 'completed':
@@ -159,9 +159,9 @@ export const updateOrder = async (event, intent) => {
 
 		console.log('updated order data: ', updatedOrder);
 	} catch (error) {
-		console.error('Error updating order:', error.message);
+		console.error('Error updating order:', error);
 		// Consider sending a more specific error response
-		throw new Error(`Server Error: ${error.message}`);
+		throw new Error(`Server Error: ${error}`);
 	}
 };
 

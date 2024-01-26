@@ -267,14 +267,18 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 													<div>
 														{order.status[
 															order.status.length - 1
-														].type.toUpperCase()}
+														].type.toUpperCase() || 'Something went wrong'}
 													</div>
 												</div>
 											</td>
 										</tr>
 									))
 								) : (
-									<h1 className='mt-4 text-2xl'>No Results</h1>
+									<tr>
+										<td>
+											<h2 className='mt-4 text-2xl'>No Results</h2>
+										</td>
+									</tr>
 								)}
 							</tbody>
 						</table>
@@ -400,14 +404,18 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 													<div>
 														{order.status[
 															order.status.length - 1
-														].type.toUpperCase()}
+														].type.toUpperCase() || 'Something went wrong'}
 													</div>
 												</div>
 											</td>
 										</tr>
 									))
 								) : (
-									<h1 className='mt-4 text-2xl'>No Results</h1>
+									<tr>
+										<td>
+											<h2 className='mt-4 text-2xl'>No Results</h2>
+										</td>
+									</tr>
 								)}
 							</tbody>
 						</table>

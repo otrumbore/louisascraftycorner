@@ -9,13 +9,39 @@ const OrderModal = ({ order, onClose }) => {
 	const { userRole } = useUser();
 	const [loading, setLoading] = useState(false);
 	const [orderDetails, setOrderDetails] = useState(order);
+	const [trackingNum, setTrackingNum] = useState('');
+	const { enqueueSnackbar } = useSnackbar();
 
-	const sendStatusUpdate = async (status) => {
+	const showShippingTrackingInput = () => {
+		// Use window.prompt to display a dialog box with an input field
+		const userInput = window.prompt(
+			'Enter a tracking number for shipping:',
+			''
+		);
+
+		// Check if the user clicked "OK" and entered some text
+		if (userInput !== null) {
+			//setTrackingNum(userInput);
+			sendStatusUpdate('shipped', userInput.trim());
+			enqueueSnackbar(`Order ${order.orderId} has been marked shipped.`, {
+				variant: 'success',
+			});
+		} else {
+			enqueueSnackbar(`Cancelled, not marked shipped.`, {
+				variant: 'info',
+			});
+		}
+	};
+
+	const sendStatusUpdate = async (status, tracking) => {
 		setLoading(true);
 		try {
 			const data = order;
 			data.status.push({ type: status, timestamp: new Date() });
-			//console.log(data);
+			if (tracking !== '') {
+				data.shipping.tracking = tracking;
+			}
+			console.log(data);
 			const update = await updateOrder(orderDetails.orderId, data);
 			setOrderDetails(data);
 		} catch (error) {
@@ -119,7 +145,7 @@ const OrderModal = ({ order, onClose }) => {
 						</p>
 						<p>
 							<strong>Tracking # </strong>
-							{order.shipping.tracking || 'N/A'}
+							{order.shipping.tracking}
 						</p>
 					</div>
 					<div>
@@ -141,7 +167,7 @@ const OrderModal = ({ order, onClose }) => {
 						  ) ? (
 							<button
 								className='btn'
-								onClick={() => sendStatusUpdate('shipped')}
+								onClick={() => showShippingTrackingInput()}
 							>
 								Shipped?
 							</button>
