@@ -8,7 +8,7 @@ import { useUser } from '../../context/UserContext';
 import LoadingModal from '../../components/LoadingModal';
 
 const Orders = () => {
-	const [viewOrder, setViewOrder] = useState('');
+	const [viewOrder, setViewOrder] = useState([]);
 	const [orders, setOrders] = useState([]);
 	const { userDetails } = useUser();
 	const [loading, setLoading] = useState(false);
@@ -39,7 +39,7 @@ const Orders = () => {
 	};
 
 	useEffect(() => {
-		setViewOrder(''); // Reset viewOrder whenever the component re-renders
+		setViewOrder([]); // Reset viewOrder whenever the component re-renders
 		fetchOrders();
 	}, []);
 
@@ -56,7 +56,7 @@ const Orders = () => {
 	return (
 		<>
 			<LoadingModal loading={loading} />
-			{!viewOrder ? (
+			{viewOrder.length === 0 ? (
 				<div className='w-full'>
 					<div className='flex w-full justify-center'>
 						<h3 className='text-2xl lg:text-3xl'>Your Purchases</h3>
@@ -134,7 +134,7 @@ const Orders = () => {
 										<button
 											className='cursor-pointer'
 											onClick={() => {
-												setViewOrder(item.orderId);
+												setViewOrder(item);
 											}}
 										>
 											<p className='flex space-x-2 items-center justify-center text-gray-600'>
@@ -150,7 +150,7 @@ const Orders = () => {
 				</div>
 			) : (
 				<>
-					<ViewOrder orderNum={viewOrder} setViewOrder={setViewOrder} />
+					<ViewOrder order={viewOrder} setViewOrder={setViewOrder} />
 				</>
 			)}
 		</>

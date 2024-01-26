@@ -6,7 +6,7 @@ import DefaultProductImg from '../assets/product-img/default.png';
 import { MdOutlineDeleteForever, MdEdit } from 'react-icons/md';
 import { FaRegHeart } from 'react-icons/fa';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import createOrder from '../api/orders.api';
 import { getProduct } from '../api/products.api';
@@ -27,6 +27,7 @@ const Cart = () => {
 		cartSubTotal,
 		updateAllCartItems,
 	} = useCart();
+	const location = useLocation();
 
 	const { addToFavorites, userFavorites, userDetails, userRole } = useUser();
 
@@ -34,10 +35,12 @@ const Cart = () => {
 
 	const cartItemsCount = cartItems.length;
 
+	let newCart = [];
+
 	const updateCartPrices = async () => {
 		setLoading(true);
 		try {
-			const newCart = await Promise.all(
+			newCart = await Promise.all(
 				cartItems.map(async (item) => {
 					const product = await getProduct(item._id);
 					return {
@@ -47,8 +50,9 @@ const Cart = () => {
 					};
 				})
 			);
-
+			//console.log(newCart);
 			updateAllCartItems(newCart);
+			return newCart;
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -61,7 +65,6 @@ const Cart = () => {
 		if (cartItems.length > 0) {
 			updateCartPrices();
 		}
-
 		window.scrollTo(0, 0);
 	}, []);
 
@@ -69,16 +72,32 @@ const Cart = () => {
 		userDetails._id ? setLoggedIn(true) : setLoggedIn(false);
 	}, [userDetails, loggedIn]);
 
-	const checkout = async () => {
+	const preCheckout = async () => {
 		setStripeLoading(true);
-		updateCartPrices();
+		try {
+			const updatedCart = await updateCartPrices();
+			checkout(updatedCart);
+		} catch (error) {
+			console.log(error);
+			enqueueSnackbar(
+				'Try checking out again...Needed to update some prices.',
+				{
+					variant: 'info',
+				}
+			);
+			setStripeLoading(false);
+		}
+	};
+
+	const checkout = async (updatedCart) => {
+		//setStripeLoading(true);
 		try {
 			await fetch(`${API_URL}/api/checkout`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({ items: cartItems, userData: userDetails }),
+				body: JSON.stringify({ items: updatedCart, userData: userDetails }),
 			})
 				.then((response) => {
 					return response.json();
@@ -252,7 +271,7 @@ const Cart = () => {
 										className={`btn py-3 w-full ${
 											stripeLoading && 'cursor-not-allowed'
 										}`}
-										onClick={checkout}
+										onClick={preCheckout}
 										disabled={userRole() < 2 || stripeLoading}
 									>
 										{stripeLoading ? (
