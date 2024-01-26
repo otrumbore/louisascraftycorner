@@ -185,27 +185,17 @@ const ProductCard = ({
 								disabled={userFavorites.some(
 									(faveItem) => faveItem.itemId === item.storeId
 								)}
-								className={`has-tooltip p-2 btn-ghost text-primary hover:text-secondary ${
+								className={`p-2 btn-ghost text-primary ${
 									userFavorites.some(
 										(faveItem) => faveItem.itemId === item.storeId
 									) && 'opacity-75 cursor-not-allowed'
 								}`}
 							>
-								<span className='hidden tooltip lg:flex w-fit rounded shadow-lg p-2 text-secondary bg-primary opacity-90 -mt-24 -mr-24'>
-									{!userFavorites.some(
-										(faveItem) => faveItem.itemId === item.storeId
-									) ? (
-										<p>Add to Favorites</p>
-									) : (
-										<p>Already in Favorites</p>
-									)}
-								</span>
-
 								<FaRegHeart className='' size={25} />
 							</button>
 
 							<button
-								className={`has-tooltip px-4 py-2 btn ${
+								className={`px-4 py-2 btn ${
 									cartItems.some((cartItem) => cartItem._id === item._id)
 										? 'opacity-75 cursor-not-allowed'
 										: ''
@@ -227,13 +217,6 @@ const ProductCard = ({
 									(cartItem) => cartItem._id === item._id
 								)}
 							>
-								<span className='hidden tooltip lg:flex w-fit rounded shadow-lg p-2 text-secondary bg-primary opacity-90 -mt-24 -mr-12'>
-									{!cartItems.some((cartItem) => cartItem._id === item._id) ? (
-										<p>Add to Cart</p>
-									) : (
-										<p>Already in cart</p>
-									)}
-								</span>
 								<MdAddShoppingCart size={27} />
 							</button>
 						</div>
