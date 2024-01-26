@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getAllOrders, updateOrder } from '../../../api/orders.api';
-import { MdRefresh } from 'react-icons/md';
+import { MdRefresh, MdOutlineCancel } from 'react-icons/md';
 import LoadingModal from '../../../components/LoadingModal';
 import OrderModal from './OrderModal';
 
@@ -8,10 +8,14 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 	const [orders, setOrders] = useState(apiOrders);
 	const [loading, setLoading] = useState(false);
 	const [showModal, setShowModal] = useState('');
-	const [showProgressOrders, setshowProgressOrders] = useState(false);
-	const [progressOrdersMap, setProgressOrdersMap] = useState([]);
-	const [unfulText, setUnfulText] = useState('');
+	const [boxOneOrders, setBoxOneOrders] = useState('unfulfilled');
+	const [boxOneOrdersMap, setBoxOneOrdersMap] = useState([]);
+	const [boxTwoOrders, setBoxTwoOrders] = useState('shipped');
+	const [boxTwoOrdersMap, setBoxTwoOrdersMap] = useState([]);
+	const [boxOneText, setBoxOneText] = useState('');
+	const [boxTwoText, setBoxTwoText] = useState('');
 
+	const [unfulfilledOrders, setUnfulfilledOrders] = useState([]);
 	const [paidOrders, setPaidOrders] = useState([]);
 	const [recentOrders, setRecentOrders] = useState([]);
 	const [shippedOrders, setShippedOrders] = useState([]);
@@ -37,22 +41,36 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 		fetchOrders();
 	};
 
+	useEffect(() => {
+		filteredData();
+	}, [boxOneText, boxTwoText]);
+
 	const filteredData = () => {
-		const paidOrders = orders
+		const filterUnfulfilledOrders = orders
 			.filter((order) => order.status.some((status) => status.type === 'paid'))
 			.filter(
 				(order) => !order.status.some((status) => status.type === 'shipped')
 			)
 			.filter((order) => {
-				return !unfulText || order.orderId.includes(unfulText);
+				return !boxOneText || order.orderId.includes(boxOneText);
 			})
 			.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-		const recentOrders = orders
-			.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-			.slice(0, 10); //add 30 day limit
+		const filterPaidOrders = orders
+			.filter((order) => order.status.some((status) => status.type === 'paid'))
+			.filter(
+				(order) => !order.status.some((status) => status.type === 'crafting')
+			)
+			.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-		const shippedOrders = orders
+		const filterRecentOrders = orders
+			.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+			.filter((order) => {
+				return !boxTwoText || order.orderId.includes(boxTwoText);
+			})
+			.slice(0, 50); //add 30 day limit
+
+		const filterShippedOrders = orders
 			.filter((order) => order.status.some((status) => status.type === 'paid'))
 			.filter((order) =>
 				order.status.some((status) => status.type === 'shipped')
@@ -62,13 +80,13 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 			)
 			.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-		const pastOrders = orders
+		const filterPastOrders = orders
 			.filter((order) =>
 				order.status.some((status) => status.type === 'delivered')
 			)
 			.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-		const progressOrders = orders
+		const filterProgressOrders = orders
 			.filter((order) =>
 				order.status.some((status) => status.type === 'crafting')
 			)
@@ -77,54 +95,114 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 			)
 			.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-		setPaidOrders(paidOrders);
-		setRecentOrders(recentOrders);
-		setShippedOrders(shippedOrders);
-		setPastOrders(pastOrders);
-		setProgressOrders(progressOrders);
+		setUnfulfilledOrders(filterUnfulfilledOrders);
+		setPaidOrders(filterPaidOrders);
+		setRecentOrders(filterRecentOrders);
+		setShippedOrders(filterShippedOrders);
+		setPastOrders(filterPastOrders);
+		setProgressOrders(filterProgressOrders);
 
-		if (paidOrders.length > 1) {
-			setshowProgressOrders(true);
+		if (orders.length > 1) {
+			setBoxTwoOrdersMap(filterShippedOrders);
+			setBoxOneOrdersMap(filterUnfulfilledOrders);
+		}
+
+		if (boxTwoText !== '') {
+			setBoxTwoOrders('all');
+			setBoxTwoOrdersMap(filterRecentOrders);
+		} else {
+			setBoxTwoOrders('shipped');
 		}
 	};
 
 	useEffect(() => {
-		if (showProgressOrders) {
-			setProgressOrdersMap(progressOrders);
+		if (boxTwoOrders === 'all') {
+			setBoxTwoOrdersMap(recentOrders);
+		} else if (boxTwoOrders === 'shipped') {
+			setBoxTwoOrdersMap(shippedOrders);
 		} else {
-			setProgressOrdersMap(recentOrders);
+			setBoxTwoOrdersMap(pastOrders);
 		}
-	}, [showProgressOrders]);
+	}, [boxTwoOrders]);
+
+	useEffect(() => {
+		if (boxOneOrders === 'unfulfilled') {
+			setBoxOneOrdersMap(unfulfilledOrders);
+		} else if (boxOneOrders === 'crafting') {
+			setBoxOneOrdersMap(progressOrders);
+		} else {
+			setBoxOneOrdersMap(paidOrders);
+		}
+	}, [boxOneOrders]);
 
 	return (
-		<>
+		<div className='relative'>
 			<LoadingModal loading={loading} />
 
 			<div
-				className='absolute mt-7 flex gap-4 -ml-20 left-0 py-2 px-3 text-white bg-secondary hover:ml-0 transform duration-500 rounded-r-md cursor-pointer'
+				className='hidden absolute -left-1 top-16 lg:flex gap-4 w-fit py-2 px-3 -ml-[6.7rem] text-white bg-secondary hover:left-[4.5rem] z-20 transform duration-500 rounded-r-md cursor-pointer'
 				onClick={fetchOrders}
 			>
 				Refresh <MdRefresh size={25} />
 			</div>
-			<div className='mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4'>
+
+			{/* PAID / CRAFTING / BOTH */}
+			<div className='mt-4 grid grid-cols-1 gap-4'>
 				<div className='border-4 w-full border-primary p-4 rounded-md'>
 					<div className='flex w-full justify-between items-center border-b-4 pb-3 mb-2'>
-						<div>
+						<div className='w-1/4'>
 							<h5 className='text-lg'>
-								Unfulfilled Orders - {paidOrders.length}
+								{boxOneOrders === 'unfulfilled'
+									? 'Unfulfilled'
+									: boxOneOrders === 'paid'
+									? 'Paid'
+									: 'Crafting'}{' '}
+								- {boxOneOrdersMap.length}
 							</h5>
 							<p className='text-xs'>
-								{paidOrders.length} orders need to be shipped
+								{boxOneOrdersMap.length}{' '}
+								{boxOneOrders === 'unfulfilled'
+									? ' orders need to be shipped'
+									: boxOneOrders === 'paid'
+									? ' are paid'
+									: ' are being crafted'}
 							</p>
 						</div>
-						<div className='flex justify-end'>
+						<div className='w-2/4 flex justify-center'>
+							<button
+								className={`${
+									boxOneOrders === 'unfulfilled' ? 'btn' : 'btn-outline'
+								} rounded-none rounded-l-md border-r-transparent hover:ring-0 hover:ring-offset-0`}
+								onClick={() => setBoxOneOrders('unfulfilled')}
+							>
+								Unfulfilled
+							</button>
+							<button
+								className={`${
+									boxOneOrders === 'paid' ? 'btn' : 'btn-outline'
+								} rounded-none hover:ring-0 hover:ring-offset-0`}
+								onClick={() => setBoxOneOrders('paid')}
+							>
+								Paid
+							</button>
+							<button
+								className={`${
+									boxOneOrders === 'crafting' ? 'btn' : 'btn-outline'
+								} rounded-none rounded-r-md border-l-transparent hover:ring-0 hover:ring-offset-0`}
+								onClick={() => setBoxOneOrders('crafting')}
+							>
+								Crafting
+							</button>
+						</div>
+
+						<div className='w-1/4 flex justify-end'>
 							{/* <button className='btn-outline p-2'>View All</button> */}
 							<input
 								type='text'
-								name='unfulText'
+								name='boxOneText'
 								className='input py-2 lg:w-[50%] lg:focus:w-full transform duration-500'
 								placeholder='Search...'
-								onChange={(e) => setUnfulText(e.target.value)}
+								onChange={(e) => setBoxOneText(e.target.value)}
 							/>
 						</div>
 					</div>
@@ -138,90 +216,129 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 								</tr>
 							</thead>
 							<tbody>
-								{paidOrders.map((order, i) => (
-									<tr
-										onClick={() => openModal(order)}
-										key={i}
-										className={`border-b-2 border-primary cursor-pointer ${
-											order.status[order.status.length - 1].type === 'paid'
-												? 'bg-green-200'
-												: order.status[order.status.length - 1].type ===
-												  'payment_failed'
-												? 'bg-red-300'
-												: 'bg-orange-300'
-										}`}
-									>
-										<td className='py-2 pl-2'>
-											<div className='flex flex-col'>
-												<div>{order.orderId}</div>
-												<div>{order.email}</div>
-											</div>
-										</td>
-										<td className='text-center'>
-											<div className='py-2'>
+								{boxOneOrdersMap.length > 0 ? (
+									boxOneOrdersMap.map((order, i) => (
+										<tr
+											onClick={() => openModal(order)}
+											key={i}
+											className={`border-b-2 border-primary cursor-pointer hover:bg-primary hover:bg-opacity-50 ${
+												order.status[order.status.length - 1].type === 'paid'
+													? 'bg-green-200'
+													: order.status[order.status.length - 1].type ===
+													  'payment_failed'
+													? 'bg-red-300'
+													: 'bg-orange-300'
+											}`}
+										>
+											<td className='py-2 pl-2'>
 												<div className='flex flex-col'>
-													<div>
-														{new Date(order.createdAt).toLocaleString(
-															undefined,
-															{
-																year: 'numeric',
-																month: 'numeric',
-																day: 'numeric',
-																// hour: 'numeric',
-																// minute: 'numeric',
-																// hour12: true,
-															}
-														)}
+													<div>{order.orderId}</div>
+													<div>{order.email}</div>
+												</div>
+											</td>
+											<td className='text-center'>
+												<div className='py-2'>
+													<div className='flex flex-col'>
+														<div>
+															{new Date(order.createdAt).toLocaleString(
+																undefined,
+																{
+																	year: 'numeric',
+																	month: 'numeric',
+																	day: 'numeric',
+																	// hour: 'numeric',
+																	// minute: 'numeric',
+																	// hour12: true,
+																}
+															)}
+														</div>
+														<div>{order.items.length} item(s)</div>
 													</div>
-													<div>{order.items.length} item(s)</div>
 												</div>
-											</div>
-										</td>
-										<td className='py-2 pr-2'>
-											<div className='flex flex-col items-end'>
-												<div>
-													$
-													{order.prices.total
-														? (order.prices.total / 100).toFixed(2)
-														: '0.00'}
+											</td>
+											<td className='py-2 pr-2'>
+												<div className='flex flex-col items-end'>
+													<div>
+														$
+														{order.prices.total
+															? (order.prices.total / 100).toFixed(2)
+															: '0.00'}
+													</div>
+													<div>
+														{order.status[
+															order.status.length - 1
+														].type.toUpperCase()}
+													</div>
 												</div>
-												<div>
-													{order.status[
-														order.status.length - 1
-													].type.toUpperCase()}
-												</div>
-											</div>
-										</td>
-									</tr>
-								))}
+											</td>
+										</tr>
+									))
+								) : (
+									<h1 className='mt-4 text-2xl'>No Results</h1>
+								)}
 							</tbody>
 						</table>
 					</div>
 				</div>
-				{/* IN PROGRESS ORDER / RECENT SALES */}
+				{/* SHIPPED / DELIVERED / ALL */}
 				<div className='border-4 w-full border-primary p-4 rounded-md'>
 					<div className='flex w-full justify-between items-center border-b-4 pb-3 mb-2'>
-						<div>
+						<div className='w-1/4'>
 							<h5 className='text-lg'>
-								{showProgressOrders ? 'In Progress' : 'Recent Orders'}
+								{boxTwoOrders === 'all'
+									? 'All Orders'
+									: boxTwoOrders === 'shipped'
+									? 'Shipped'
+									: 'Delivered'}
 							</h5>
 							<p className='text-xs'>
-								{showProgressOrders
-									? progressOrders.length + ' currently in progress'
-									: `you made ${orders.length} sales this month`}
+								{boxTwoOrdersMap.length}
+								{boxTwoOrders === 'all'
+									? ' this month'
+									: boxTwoOrders === 'shipped'
+									? ' shipped'
+									: ' delivered this month'}
 							</p>
 						</div>
-						<div>
+						<div className='w-2/4 flex justify-center'>
 							<button
-								className='btn-outline p-2'
-								onClick={() => setshowProgressOrders(!showProgressOrders)}
+								className={`${
+									boxTwoOrders === 'shipped' ? 'btn' : 'btn-outline'
+								} rounded-none rounded-l-md border-r-transparent hover:ring-0 hover:ring-offset-0`}
+								onClick={() => setBoxTwoOrders('shipped')}
 							>
-								{!showProgressOrders ? 'In Progress' : 'Recent Orders'}
+								Shipped
+							</button>
+							<button
+								className={`${
+									boxTwoOrders === 'delivered' ? 'btn' : 'btn-outline'
+								} rounded-none hover:ring-0 hover:ring-offset-0`}
+								onClick={() => setBoxTwoOrders('delivered')}
+							>
+								Delivered
+							</button>
+							<button
+								className={`${
+									boxTwoOrders === 'all' ? 'btn' : 'btn-outline'
+								} rounded-none rounded-r-md border-l-transparent hover:ring-0 hover:ring-offset-0`}
+								onClick={() => setBoxTwoOrders('all')}
+							>
+								All
 							</button>
 						</div>
+						<div className='w-1/4 flex justify-end'>
+							{/* <button className='btn-outline p-2'>View All</button> */}
+							<input
+								type='text'
+								name='unfulText'
+								className='input py-2 lg:w-[50%] lg:focus:w-full transform duration-500'
+								placeholder='Search...'
+								onChange={(e) => setBoxTwoText(e.target.value)}
+							/>
+						</div>
 					</div>
-					<div className='overflow-y-auto max-h-96'>
-						<table className='w-full'>
+					<div className='overflow-y-auto h-auto max-h-[75vh]'>
+						<table className='w-full h-full'>
 							<thead className='sticky top-0 bg-gray-100 z-10'>
 								<tr className='font-bold border-b-4 border-primary'>
 									<th className='py-2 text-left'>Order # / Email</th>
@@ -230,204 +347,75 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 								</tr>
 							</thead>
 							<tbody>
-								{progressOrdersMap.map((order, i) => (
-									<tr
-										onClick={() => openModal(order)}
-										key={i}
-										className={`border-b-2 border-primary ${
-											order.status[order.status.length - 1].type === 'crafting'
-												? 'bg-orange-300'
-												: order.status[order.status.length - 1].type === 'paid'
-												? 'bg-green-300'
-												: order.status[order.status.length - 1].type ===
-												  'shipped'
-												? 'bg-blue-200'
-												: order.status[order.status.length - 1].type ===
-												  'delivered'
-												? 'bg-gray-200'
-												: null
-										}`}
-									>
-										<td className='py-2 pl-1'>
-											<div className='flex flex-col'>
-												<div>{order.orderId}</div>
-												<div>{order.email}</div>
-											</div>
-										</td>
-										<td className='text-center'>
-											<div className='py-2'>
+								{boxTwoOrdersMap.length > 0 ? (
+									boxTwoOrdersMap.map((order, i) => (
+										<tr
+											onClick={() => openModal(order)}
+											key={i}
+											className={`border-b-2 border-primary cursor-pointer hover:bg-primary hover:bg-opacity-50 ${
+												order.status[order.status.length - 1].type ===
+												'crafting'
+													? 'bg-orange-300'
+													: order.status[order.status.length - 1].type ===
+													  'paid'
+													? 'bg-green-300'
+													: order.status[order.status.length - 1].type ===
+													  'shipped'
+													? 'bg-blue-200'
+													: order.status[order.status.length - 1].type ===
+													  'delivered'
+													? 'bg-gray-200'
+													: null
+											}`}
+										>
+											<td className='py-2 pl-1'>
 												<div className='flex flex-col'>
-													<div>
-														{new Date(order.createdAt).toLocaleString(
-															undefined,
-															{
-																year: 'numeric',
-																month: 'numeric',
-																day: 'numeric',
-																// hour: 'numeric',
-																// minute: 'numeric',
-																// hour12: true,
-															}
-														)}
+													<div>{order.orderId}</div>
+													<div>{order.email}</div>
+												</div>
+											</td>
+											<td className='text-center'>
+												<div className='py-2'>
+													<div className='flex flex-col'>
+														<div>
+															{new Date(order.createdAt).toLocaleString(
+																undefined,
+																{
+																	year: 'numeric',
+																	month: 'numeric',
+																	day: 'numeric',
+																	// hour: 'numeric',
+																	// minute: 'numeric',
+																	// hour12: true,
+																}
+															)}
+														</div>
+														<div>{order.items.length} item(s)</div>
 													</div>
-													<div>{order.items.length} item(s)</div>
 												</div>
-											</div>
-										</td>
-										<td className='py-2 pr-1'>
-											<div className='flex flex-col items-end'>
-												<div>${(order.prices.total / 100).toFixed(2)}</div>
-												<div>
-													{order.status[
-														order.status.length - 1
-													].type.toUpperCase()}
+											</td>
+											<td className='py-2 pr-1'>
+												<div className='flex flex-col items-end'>
+													<div>${(order.prices.total / 100).toFixed(2)}</div>
+													<div>
+														{order.status[
+															order.status.length - 1
+														].type.toUpperCase()}
+													</div>
 												</div>
-											</div>
-										</td>
-									</tr>
-								))}
+											</td>
+										</tr>
+									))
+								) : (
+									<h1 className='mt-4 text-2xl'>No Results</h1>
+								)}
 							</tbody>
 						</table>
 					</div>
-				</div>
-				{/* SHIPPED ORDERS */}
-				<div className='border-4 w-full border-primary p-4 rounded-md'>
-					<div className='flex w-full justify-between items-center border-b-4 pb-3 mb-2'>
-						<div>
-							<h5 className='text-lg'>Shipped</h5>
-							<p className='text-xs'>{shippedOrders.length} order(s) shipped</p>
-						</div>
-						<div>
-							<button className='btn-outline p-2'>View All</button>
-						</div>
-					</div>
-					<div className='overflow-y-auto max-h-96'>
-						<table className='w-full'>
-							<thead className='sticky top-0 bg-gray-100 z-10'>
-								<tr className='font-bold border-b-4 border-primary'>
-									<th className='py-2 text-left'>Order # / Email</th>
-									<th className='text-center'>Date / # Items</th>
-									<th className='py-2 text-right'>Price / Status</th>
-								</tr>
-							</thead>
-							<tbody>
-								{shippedOrders.map((order, i) => (
-									<tr
-										onClick={() => openModal(order)}
-										key={i}
-										className={`border-b-2 border-primary bg-blue-200`}
-									>
-										<td className='py-2 pl-1'>
-											<div className='flex flex-col'>
-												<div>{order.orderId}</div>
-												<div>{order.email}</div>
-											</div>
-										</td>
-										<td className='text-center'>
-											<div className='py-2'>
-												<div className='flex flex-col'>
-													<div>
-														{new Date(order.createdAt).toLocaleString(
-															undefined,
-															{
-																year: 'numeric',
-																month: 'numeric',
-																day: 'numeric',
-																// hour: 'numeric',
-																// minute: 'numeric',
-																// hour12: true,
-															}
-														)}
-													</div>
-													<div>{order.items.length} item(s)</div>
-												</div>
-											</div>
-										</td>
-										<td className='py-2 pr-1'>
-											<div className='flex flex-col items-end'>
-												<div>${(order.prices.total / 100).toFixed(2)}</div>
-												<div>
-													{order.status[
-														order.status.length - 1
-													].type.toUpperCase()}
-												</div>
-											</div>
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</div>
-				</div>
-				{/* PAST/DELIVERED ORDERS */}
-				<div className='border-4 w-full border-primary p-4 rounded-md'>
-					<div className='flex w-full justify-between items-center border-b-4 pb-3 mb-2'>
-						<div>
-							<h5 className='text-lg'>Past Orders</h5>
-							<p className='text-xs'>
-								{pastOrders.length} order(s) delivered in last year
-							</p>
-						</div>
-						<div>
-							<button className='btn-outline p-2'>View All</button>
-						</div>
-					</div>
-					<table className='w-full'>
-						<thead className='sticky top-0 bg-gray-100 z-10'>
-							<tr className='font-bold border-b-4 border-primary'>
-								<th className='py-2 text-left'>Order # / Email</th>
-								<th className='text-center'>Date / # Items</th>
-								<th className='py-2 text-right'>Price / Status</th>
-							</tr>
-						</thead>
-						<tbody>
-							{pastOrders.map((order, i) => (
-								<tr
-									key={i}
-									className={`border-b-2 border-primary bg-gray-200`}
-									onClick={() => openModal(order)}
-								>
-									<td className='py-2 pl-1'>
-										<div className='flex flex-col'>
-											<div>{order.orderId}</div>
-											<div>{order.email}</div>
-										</div>
-									</td>
-									<td className='text-center'>
-										<div className='py-2'>
-											<div className='flex flex-col'>
-												<div>
-													{new Date(order.createdAt).toLocaleString(undefined, {
-														year: 'numeric',
-														month: 'numeric',
-														day: 'numeric',
-														// hour: 'numeric',
-														// minute: 'numeric',
-														// hour12: true,
-													})}
-												</div>
-												<div>{order.items.length} item(s)</div>
-											</div>
-										</div>
-									</td>
-									<td className='py-2 pr-2'>
-										<div className='flex flex-col items-end'>
-											<div>${(order.prices.total / 100).toFixed(2)}</div>
-											<div>
-												{order.status[
-													order.status.length - 1
-												].type.toUpperCase()}
-											</div>
-										</div>
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
 				</div>
 			</div>
 			{showModal && <OrderModal order={showModal} onClose={closeModal} />}
-		</>
+		</div>
 	);
 };
 
