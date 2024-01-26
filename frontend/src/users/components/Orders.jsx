@@ -125,6 +125,7 @@ const Orders = () => {
 										</p>
 										{item.shipping.tracking ? (
 											<a
+												target='_blank'
 												href={`https://tools.usps.com/go/TrackConfirmAction?tRef=fullpage&tLc=2&text28777=&tLabels=${item.shipping.tracking}`}
 												className='flex space-x-2 items-center justify-center text-gray-600'
 											>

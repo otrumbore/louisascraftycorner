@@ -20,7 +20,7 @@ const ViewOrder = ({ order, setViewOrder }) => {
 				<FaArrowLeft size={30} />
 				<span className='hidden lg:block'>Back</span>
 			</div>
-			<div className='w-full flex justify-center'>
+			<div className='w-full flex justify-center mb-4'>
 				<h3 className='text-2xl'>
 					Order #{order.orderId} -{' '}
 					{order.status.length > 0
@@ -28,6 +28,19 @@ const ViewOrder = ({ order, setViewOrder }) => {
 						: 'No Status'}
 				</h3>
 			</div>
+			{order.shipping.tracking ? (
+				<div className='w-full flex gap-2 justify-center'>
+					<p>Tracking Number:</p>
+					<a
+						target='_blank'
+						className='text-primary underline'
+						href={`https://tools.usps.com/go/TrackConfirmAction?tRef=fullpage&tLc=2&text28777=&tLabels=${order.shipping.tracking}`}
+					>
+						{order.shipping.tracking}
+					</a>
+				</div>
+			) : null}
+
 			<div className='bg-white p-4 lg:p-8 rounded-lg shadow-md max-w-xl mx-auto mt-10 border-4 border-primary border-dashed'>
 				<div className='grid grid-cols-1 lg:grid-cols-2 mb-4'>
 					<div>

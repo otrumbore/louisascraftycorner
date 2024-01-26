@@ -166,12 +166,12 @@ const Settings = () => {
 								onChange={(e) => setCollectionSelect(e.target.value)}
 							>
 								<option value=''>Select Collection</option>
+								<option value='new'>Add New...</option>
 								{collections.map((item, i) => (
 									<option key={i} value={item.name}>
 										{item.name}
 									</option>
 								))}
-								<option value='new'>Add New...</option>
 							</select>
 							<div>
 								{collectionSelect !== '' && (
