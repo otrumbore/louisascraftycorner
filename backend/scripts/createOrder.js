@@ -7,6 +7,7 @@ const createOrder = async (event) => {
 
 		const processedCartItems = cartItems.map((item) => ({
 			storeId: item.storeId,
+			productName: item.name,
 			price: item.price,
 			quantity: item.qty,
 			sale: item.sale,

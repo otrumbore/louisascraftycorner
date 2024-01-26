@@ -74,9 +74,11 @@ router.post('/', async (req, res) => {
 	//console.log(orderId);
 
 	let lineItems = [];
+	let totalQty = 0;
 
 	items.forEach((item) => {
 		let price = item.sale ? item.sale : item.price;
+		totalQty += item.qty;
 
 		const lineItem = {
 			price_data: {
@@ -113,10 +115,16 @@ router.post('/', async (req, res) => {
 
 	let shipAmount = '';
 
-	if (lineItemsTotal > 5000) {
+	if (lineItemsTotal > 7500) {
 		shipAmount = 0;
 	} else {
-		shipAmount = 1500;
+		if (totalQty <= 3) {
+			shipAmount = 500;
+		} else if (totalQty > 3 && totalQty <= 5) {
+			shipAmount = 1000;
+		} else {
+			shipAmount = 1400;
+		}
 	}
 
 	const sessionOptions = {
@@ -186,7 +194,7 @@ router.post('/', async (req, res) => {
 			},
 		],
 		success_url: `${frontendURL}/order/success/${orderId}`,
-		cancel_url: `${frontendURL}/order/cancel/${orderId}`,
+		cancel_url: `${frontendURL}/cart?orderCancel`,
 	};
 
 	// Prefill email if user is logged in
