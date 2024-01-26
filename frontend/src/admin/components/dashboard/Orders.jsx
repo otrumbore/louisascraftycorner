@@ -246,9 +246,9 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 																	year: 'numeric',
 																	month: 'numeric',
 																	day: 'numeric',
-																	// hour: 'numeric',
-																	// minute: 'numeric',
-																	// hour12: true,
+																	hour: 'numeric',
+																	minute: 'numeric',
+																	hour12: true,
 																}
 															)}
 														</div>
@@ -347,6 +347,7 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 								<tr className='font-bold border-b-4 border-primary'>
 									<th className='py-2 text-left'>Order # / Email</th>
 									<th className='text-center'>Date / # Items</th>
+									<th className='text-center'>Tracking #</th>
 									<th className='py-2 text-right'>Price / Status</th>
 								</tr>
 							</thead>
@@ -388,14 +389,19 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 																	year: 'numeric',
 																	month: 'numeric',
 																	day: 'numeric',
-																	// hour: 'numeric',
-																	// minute: 'numeric',
-																	// hour12: true,
+																	hour: 'numeric',
+																	minute: 'numeric',
+																	hour12: true,
 																}
 															)}
 														</div>
 														<div>{order.items.length} item(s)</div>
 													</div>
+												</div>
+											</td>
+											<td className='text-center'>
+												<div className='py-2'>
+													{order.shipping.tracking || 'N/A'}
 												</div>
 											</td>
 											<td className='py-2 pr-1'>

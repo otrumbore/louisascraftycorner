@@ -9,7 +9,6 @@ const OrderModal = ({ order, onClose }) => {
 	const { userRole } = useUser();
 	const [loading, setLoading] = useState(false);
 	const [orderDetails, setOrderDetails] = useState(order);
-	const [trackingNum, setTrackingNum] = useState('');
 	const { enqueueSnackbar } = useSnackbar();
 
 	const showShippingTrackingInput = () => {
@@ -18,14 +17,9 @@ const OrderModal = ({ order, onClose }) => {
 			'Enter a tracking number for shipping:',
 			''
 		);
-
 		// Check if the user clicked "OK" and entered some text
 		if (userInput !== null) {
-			//setTrackingNum(userInput);
 			sendStatusUpdate('shipped', userInput.trim());
-			enqueueSnackbar(`Order ${order.orderId} has been marked shipped.`, {
-				variant: 'success',
-			});
 		} else {
 			enqueueSnackbar(`Cancelled, not marked shipped.`, {
 				variant: 'info',
@@ -44,8 +38,17 @@ const OrderModal = ({ order, onClose }) => {
 			console.log(data);
 			const update = await updateOrder(orderDetails.orderId, data);
 			setOrderDetails(data);
+			enqueueSnackbar(
+				`Updated order number ${order.orderId} with status ${status}`,
+				{
+					variant: 'success',
+				}
+			);
 		} catch (error) {
 			console.log(error);
+			enqueueSnackbar(`Could not update order. Try again!`, {
+				variant: 'error',
+			});
 		} finally {
 			setLoading(false);
 		}
@@ -145,7 +148,17 @@ const OrderModal = ({ order, onClose }) => {
 						</p>
 						<p>
 							<strong>Tracking # </strong>
-							{order.shipping.tracking}
+							{order.shipping.tracking ? (
+								<a
+									className='underline text-primary'
+									target={'_blank'}
+									href={`https://tools.usps.com/go/TrackConfirmAction?tRef=fullpage&tLc=2&text28777=&tLabels=${order.shipping.tracking}`}
+								>
+									{order.shipping.tracking}
+								</a>
+							) : (
+								'N/A'
+							)}
 						</p>
 					</div>
 					<div>
