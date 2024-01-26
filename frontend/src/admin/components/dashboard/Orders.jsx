@@ -52,7 +52,7 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 				(order) => !order.status.some((status) => status.type === 'shipped')
 			)
 			.filter((order) => {
-				return !boxOneText || order.orderId.includes(boxOneText);
+				return !boxOneText || order.orderId.toString().includes(boxOneText);
 			})
 			.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
@@ -66,7 +66,7 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 		const filterRecentOrders = orders
 			.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 			.filter((order) => {
-				return !boxTwoText || order.orderId.includes(boxTwoText);
+				return !boxTwoText || order.orderId.toString().includes(boxTwoText);
 			})
 			.slice(0, 50); //add 30 day limit
 
