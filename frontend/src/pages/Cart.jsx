@@ -48,9 +48,6 @@ const Cart = () => {
 				})
 			);
 
-			// localStorage.setItem('cartItems', JSON.stringify(newCart));
-			// localStorage.setItem('lastUpdatedTime', Date.now());
-
 			updateAllCartItems(newCart);
 		} catch (error) {
 			console.log(error);
@@ -61,7 +58,10 @@ const Cart = () => {
 
 	useEffect(() => {
 		//console.log(cartItems);
-		updateCartPrices();
+		if (cartItems.length > 0) {
+			updateCartPrices();
+		}
+
 		window.scrollTo(0, 0);
 	}, []);
 
@@ -71,6 +71,7 @@ const Cart = () => {
 
 	const checkout = async () => {
 		setStripeLoading(true);
+		updateCartPrices();
 		try {
 			await fetch(`${API_URL}/api/checkout`, {
 				method: 'POST',
