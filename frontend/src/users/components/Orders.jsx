@@ -123,10 +123,17 @@ const Orders = () => {
 											Items:{' '}
 											{item.items.reduce((acc, curr) => acc + curr.quantity, 0)}
 										</p>
-										<p className='flex space-x-2 items-center justify-center text-gray-600'>
-											<span className='hidden lg:block'>Track</span>
-											<MdOutlineLocalShipping size={30} />
-										</p>
+										{item.shipping.tracking ? (
+											<a
+												href={`https://tools.usps.com/go/TrackConfirmAction?tRef=fullpage&tLc=2&text28777=&tLabels=${item.shipping.tracking}`}
+												className='flex space-x-2 items-center justify-center text-gray-600'
+											>
+												<span className='hidden lg:block'>Track</span>
+												<MdOutlineLocalShipping size={30} />
+											</a>
+										) : (
+											'Not Shipped'
+										)}
 									</div>
 									<div className='flex flex-wrap w-full items-center justify-between'>
 										<p>Order# {item.orderId}</p>
