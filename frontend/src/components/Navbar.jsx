@@ -178,30 +178,26 @@ const Navbar = () => {
 						</Link>
 						<Link
 							to='/user/dashboard#favorites'
-							className={`font-medium hover:bg-opacity-90 p-2 ${
-								userFavorites.length > 0 ? 'btn-outline py-1' : 'btn-ghost'
-							} cursor-pointer`}
+							className={`relative group font-medium hover:bg-opacity-90 p-2 btn-ghost cursor-pointer`}
 						>
 							<FaRegHeart className='' size={25} />
 							<p
-								className={` ${
-									userFavorites.length > 0 ? 'block' : 'hidden'
-								} text-lg`}
+								className={`${
+									userFavorites.length === 0 && 'hidden'
+								} absolute top-[.05rem] right-[.1rem] group-hover:bg-secondary bg-primary bg bg-opacity-75 rounded-md px-[.35rem] py-0 text-white text-sm z-10 transition-colors duration-300`}
 							>
 								{userFavorites.length}
 							</p>
 						</Link>
 						<Link
-							className={`font-medium hover:bg-opacity-90 p-2 ${
-								cartItemsCount() > 0 ? 'btn-outline py-1' : 'btn-ghost'
-							} cursor-pointer`}
+							className={`font-medium relative group hover:bg-opacity-90 p-2 btn-ghost cursor-pointer`}
 							to={'/cart'}
 						>
 							<MdOutlineShoppingCart className='' size={26} />
 							<p
-								className={` ${
-									totalItemsCount > 0 ? 'block' : 'hidden'
-								} text-lg`}
+								className={`${
+									totalItemsCount === 0 && 'hidden'
+								} absolute top-[.05rem] right-[.1rem] group-hover:bg-secondary bg-primary bg bg-opacity-75 rounded-md px-[.35rem] py-0 text-white text-sm z-10 transition-colors duration-300`}
 							>
 								{totalItemsCount}
 							</p>
@@ -245,15 +241,13 @@ const Navbar = () => {
 						</Link>
 						<Link
 							to='/user/dashboard#favorites'
-							className={`font-medium p-2 ${
-								userFavorites.length > 0 ? 'btn-outline py-1' : 'btn-ghost'
-							} cursor-pointer`}
+							className={`relative group font-medium p-2 btn-ghost`}
 						>
 							<FaRegHeart className='' size={27} />
 							<p
 								className={`${
-									userFavorites.length > 0 ? 'block text-xl' : 'hidden'
-								}`}
+									userFavorites.length === 0 && 'hidden'
+								} absolute top-[.05rem] right-[.1rem] group-hover:bg-secondary bg-primary bg bg-opacity-75 rounded-md px-[.35rem] py-0 text-white text-sm z-10 transition-colors duration-300`}
 							>
 								{userFavorites.length}
 							</p>
@@ -261,15 +255,13 @@ const Navbar = () => {
 
 						<Link
 							to={'/cart'}
-							className={`font-medium p-2 ${
-								totalItemsCount > 0 ? 'btn-outline py-1' : 'btn-ghost'
-							}`}
+							className={`relative group font-medium p-2 btn-ghost`}
 						>
 							<MdOutlineShoppingCart className='' size={28} />
 							<p
-								className={` ${
-									totalItemsCount > 0 ? 'block' : 'hidden'
-								} text-xl`}
+								className={`${
+									totalItemsCount === 0 && 'hidden'
+								} absolute top-[.05rem] right-[.1rem] group-hover:bg-secondary bg-primary bg bg-opacity-75 rounded-md px-[.35rem] py-0 text-white text-sm z-10 transition-colors duration-300`}
 							>
 								{totalItemsCount}
 							</p>
