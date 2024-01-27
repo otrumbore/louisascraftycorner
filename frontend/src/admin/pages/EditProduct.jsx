@@ -24,6 +24,7 @@ const EditProduct = () => {
 	const [image, setImage] = useState('');
 	const [sale, setSale] = useState(0);
 	const [manCost, setManCost] = useState(0);
+	const [storageLocation, setStorageLocation] = useState('');
 	const [measurements, setMeasurements] = useState('');
 	const [rating, setRating] = useState('');
 	const [active, setActive] = useState(false);
@@ -51,6 +52,7 @@ const EditProduct = () => {
 			setCategory(response.category);
 			setRating(response.rating);
 			setTags(response.tags);
+			setStorageLocation(response.storageLocation);
 			setInventory(response.inventory);
 			setImage(response.image);
 			setActive(response.active);
@@ -109,6 +111,7 @@ const EditProduct = () => {
 			rating,
 			tags,
 			manCost,
+			storageLocation,
 			measurements,
 			inventory,
 			image: !img ? image : img,
@@ -324,6 +327,15 @@ const EditProduct = () => {
 							type='text'
 							value={tags}
 							onChange={(e) => setTags(e.target.value)}
+							className='input'
+						/>
+						<label className='text-xl mr-4 text-gray-500'>
+							Storage Location
+						</label>
+						<input
+							type='text'
+							value={storageLocation}
+							onChange={(e) => setStorageLocation(e.target.value)}
 							className='input'
 						/>
 

@@ -67,6 +67,17 @@ const productSchema = mongoose.Schema(
 		},
 		manCost: {
 			type: Number,
+			validate: {
+				validator: function (value) {
+					return value >= 0;
+				},
+				message: 'Inventory must be a positive number',
+			},
+		},
+		storageLocation: {
+			type: String,
+			trim: true,
+			default: 'N/A',
 		},
 		inventory: {
 			type: Number,

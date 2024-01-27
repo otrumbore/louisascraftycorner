@@ -103,10 +103,21 @@ const AdminDashboard = () => {
 				(order) => !order.status.some((status) => status.type === 'shipped')
 			);
 
-		const totalRevenue = paidOrders.reduce(
+		const totalRevenue = lastMonthOrders.reduce(
 			(total, order) => total + order.prices.total,
 			0
 		);
+
+		const netRevenue = lastMonthOrders.reduce(
+			(total, order) => total + order.prices.total,
+			0
+		);
+
+		const profits = lastMonthOrders.reduce(
+			(total, order) => total + order.prices.total,
+			0
+		);
+
 		const paidOrdersCount = paidOrders.length;
 
 		const thisMonthSales = lastMonthOrders.filter((order) =>
@@ -247,7 +258,7 @@ const AdminDashboard = () => {
 								currency: 'USD',
 							})}
 						</p>
-						<p className='text-sm'></p>
+						<p className='text-sm'>This month</p>
 					</div>
 					<div className='flex flex-col border-4 border-primary p-4 rounded-md'>
 						<div className='flex items-center justify-between'>
@@ -256,7 +267,7 @@ const AdminDashboard = () => {
 						</div>
 
 						<p className='text-2xl'>{sales}</p>
-						<p className='text-sm'></p>
+						<p className='text-sm'>This month</p>
 					</div>
 					<div className='flex flex-col border-4 border-primary p-4 rounded-md'>
 						<div className='flex items-center justify-between'>

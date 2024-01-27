@@ -25,6 +25,7 @@ const AddProduct = () => {
 	const [sale, setSale] = useState(0);
 	const [rating, setRating] = useState(0);
 	const [manCost, setManCost] = useState('');
+	const [storageLocation, setStorageLocation] = useState('');
 	const [measurements, setMeasurements] = useState('');
 	const active = false;
 	const archived = false;
@@ -101,6 +102,7 @@ const AddProduct = () => {
 		const isValidMeasurements = validateInput(measurements, 'measurements');
 		const isValidManCost = validateInputNumber(manCost, 'manCost');
 		const isValidInventory = validateInputNumber(inventory, 'inventory');
+		const isValidStorageLocation = validateInput(storageLocation, 'storage');
 
 		console.log(inputError);
 
@@ -113,6 +115,7 @@ const AddProduct = () => {
 			isValidCategory &&
 			isValidRating &&
 			isValidTags &&
+			isValidStorageLocation &&
 			isValidMeasurements &&
 			isValidManCost &&
 			isValidInventory
@@ -121,13 +124,14 @@ const AddProduct = () => {
 				name: name.trim(),
 				description: description.trim(),
 				price: price.trim(),
-				sale: sale.trim(),
+				sale: sale,
 				type: type.trim(),
 				category: category.trim(),
-				rating: rating.trim(),
+				rating: rating,
 				tags: tags.trim(),
 				measurements: measurements.trim(),
 				manCost: manCost.trim(),
+				storageLocation: storageLocation.trim(),
 				inventory: inventory.trim(),
 				image: img,
 				active,
@@ -336,6 +340,20 @@ const AddProduct = () => {
 									}`}
 								/>
 							</div>
+						</div>
+						<div className='w-full mt-4'>
+							<label className='text-xl mr-4 text-gray-500'>
+								Storage Location
+							</label>
+							<input
+								type='text'
+								value={storageLocation}
+								onChange={(e) => setStorageLocation(e.target.value)}
+								placeholder=''
+								className={`input ${
+									inputError.includes('measurements') && 'border-red-600'
+								}`}
+							/>
 						</div>
 						<div className='w-full mt-5 flex justify-end gap-4'>
 							<Link className='btn-outline' to={'/admin#settings'}>
