@@ -227,6 +227,10 @@ const AddProduct = () => {
 							/>
 						</div>
 						<ImageUpload />
+						<p className='hidden'>
+							Please Note: Before uploading, change picture resolution/size to a
+							height of 500px.
+						</p>
 					</div>
 					<div>
 						<div className='my-4'>

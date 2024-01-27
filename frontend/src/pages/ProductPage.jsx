@@ -177,28 +177,31 @@ const ProductPage = () => {
 
 	return (
 		<>
-			<div className='p-4 mt-[8rem] h-full lg:mt-[10rem]'>
+			<div className='p-4 mt-[8rem] h-full lg:mt-[8rem]'>
 				<LoadingModal loading={loading} />
 				<div className='flex justify-center'>
-					<div className='w-full grid grid-cols-1 lg:grid-cols-2 max-w-[1400px] items-start justify-start'>
-						<div className='h-[500px] flex flex-col justify-center items-center'>
-							<img
-								src={product.image ? product.image : DefaultProductImg}
-								alt={
-									product.image
-										? product.name + 'Product Image'
-										: 'Default Product Image'
-								}
-								onError={(e) => {
-									e.target.src = DefaultProductImg; // Fallback to default image on error
-									e.target.alt = 'Default Product Image';
-								}}
-								className='h-full w-fit aspect-auto rounded-2xl shadow-2xl shadow-gray-400 lg:hover:scale-110'
-							/>
-							<div className='flex w-full items-center text-sm mt-4 justify-center'>
-								Measurements: {product.measurements}
+					<div className='w-full grid grid-cols-1 lg:grid-cols-2 max-w-[1400px] items-end justify-end gap-y-12'>
+						<div className='flex w-full justify-center'>
+							<div className='max-h-[500px] aspect-square flex flex-col justify-center items-center'>
+								<img
+									src={product.image ? product.image : DefaultProductImg}
+									alt={
+										product.image
+											? product.name + ' Product Image'
+											: 'Default Product Image'
+									}
+									onError={(e) => {
+										e.target.src = DefaultProductImg; // Fallback to default image on error
+										e.target.alt = 'Default Product Image';
+									}}
+									className='max-h-full max-w-full object-contain rounded-2xl shadow-2xl shadow-gray-400 lg:hover:scale-110'
+								/>
+								<div className='flex w-full items-center text-sm mt-4 justify-center'>
+									Measurements: {product.measurements}
+								</div>
 							</div>
 						</div>
+
 						<div className='px-4 h-full items-center mt-12 lg:mt-0'>
 							<div className='w-full mb-10 flex items-center justify-between'>
 								<div className='text-sm'>Store ID: {product.storeId}</div>
