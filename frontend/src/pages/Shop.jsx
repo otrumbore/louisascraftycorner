@@ -261,55 +261,56 @@ const Shop = () => {
 						)}
 					</div>
 					{/* Pagination */}
-
-					<div className='flex w-[90%] px-2 items-center justify-between mt-8'>
-						<div className=''>
-							<p>
+					<div className='w-full flex justify-center items-center mt-12'>
+						<div className='px-4 grid max-w-[1450px] grid-cols-2 lg:grid-cols-3 w-full gap-y-6'>
+							<div className='flex items-center mt-4'>
 								Page {currentPage} of {pageNumbers.length}
-							</p>
+							</div>
+							<div className='mt-4 flex items-center justify-end lg:justify-center'>
+								Results: {products.length}
+							</div>
+							<ul className='flex items-center justify-center col-span-2 lg:col-span-1 lg:justify-end gap-2'>
+								{currentPage > 1 && (
+									<li className=''>
+										<button
+											onClick={() => paginate(currentPage - 1)}
+											className='btn-outline px-2'
+										>
+											<FaChevronLeft size={25} />
+										</button>
+									</li>
+								)}
+
+								{pageNumbers.map((number) => (
+									<li
+										key={number}
+										//className={}
+									>
+										<button
+											onClick={() => paginate(number)}
+											className={` text-lg ${
+												number === currentPage
+													? 'btn px-4'
+													: 'btn-ghost py-2 px-4'
+											}`}
+										>
+											{number}
+										</button>
+									</li>
+								))}
+
+								{currentPage < pageNumbers.length && (
+									<li className=''>
+										<button
+											onClick={() => paginate(currentPage + 1)}
+											className='btn-outline px-2'
+										>
+											<FaChevronRight className='text-2xl' />
+										</button>
+									</li>
+								)}
+							</ul>
 						</div>
-						<div className='mt-4'>Total Products: {products.length}</div>
-						<ul className='flex gap-2'>
-							{currentPage > 1 && (
-								<li className=''>
-									<button
-										onClick={() => paginate(currentPage - 1)}
-										className='btn-outline px-2'
-									>
-										<FaChevronLeft size={25} />
-									</button>
-								</li>
-							)}
-
-							{pageNumbers.map((number) => (
-								<li
-									key={number}
-									//className={}
-								>
-									<button
-										onClick={() => paginate(number)}
-										className={` text-lg ${
-											number === currentPage
-												? 'btn px-4'
-												: 'btn-ghost py-2 px-4'
-										}`}
-									>
-										{number}
-									</button>
-								</li>
-							))}
-
-							{currentPage < pageNumbers.length && (
-								<li className=''>
-									<button
-										onClick={() => paginate(currentPage + 1)}
-										className='btn-outline px-2'
-									>
-										<FaChevronRight className='text-2xl' />
-									</button>
-								</li>
-							)}
-						</ul>
 					</div>
 				</div>
 			</div>
