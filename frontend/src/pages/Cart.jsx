@@ -115,8 +115,8 @@ const Cart = () => {
 	};
 
 	return (
-		<>
-			<div className='p-4 mt-[8rem] min-h-[60vh] lg:mt-[10rem]'>
+		<div className='p-4 mt-[8rem] min-h-[60vh] w-full flex flex-col justify-center items-center'>
+			<div className='flex flex-col w-full justify-center items-center max-w-[1400px]'>
 				<LoadingModal loading={loading} />
 				<div className='flex justify-center'>
 					<h1 className='text-2xl'>Shopping Cart</h1>
@@ -247,7 +247,7 @@ const Cart = () => {
 					</div>
 				</div>
 				{cartItemsCount > 0 && (
-					<div className='flex flex-col w-full items-center justify-center pr-2'>
+					<div className='flex flex-col w-full justify-center items-end max-w-[1000px] pr-2'>
 						<div className='flex w-full max-w-[1000px] items-center justify-end text-right'>
 							<div className='mt-2 flex flex-col'>
 								<p>Subtotal: ${cartSubTotal().toFixed(2)}</p>
@@ -266,38 +266,41 @@ const Cart = () => {
 										Total: ${cartTotal().toFixed(2)}
 									</p>
 								</div>
-								<div className='mt-4'>
-									<button
-										className={`btn py-3 w-full ${
-											stripeLoading && 'cursor-not-allowed'
-										}`}
-										onClick={preCheckout}
-										disabled={userRole() < 2 || stripeLoading}
-									>
-										{stripeLoading ? (
-											<span className='flex gap-2'>
-												<AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
-												Processing...
-											</span>
-										) : (
-											'Checkout'
-										)}
-									</button>
-									{userRole() < 2 && (
-										<h2 className='text-xl'>Checkout is disabled currently!</h2>
-									)}
-								</div>
 							</div>
 						</div>
-						<div className='flex w-full max-w-[1000px]'>
-							<p className='mt-4 w-full text-xs text-left'>
-								*Sales tax and shipping cost calculated at checkout
-							</p>
+
+						<div className='mt-4 w-full lg:w-[20%] flex flex-col items-end'>
+							<button
+								className={`btn py-3 w-full ${
+									stripeLoading && 'cursor-not-allowed'
+								}`}
+								onClick={preCheckout}
+								disabled={userRole() < 2 || stripeLoading}
+							>
+								{stripeLoading ? (
+									<span className='flex gap-2'>
+										<AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
+										Processing...
+									</span>
+								) : (
+									'Checkout'
+								)}
+							</button>
+							{userRole() < 2 && (
+								<h2 className='text-xl w-full text-center'>
+									Checkout is disabled currently!
+								</h2>
+							)}
+							<div className='flex justify-center w-full'>
+								<p className='mt-4 w-full text-xs text-left'>
+									*Sales tax and shipping cost calculated at checkout
+								</p>
+							</div>
 						</div>
 					</div>
 				)}
 			</div>
-		</>
+		</div>
 	);
 };
 

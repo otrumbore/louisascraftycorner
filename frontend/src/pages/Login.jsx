@@ -307,7 +307,7 @@ const Login = () => {
 							<button
 								type='submit'
 								className={`btn ${
-									loading ? 'px-2' : 'px-14'
+									loading ? 'px-7' : 'px-14'
 								}  py-2 w-full lg:w-auto mt-4`}
 								tabIndex={3}
 								disabled={loading}
@@ -315,7 +315,7 @@ const Login = () => {
 								{loading ? (
 									<span className='flex'>
 										<AiOutlineLoading3Quarters className='h-5 w-5 mr-2 animate-spin' />
-										Processing...
+										Logging In...
 									</span>
 								) : (
 									'Login'
