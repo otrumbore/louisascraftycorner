@@ -76,7 +76,7 @@ const OrderModal = ({ order, onClose }) => {
 						Order #{orderDetails.orderId} -{' '}
 						{orderDetails.status[order.status.length - 1].type.toUpperCase()}
 					</h4>
-					<div className='grid grid-cols-3'>
+					<div className='grid grid-cols-1 lg:grid-cols-2 gap-y-4'>
 						<div className='flex flex-col gap-2'>
 							<div>
 								<strong>Ship to Name:</strong>
@@ -132,12 +132,13 @@ const OrderModal = ({ order, onClose }) => {
 								</p>
 							</div>
 						</div>
-						<div className='flex flex-col items-end'>
+						<div className='flex flex-col'>
 							<strong>Items Purchased:</strong>
 							{order.items.map((item, i) => (
 								<p key={i}>
 									{i + 1 + ': '}
-									{item.storeId} - QTY: {item.quantity}
+									{(item.productName || 'N/A') + ' - ' + item.storeId} - QTY:{' '}
+									{item.quantity}
 								</p>
 							))}
 						</div>
