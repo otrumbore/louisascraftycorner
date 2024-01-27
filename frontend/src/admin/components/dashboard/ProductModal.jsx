@@ -8,6 +8,7 @@ import {
 } from 'react-icons/md';
 import { useSnackbar } from 'notistack';
 import { IoPricetagsOutline } from 'react-icons/io5';
+import { FaLocationArrow } from 'react-icons/fa';
 import { SiMonkeytype } from 'react-icons/si';
 import { updateProduct } from '../../../api/products.api';
 import { Link, useNavigate } from 'react-router-dom';
@@ -133,6 +134,10 @@ const ProductModal = ({ product, onClose }) => {
 							)}
 						</div>
 						<div className='flex justify-end items-center gap-x-2'>
+							<h2 className='my-1'>{product.storageLocation}</h2>
+							<FaLocationArrow className='text-xl text-primary' />
+						</div>
+						<div className='flex justify-start items-center gap-x-2'>
 							<strong>Scroll down for more</strong>
 						</div>
 					</div>
