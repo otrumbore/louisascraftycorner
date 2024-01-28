@@ -72,6 +72,7 @@ const CashOrderModal = ({ onClose }) => {
 				parseInt(quantity) > 0
 			) {
 				let pricePer = window.prompt(`Enter the price paid per item:`);
+				pricePer = pricePer.trim();
 				if (
 					pricePer !== null &&
 					!isNaN(pricePer) &&
@@ -125,11 +126,9 @@ const CashOrderModal = ({ onClose }) => {
 				prices: { total: newTotal },
 			};
 			const response = createOrder(data);
-			if (response.status === 200) {
-				enqueueSnackbar(`Cash order has been created!`, {
-					variant: 'success',
-				});
-			}
+			enqueueSnackbar(`Cash order has been created!`, {
+				variant: 'success',
+			});
 			console.log(response);
 			onClose();
 		} catch (err) {

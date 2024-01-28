@@ -44,6 +44,7 @@ const OrderModal = ({ order, onClose }) => {
 					variant: 'success',
 				}
 			);
+			onClose();
 		} catch (error) {
 			console.log(error);
 			enqueueSnackbar(`Could not update order. Try again!`, {

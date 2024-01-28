@@ -32,8 +32,7 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 	useEffect(() => {
 		setOrders(apiOrders);
 		filteredData();
-		//console.log(apiOrders);
-	}, [apiOrders]);
+	}, [fetchOrders, apiOrders]);
 
 	const openModal = (orderId) => {
 		setShowModal(orderId);
