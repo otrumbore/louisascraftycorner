@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 
 let imgURL = '';
 
+let CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_NAME;
+
 export const sendImageURL = () => {
 	return imgURL;
 };
@@ -15,13 +17,16 @@ const ImageUpload = () => {
 		cloudinaryRef.current = window.cloudinary;
 		widgetRef.current = cloudinaryRef.current.createUploadWidget(
 			{
-				cloudName: 'dedinrpix',
+				cloudName: CLOUD_NAME,
 				uploadPreset: 'product',
+				cropping: true,
+				sources: ['local'],
+				maxImageWidth: 1000,
+				theme: 'blue',
 			},
 			function (error, result) {
 				console.log('result: ', result);
-				// Handle the result or error here
-				//setImageURL(result);
+				error && console.log('error: ', error);
 				if (result.event === 'success') {
 					imgURL = result.info.secure_url;
 					setImageURL(imgURL);
