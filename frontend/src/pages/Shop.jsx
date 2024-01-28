@@ -48,7 +48,7 @@ const Shop = () => {
 						  product.type.toLowerCase().includes(searchText.toLowerCase()));
 
 				const matchesCollection =
-					!selectedCollection || product.collection === selectedCollection;
+					!selectedCollection || product.category === selectedCollection;
 
 				const matchesOnSale = onSaleOnly ? product.sale > 0 : true;
 
