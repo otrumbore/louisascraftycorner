@@ -69,6 +69,7 @@ const ordersSchema = mongoose.Schema(
 						'created',
 						'processing',
 						'paid',
+						'cash',
 						'crafting',
 						'shipped',
 						'delivered',

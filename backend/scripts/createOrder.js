@@ -3,32 +3,59 @@ import { Product } from '../models/productsModel.js';
 
 const createOrder = async (event) => {
 	try {
-		const { cartItems, userDetails } = event;
+		const { cartItems, userDetails, other, prices } = event;
 
 		const processedCartItems = cartItems.map((item) => ({
 			storeId: item.storeId,
 			productName: item.name,
 			price: item.price,
 			quantity: item.qty,
-			sale: item.sale,
+			sale: item.sale || 0,
 		}));
 
-		const { customerNotes, source } = {};
+		const { customerNotes, source } = other;
+		let cashTrans = {};
+		let shipName = '';
+		let isActive = false;
+
+		if (source === 'retail') {
+			cashTrans = { type: 'cash', timestamp: new Date() };
+			shipName = userDetails.name;
+			isActive = true;
+		}
+
+		// const newOrder = {
+		// 	userId: userDetails._id || '',
+		// 	email: userDetails.email || '',
+		// 	username: userDetails.username || '',
+		// 	items: processedCartItems,
+		// 	customerNotes: customerNotes || '',
+		// 	source: source || 'website',
+		// 	status: [{ type: 'created', timestamp: new Date() }, cashTrans],
+		// 	shipName: shipName || '',
+		// };
+
+		//console.log(newOrder);
 
 		const newOrder = await Order.create({
-			userId: userDetails._id,
-			email: userDetails.email,
-			username: userDetails.username,
+			userId: userDetails._id || '',
+			email: userDetails.email || '',
+			username: userDetails.username || '',
 			items: processedCartItems,
 			customerNotes: customerNotes || '',
 			source: source || 'website',
-			status: [{ type: 'created', timestamp: new Date() }],
+			status: [{ type: 'created', timestamp: new Date() }, cashTrans],
+			shipName: shipName || '',
+			active: isActive,
+			prices: prices,
 		});
 
 		updateInventory(processedCartItems);
 
-		// Access orderId directly from the newOrder object
+		// // Access orderId directly from the newOrder object
 		const orderId = newOrder.orderId;
+
+		console.log('success: ' + orderId);
 
 		return orderId;
 	} catch (error) {
@@ -69,12 +96,12 @@ const updateInventory = async (cartItems) => {
 					`Product Inventory could not be updated for storeId ${cartItem.storeId}!`
 				);
 				// You might want to handle this case depending on your application logic
-			} else {
-				console.log(
-					`Product Inventory updated for storeId ${cartItem.storeId}:`,
-					updatedProduct
-				);
-			}
+			} //else {
+			// 	console.log(
+			// 		`Product Inventory updated for storeId ${cartItem.storeId}:`,
+			// 		updatedProduct
+			// 	);
+			// }
 		}
 	} catch (error) {
 		console.log(error);

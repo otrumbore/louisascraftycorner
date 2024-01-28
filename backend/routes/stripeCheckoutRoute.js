@@ -68,6 +68,8 @@ router.post('/', async (req, res) => {
 	const data = {
 		cartItems: items,
 		userDetails: user,
+		other: { customerNotes: '', source: 'website' },
+		prices: {},
 	};
 
 	const orderId = await createOrder(data);

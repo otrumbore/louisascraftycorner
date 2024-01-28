@@ -74,127 +74,155 @@ const OrderModal = ({ order, onClose }) => {
 				<div className='mt-4 w-full p-4 rounded-md space-y-2'>
 					<h4 className='flex justify-center text-xl'>
 						Order #{orderDetails.orderId} -{' '}
-						{orderDetails.status[order.status.length - 1].type.toUpperCase()}
+						{orderDetails.status[
+							orderDetails.status.length - 1
+						].type.toUpperCase()}
 					</h4>
 					<div className='grid grid-cols-1 lg:grid-cols-2 gap-y-4'>
 						<div className='flex flex-col gap-2'>
-							<div>
-								<strong>Ship to Name:</strong>
-								<p>{order.shipName}</p>
-							</div>
-							<div>
-								<strong>Shipping Address:</strong>
-								<p>{order.shipAdd.line1}</p>
-								<p>{order.shipAdd.line2}</p>
-								<p>
-									{order.shipAdd.city}, {order.shipAdd.state}{' '}
-									{order.shipAdd.postal_code}
-								</p>
-							</div>
+							{order.shipName && (
+								<div>
+									<strong>Ship to Name:</strong>
+									<p>{order.shipName}</p>
+								</div>
+							)}
+							{order.shipAdd && order.shipAdd.line1 && (
+								<div>
+									<strong>Shipping Address:</strong>
+									<p>{order.shipAdd.line1}</p>
+									<p>{order.shipAdd.line2}</p>
+									<p>
+										{order.shipAdd.city}, {order.shipAdd.state}{' '}
+										{order.shipAdd.postal_code}
+									</p>
+								</div>
+							)}
 						</div>
 						<div className='flex justify-center'>
 							<div>
 								<strong>Prices:</strong>
 								<p>
 									Subtotal:{' '}
-									{(order.prices.subtotal / 100).toLocaleString('en-US', {
-										style: 'currency',
-										currency: 'USD',
-									})}
+									{order.prices.subtotal !== undefined
+										? (order.prices.subtotal / 100).toLocaleString('en-US', {
+												style: 'currency',
+												currency: 'USD',
+										  })
+										: 'N/A'}
 								</p>
 								<p>
 									Discounts:{' '}
-									{(order.prices.discounts / 100).toLocaleString('en-US', {
-										style: 'currency',
-										currency: 'USD',
-									})}
+									{order.prices.discounts !== undefined
+										? (order.prices.discounts / 100).toLocaleString('en-US', {
+												style: 'currency',
+												currency: 'USD',
+										  })
+										: 'N/A'}
 								</p>
 								<p>
 									Shipping:{' '}
-									{(order.prices.shipping / 100).toLocaleString('en-US', {
-										style: 'currency',
-										currency: 'USD',
-									})}
+									{order.prices.shipping !== undefined
+										? (order.prices.shipping / 100).toLocaleString('en-US', {
+												style: 'currency',
+												currency: 'USD',
+										  })
+										: 'N/A'}
 								</p>
 								<p>
 									Tax:{' '}
-									{(order.prices.tax / 100).toLocaleString('en-US', {
-										style: 'currency',
-										currency: 'USD',
-									})}
+									{order.prices.tax !== undefined
+										? (order.prices.tax / 100).toLocaleString('en-US', {
+												style: 'currency',
+												currency: 'USD',
+										  })
+										: 'N/A'}
 								</p>
 								<p>
 									<strong>Total: </strong>
-									{(order.prices.total / 100).toLocaleString('en-US', {
-										style: 'currency',
-										currency: 'USD',
-									})}
+									{order.prices.total !== undefined
+										? (order.prices.total / 100).toLocaleString('en-US', {
+												style: 'currency',
+												currency: 'USD',
+										  })
+										: 'N/A'}
 								</p>
 							</div>
 						</div>
 						<div className='flex flex-col'>
 							<strong>Items Purchased:</strong>
-							{order.items.map((item, i) => (
-								<p key={i}>
-									{i + 1 + ': '}
-									{(item.productName || 'N/A') + ' - ' + item.storeId} - QTY:{' '}
-									{item.quantity}
-								</p>
-							))}
+							{order.items &&
+								order.items.map((item, i) => (
+									<p key={i}>
+										{i + 1 + ': '}
+										{(item.productName || 'N/A') + ' - ' + item.storeId} - QTY:{' '}
+										{item.quantity}
+									</p>
+								))}
 						</div>
 					</div>
 					<div>
-						<p>
-							<strong>Shipping Carrier:</strong> {order.shipping.carrier}
-						</p>
-						<p>
-							<strong>Tracking # </strong>
-							{order.shipping.tracking ? (
-								<a
-									className='underline text-primary'
-									target={'_blank'}
-									href={`https://tools.usps.com/go/TrackConfirmAction?tRef=fullpage&tLc=2&text28777=&tLabels=${order.shipping.tracking}`}
-								>
-									{order.shipping.tracking}
-								</a>
-							) : (
-								'N/A'
-							)}
-						</p>
+						{order.shipping && (
+							<>
+								<p>
+									<strong>Shipping Carrier:</strong> {order.shipping.carrier}
+								</p>
+								<p>
+									<strong>Tracking # </strong>
+									{order.shipping.tracking ? (
+										<a
+											className='underline text-primary'
+											target={'_blank'}
+											href={`https://tools.usps.com/go/TrackConfirmAction?tRef=fullpage&tLc=2&text28777=&tLabels=${order.shipping.tracking}`}
+										>
+											{order.shipping.tracking}
+										</a>
+									) : (
+										'N/A'
+									)}
+								</p>
+							</>
+						)}
 					</div>
 					<div>
 						<strong>Customer Notes:</strong>
 						<p>{order.customerNotes || 'None'}</p>
 					</div>
 					<div className='flex gap-2 justify-end'>
-						{!orderDetails.status.some(
-							(status) => status.type === 'crafting'
-						) ? (
-							<button
-								className='btn'
-								onClick={() => sendStatusUpdate('crafting')}
-							>
-								Crafting?
-							</button>
-						) : !orderDetails.status.some(
+						{!orderDetails.status.some((status) => status.type === 'cash') &&
+							!orderDetails.status.some(
+								(status) => status.type === 'crafting'
+							) && (
+								<button
+									className='btn'
+									onClick={() => sendStatusUpdate('crafting')}
+								>
+									Crafting?
+								</button>
+							)}
+
+						{!orderDetails.status.some((status) => status.type === 'cash') &&
+							!orderDetails.status.some(
 								(status) => status.type === 'shipped'
-						  ) ? (
-							<button
-								className='btn'
-								onClick={() => showShippingTrackingInput()}
-							>
-								Shipped?
-							</button>
-						) : !orderDetails.status.some(
+							) && (
+								<button
+									className='btn'
+									onClick={() => showShippingTrackingInput()}
+								>
+									Shipped?
+								</button>
+							)}
+
+						{!orderDetails.status.some((status) => status.type === 'cash') &&
+							!orderDetails.status.some(
 								(status) => status.type === 'delivered'
-						  ) ? (
-							<button
-								className='btn'
-								onClick={() => sendStatusUpdate('delivered')}
-							>
-								Delivered?
-							</button>
-						) : null}
+							) && (
+								<button
+									className='btn'
+									onClick={() => sendStatusUpdate('delivered')}
+								>
+									Delivered?
+								</button>
+							)}
 					</div>
 				</div>
 			</div>

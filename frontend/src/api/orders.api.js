@@ -19,18 +19,25 @@ export const getAllOrders = async () => {
 	}
 };
 
-//user get orders
-export const getOrders = async (userId) => {
+// user get orders
+export const getOrders = async (userId, email) => {
 	try {
 		const token = Cookies.get('token');
-		const response = await axios.get(`${API_URL}/api/orders/${userId}`, {
+		let url = `${API_URL}/api/orders/${userId}`;
+
+		if (email) {
+			url += `?email=${email}`;
+		}
+
+		const response = await axios.get(url, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
 		});
+
 		return response.data.data;
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		return [];
 	}
 };
@@ -47,7 +54,12 @@ export const getOrder = async (id) => {
 
 export const createOrder = async (data) => {
 	try {
-		const response = await axios.post(`${API_URL}/api/orders/`, data);
+		const token = Cookies.get('token');
+		const response = await axios.post(`${API_URL}/api/orders/`, data, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
 		return response;
 	} catch (error) {
 		console.error(error);

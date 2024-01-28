@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { getAllOrders, updateOrder } from '../../../api/orders.api';
+import { BsCashCoin } from 'react-icons/bs';
 import { MdRefresh, MdOutlineCancel } from 'react-icons/md';
 import LoadingModal from '../../../components/LoadingModal';
 import OrderModal from './OrderModal';
+import CashOrderModal from './CashOrderModal';
 
 const Orders = ({ apiOrders, fetchOrders }) => {
 	const [orders, setOrders] = useState(apiOrders);
 	const [loading, setLoading] = useState(false);
 	const [showModal, setShowModal] = useState('');
+	const [showCashModal, setShowCashModal] = useState(false);
 	const [boxOneOrders, setBoxOneOrders] = useState('unfulfilled');
 	const [boxOneOrdersMap, setBoxOneOrdersMap] = useState([]);
 	const [boxTwoOrders, setBoxTwoOrders] = useState('shipped');
@@ -30,13 +32,19 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 	useEffect(() => {
 		setOrders(apiOrders);
 		filteredData();
+		//console.log(apiOrders);
 	}, [apiOrders]);
 
 	const openModal = (orderId) => {
 		setShowModal(orderId);
 	};
 
+	const openCashRegister = () => {
+		setShowCashModal(true);
+	};
+
 	const closeModal = () => {
+		setShowCashModal(false);
 		setShowModal('');
 		fetchOrders();
 	};
@@ -143,7 +151,14 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 				className='hidden absolute -left-1 top-16 lg:flex gap-4 w-fit py-2 px-3 -ml-[6.7rem] text-white bg-secondary hover:left-[4.5rem] z-20 transform duration-500 rounded-r-md cursor-pointer'
 				onClick={fetchOrders}
 			>
-				Refresh <MdRefresh size={25} />
+				Refresh <MdRefresh className='text-[1.75rem]' />
+			</div>
+			<div
+				className='hidden absolute -left-8 top-28 lg:flex gap-5 w-fit py-2 px-3 -ml-[6.7rem] text-white bg-green-600 hover:left-[4.5rem] z-20 transform duration-500 rounded-r-md cursor-pointer'
+				onClick={openCashRegister}
+			>
+				Cash Order
+				<BsCashCoin className='text-2xl' />
 			</div>
 
 			{/* PAID / CRAFTING / BOTH */}
@@ -370,13 +385,13 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 													: order.status[order.status.length - 1].type ===
 													  'delivered'
 													? 'bg-gray-200'
-													: null
+													: 'bg-gray-200'
 											}`}
 										>
 											<td className='py-2 pl-1'>
 												<div className='flex flex-col'>
 													<div>{order.orderId}</div>
-													<div>{order.email}</div>
+													<div>{order.email || 'N/A'}</div>
 												</div>
 											</td>
 											<td className='text-center'>
@@ -401,7 +416,10 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 											</td>
 											<td className='text-center'>
 												<div className='py-2'>
-													{order.shipping.tracking || 'N/A'}
+													{order.shipping &&
+													order.shipping.tracking !== undefined
+														? order.shipping.tracking
+														: 'N/A'}
 												</div>
 											</td>
 											<td className='py-2 pr-1'>
@@ -429,6 +447,7 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 				</div>
 			</div>
 			{showModal && <OrderModal order={showModal} onClose={closeModal} />}
+			{showCashModal && <CashOrderModal onClose={closeModal} />}
 		</div>
 	);
 };

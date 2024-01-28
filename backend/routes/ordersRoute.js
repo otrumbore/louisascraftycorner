@@ -1,11 +1,18 @@
 import express from 'express';
 import { Order } from '../models/ordersModel.js';
 import verifyToken from '../middleware/tokenChecks.js';
+import createOrder from '../scripts/createOrder.js';
 
 const router = express.Router();
 
-router.post('/', async (request, response) => {
-	//createOrder()
+router.post('/', verifyToken, async (request, response) => {
+	if (request.user.role !== 'admin' && request.user.role !== 'moderator') {
+		return response.status(401).json({ message: 'Unauthorized' });
+	}
+	const data = request.body;
+	console.log(data);
+	const orderId = createOrder(data);
+	response.status(200).json({ orderId: orderId });
 });
 
 // Get all orders
@@ -32,17 +39,35 @@ router.get('/', verifyToken, async (request, response) => {
 router.get('/:userId', verifyToken, async (request, response) => {
 	try {
 		const { userId } = request.params;
-		let orders = '';
+		const { email } = request.query;
 
-		if (userId === request.user.userId) {
-			orders = await Order.find({ userId: userId });
-		} else {
+		if (userId !== request.user.userId) {
 			return response.status(401).json({ message: 'Unauthorized' });
 		}
 
+		let orders;
+
+		if (email) {
+			// Retrieve orders based on userId and email
+			orders = await Order.find({
+				$or: [{ userId: userId, email: email }, { email: email }],
+			});
+		} else {
+			// Retrieve orders based on userId only
+			orders = await Order.find({ userId: userId });
+		}
+
+		// Remove duplicate orderIds using distinct
+		const uniqueOrderIds = await Order.distinct('orderId', {
+			_id: { $in: orders.map((order) => order._id) },
+		});
+
+		// Retrieve unique orders based on unique orderIds
+		const uniqueOrders = await Order.find({ orderId: { $in: uniqueOrderIds } });
+
 		return response.status(200).json({
-			count: orders.length,
-			data: orders,
+			count: uniqueOrders.length,
+			data: uniqueOrders,
 		});
 	} catch (error) {
 		console.error(error.message);

@@ -103,25 +103,29 @@ const AdminDashboard = () => {
 				(order) => !order.status.some((status) => status.type === 'shipped')
 			);
 
+		const retailOrders = orders.filter((order) => order.source === 'retail');
+
 		const totalRevenue = lastMonthOrders.reduce(
 			(total, order) => total + order.prices.total,
 			0
 		);
 
-		const netRevenue = lastMonthOrders.reduce(
-			(total, order) => total + order.prices.total,
-			0
-		);
+		// const netRevenue = lastMonthOrders.reduce(
+		// 	(total, order) => total + order.prices.total,
+		// 	0
+		// );
 
-		const profits = lastMonthOrders.reduce(
-			(total, order) => total + order.prices.total,
-			0
-		);
+		// const profits = lastMonthOrders.reduce(
+		// 	(total, order) => total + order.prices.total,
+		// 	0
+		// );
 
 		const paidOrdersCount = paidOrders.length;
 
-		const thisMonthSales = lastMonthOrders.filter((order) =>
-			order.status.some((status) => status.type.includes('paid'))
+		const thisMonthSales = lastMonthOrders.filter(
+			(order) =>
+				order.status.some((status) => status.type.includes('paid')) ||
+				order.status.some((status) => status.type.includes('cash'))
 		).length;
 
 		setRevenue(totalRevenue);

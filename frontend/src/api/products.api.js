@@ -53,4 +53,20 @@ export const updateProduct = async (id, data) => {
 	}
 };
 
+export const getProductStoreIds = async () => {
+	try {
+		const response = await axios.get(`${API_URL}/api/products`);
+
+		const data = response.data.data.map((product) => ({
+			name: product.name,
+			storeId: product.storeId,
+		}));
+
+		return data;
+	} catch (error) {
+		console.log(error);
+		return [];
+	}
+};
+
 export default getProducts;

@@ -19,7 +19,7 @@ const Orders = () => {
 			if (!userDetails._id) {
 				return;
 			}
-			const fetchedOrders = await getOrders(userDetails._id);
+			const fetchedOrders = await getOrders(userDetails._id, userDetails.email);
 
 			const sortedOrders = fetchedOrders.sort(
 				(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -29,7 +29,7 @@ const Orders = () => {
 				(order) => order.active === true
 			);
 
-			//console.log(fetchedOrders.status[1].type);
+			console.log(fetchedOrders);
 			setOrders(filteredOrders);
 		} catch (error) {
 			console.log(error);
@@ -110,20 +110,22 @@ const Orders = () => {
 									<div className='flex flex-wrap w-full items-center justify-between'>
 										<p>
 											Date:{' '}
-											{new Date(item.createdAt).toLocaleString('en-US', {
-												year: 'numeric',
-												month: 'numeric',
-												day: 'numeric',
-												hour: 'numeric',
-												minute: 'numeric',
-												hour12: true,
-											})}
+											{item.createdAt
+												? new Date(item.createdAt).toLocaleString('en-US', {
+														year: 'numeric',
+														month: 'numeric',
+														day: 'numeric',
+														hour: 'numeric',
+														minute: 'numeric',
+														hour12: true,
+												  })
+												: ''}
 										</p>
 										<p>
 											Items:{' '}
 											{item.items.reduce((acc, curr) => acc + curr.quantity, 0)}
 										</p>
-										{item.shipping.tracking ? (
+										{item.shipping && item.shipping.tracking ? (
 											<a
 												target='_blank'
 												href={`https://tools.usps.com/go/TrackConfirmAction?tRef=fullpage&tLc=2&text28777=&tLabels=${item.shipping.tracking}`}
@@ -138,7 +140,7 @@ const Orders = () => {
 									</div>
 									<div className='flex flex-wrap w-full items-center justify-between'>
 										<p>Order# {item.orderId}</p>
-										<p>Total: ${(item.prices.total / 100).toFixed(2)}</p>
+										<p>Total: ${(item.prices.total / 100 || 0).toFixed(2)}</p>
 										<button
 											className='cursor-pointer'
 											onClick={() => {
