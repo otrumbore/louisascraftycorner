@@ -1,17 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 
-let imgURL = '';
+const [imageURL, setImageURL] = useState('');
 
 let CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_NAME;
 
 export const sendImageURL = () => {
-	return imgURL;
+	return imageURL;
 };
 
 const ImageUpload = () => {
 	const cloudinaryRef = useRef();
-	const widgetRef = useRef();
-	const [imageURL, setImageURL] = useState('');
+	const widgetRef = useRef(); //	const [imageURL, setImageURL] = useState('');
 
 	useEffect(() => {
 		cloudinaryRef.current = window.cloudinary;
@@ -28,8 +27,7 @@ const ImageUpload = () => {
 				console.log('result: ', result);
 				error && console.log('error: ', error);
 				if (result.event === 'success') {
-					imgURL = result.info.secure_url;
-					setImageURL(imgURL);
+					setImageURL(result.info.secure_url);
 					//console.log('image url: ', result.info.secure_url); //info.secure_url
 				}
 			}
