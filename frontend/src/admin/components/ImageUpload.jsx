@@ -13,6 +13,7 @@ const ImageUpload = () => {
 	const widgetRef = useRef(); //	const [imageURL, setImageURL] = useState('');
 
 	useEffect(() => {
+		setImageURL('');
 		cloudinaryRef.current = window.cloudinary;
 		widgetRef.current = cloudinaryRef.current.createUploadWidget(
 			{
