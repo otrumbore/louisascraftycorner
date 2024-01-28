@@ -3,11 +3,13 @@ import { useUser } from '../../context/UserContext';
 import { updateUser } from '../../api/admin/users.api';
 import LoadingModal from '../../components/LoadingModal';
 import { useSnackbar } from 'notistack';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const Settings = () => {
 	const { userDetails, addUserDetails } = useUser();
 	const [loading, setLoading] = useState(false);
 	const { enqueueSnackbar } = useSnackbar();
+	const [saveDisable, setSaveDisable] = useState(true);
 
 	const [formData, setFormData] = useState({
 		name: '',
@@ -68,6 +70,7 @@ const Settings = () => {
 				[name]: value,
 			},
 		});
+		setSaveDisable(false);
 	};
 
 	const sendUserUpdate = async () => {
@@ -82,6 +85,7 @@ const Settings = () => {
 			enqueueSnackbar('Information has been updated!', {
 				variant: 'success',
 			});
+			setSaveDisable(true);
 		} catch (error) {
 			console.error(error);
 			setUpdateError('Error updating user details. Please try again.');
@@ -98,7 +102,7 @@ const Settings = () => {
 
 	return (
 		<div className='w-full'>
-			<LoadingModal loading={loading} />
+			{/* <LoadingModal loading={loading} /> */}
 			<div className='flex w-full justify-center items-center'>
 				<h3 className='text-2xl lg:text-3xl mb-6'>Profile Settings</h3>
 			</div>
@@ -249,10 +253,19 @@ const Settings = () => {
 							<div className='flex justify-end'>
 								<button
 									type='submit'
-									className={` mt-1 px-10 py-3 w-full lg:w-auto btn`}
-									//disabled={!agreeTerms}
+									className={` mt-1 px-10 py-3 w-full lg:w-auto btn disabled:opacity-50 disabled:cursor-progress`}
+									disabled={saveDisable || loading}
 								>
-									Save Changes
+									{loading ? (
+										<span className='flex'>
+											<AiOutlineLoading3Quarters className='h-5 w-5 mr-2 animate-spin' />
+											Saving Changes...
+										</span>
+									) : saveDisable ? (
+										'No Changes Made'
+									) : (
+										'Save Changes'
+									)}
 								</button>
 							</div>
 						</div>
