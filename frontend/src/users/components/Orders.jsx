@@ -59,102 +59,125 @@ const Orders = () => {
 			{viewOrder.length === 0 ? (
 				<div className='w-full'>
 					<div className='flex w-full justify-center'>
-						<h3 className='text-2xl lg:text-3xl'>Your Purchases</h3>
+						<h3 className='text-2xl lg:text-3xl font-semibold'>
+							Purchase History
+						</h3>
 					</div>
-					{orders.length <= 0 && !loading ? (
+					{orders.length === 0 && !loading ? (
 						<div className='flex w-full items-center justify-center mt-4'>
-							<h5 className='text-lg'>HMMM...No purchases yet 😔</h5>
+							<h5 className='text-xl '>No purchases yet 😔</h5>
 						</div>
 					) : (
-						<div className='mt-8 grid grid-cols-1 lg:grid-cols-2 w-full gap-4'>
-							{orders.map((item, i) => (
-								<div
-									key={i}
-									className='border-2 border-primary p-4 rounded-md space-y-4'
-								>
-									<div className='flex flex-wrap items-center justify-center'>
-										<div className='flex gap-2'>
-											Status:{' '}
-											<p
-												className={`${
-													item.status.length > 0
-														? item.status[item.status.length - 1].type ===
-																'shipped' ||
-														  item.status[item.status.length - 1].type ===
-																'paid' ||
-														  item.status[item.status.length - 1].type ===
-																'delivered'
-															? 'text-green-600'
-															: item.status[item.status.length - 1].type ===
-																	'crafting' ||
-															  item.status[item.status.length - 1].type ===
-																	'created' ||
-															  item.status[item.status.length - 1].type ===
-																	'processing'
-															? 'text-orange-400'
-															: item.status[item.status.length - 1].type ===
-															  'payment_failed'
-															? 'text-red-600'
-															: ''
-														: ''
-												}`}
-											>
-												{item.status.length > 0
-													? item.status[
-															item.status.length - 1
-													  ].type.toUpperCase()
-													: 'No Status'}
-											</p>
-										</div>
-									</div>
-									<div className='flex flex-wrap w-full items-center justify-between'>
-										<p>
-											Date:{' '}
-											{item.createdAt
-												? new Date(item.createdAt).toLocaleString('en-US', {
-														year: 'numeric',
-														month: 'numeric',
-														day: 'numeric',
-														hour: 'numeric',
-														minute: 'numeric',
-														hour12: true,
-												  })
-												: ''}
-										</p>
-										<p>
-											Items:{' '}
-											{item.items.reduce((acc, curr) => acc + curr.quantity, 0)}
-										</p>
-										{item.shipping && item.shipping.tracking ? (
-											<a
-												target='_blank'
-												href={`https://tools.usps.com/go/TrackConfirmAction?tRef=fullpage&tLc=2&text28777=&tLabels=${item.shipping.tracking}`}
-												className='flex space-x-2 items-center justify-center text-gray-600'
-											>
-												<span className='hidden lg:block'>Track</span>
-												<MdOutlineLocalShipping size={30} />
-											</a>
-										) : (
-											'Not Shipped'
-										)}
-									</div>
-									<div className='flex flex-wrap w-full items-center justify-between'>
-										<p>Order# {item.orderId}</p>
-										<p>Total: ${(item.prices.total / 100 || 0).toFixed(2)}</p>
-										<button
-											className='cursor-pointer'
-											onClick={() => {
-												setViewOrder(item);
-											}}
-										>
-											<p className='flex space-x-2 items-center justify-center text-gray-600'>
-												<span className='hidden lg:block'>View</span>
-												<GrOverview size={30} />
-											</p>
-										</button>
-									</div>
+						<div className='w-full'>
+							<div className='max-w-full mt-8 w-full'>
+								<div className='border-4 border-primary rounded-md w-full'>
+									<table className='min-w-full bg-slate-100'>
+										<thead>
+											<tr>
+												<th className='py-2 px-4 border-b text-left'>
+													Order #
+												</th>
+												<th className='py-2 px-4 border-b'>Date</th>
+												<th className='py-2 px-4 border-b max-lg:hidden'>
+													Items
+												</th>
+												<th className='py-2 px-4 border-b max-lg:hidden'>
+													Total
+												</th>
+												<th className='py-2 px-4 border-b max-lg:hidden'>
+													Status
+												</th>
+												<th className='py-2 px-4 border-b'>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											{orders.map((row) => (
+												<tr
+													key={row.orderId}
+													className='border-b-2 border-slate-400 text-left'
+												>
+													<td className='py-2 px-4 border-b'>{row.orderId}</td>
+													<td className='py-2 px-4 border-b'>
+														{row.createdAt
+															? new Date(row.createdAt).toLocaleString(
+																	'en-US',
+																	{
+																		year: 'numeric',
+																		month: 'numeric',
+																		day: 'numeric',
+																		// hour: 'numeric',
+																		// minute: 'numeric',
+																		// hour12: true,
+																	}
+															  )
+															: ''}
+													</td>
+													<td className='py-2 px-4 border-b max-lg:hidden'>
+														{row.items.length}
+													</td>
+
+													<td className='py-2 px-4 border-b max-lg:hidden'>
+														${parseFloat(row.prices.total / 100).toFixed(2)}
+													</td>
+													<td className='py-2 px-4 border-b max-lg:hidden'>
+														<p
+															className={`${
+																row.status.length > 0
+																	? row.status[row.status.length - 1].type ===
+																			'shipped' ||
+																	  row.status[row.status.length - 1].type ===
+																			'paid' ||
+																	  row.status[row.status.length - 1].type ===
+																			'delivered'
+																		? 'text-green-600'
+																		: row.status[row.status.length - 1].type ===
+																				'crafting' ||
+																		  row.status[row.status.length - 1].type ===
+																				'created' ||
+																		  row.status[row.status.length - 1].type ===
+																				'processing'
+																		? 'text-orange-400'
+																		: row.status[row.status.length - 1].type ===
+																		  'payment_failed'
+																		? 'text-red-600'
+																		: ''
+																	: ''
+															}`}
+														>
+															{row.status.length > 0
+																? row.status[
+																		row.status.length - 1
+																  ].type.toUpperCase()
+																: 'No Status'}
+														</p>
+													</td>
+													<td className='py-2 px-4 flex items-center justify-end border-b space-x-4'>
+														{row.shipping && row.shipping.tracking ? (
+															<a
+																target='_blank'
+																href={`https://tools.usps.com/go/TrackConfirmAction?tRef=fullpage&tLc=2&text28777=&tLabels=${row.shipping.tracking}`}
+																className='btn-outline text-gray-600 py-2 w-fit px-3'
+															>
+																<span className='hidden lg:block'>Track</span>
+																<MdOutlineLocalShipping size={30} />
+															</a>
+														) : (
+															<p>Not Shipped</p>
+														)}
+														<button
+															className='btn py-2 w-fit px-3'
+															onClick={() => setViewOrder(row)}
+														>
+															<span className='hidden lg:block'>View</span>
+															<GrOverview size={30} />
+														</button>
+													</td>
+												</tr>
+											))}
+										</tbody>
+									</table>
 								</div>
-							))}
+							</div>
 						</div>
 					)}
 				</div>
