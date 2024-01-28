@@ -29,7 +29,7 @@ const Orders = () => {
 				(order) => order.active === true
 			);
 
-			console.log(fetchedOrders);
+			//console.log(fetchedOrders);
 			setOrders(filteredOrders);
 		} catch (error) {
 			console.log(error);
