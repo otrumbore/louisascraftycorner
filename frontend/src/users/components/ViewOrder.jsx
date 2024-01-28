@@ -20,7 +20,7 @@ const ViewOrder = ({ order, setViewOrder }) => {
 				<FaArrowLeft size={30} />
 				<span className='hidden lg:block'>Back</span>
 			</div>
-			<div className='w-full flex justify-center mb-4'>
+			<div className='mt-8 w-full flex justify-center mb-4'>
 				<h3 className='text-2xl'>
 					Order #{order.orderId} -{' '}
 					{order.status.length > 0
@@ -28,7 +28,7 @@ const ViewOrder = ({ order, setViewOrder }) => {
 						: 'No Status'}
 				</h3>
 			</div>
-			{order.shipping.tracking ? (
+			{order.shipping && order.shipping.tracking ? (
 				<div className='w-full flex gap-2 justify-center'>
 					<p>Tracking Number:</p>
 					<a
@@ -63,19 +63,21 @@ const ViewOrder = ({ order, setViewOrder }) => {
 							})}
 						</div>
 					</div>
-					<div className='lg:text-right'>
-						<strong>Ship To: </strong>
-						<p>{order.shipName}</p>
-						<p>{order.shipAdd.line1}</p>
-						<p>{order.shipAdd.line2 || ''}</p>
-						<p className='flex lg:justify-end'>
-							{order.shipAdd.city +
-								', ' +
-								order.shipAdd.state +
-								' ' +
-								order.shipAdd.postal_code}
-						</p>
-					</div>
+					{order.shipAdd && order.shipAdd.line1 && (
+						<div className='lg:text-right'>
+							<strong>Ship To: </strong>
+							<p>{order.shipName}</p>
+							<p>{order.shipAdd.line1}</p>
+							<p>{order.shipAdd.line2 || ''}</p>
+							<p className='flex lg:justify-end'>
+								{order.shipAdd.city +
+									', ' +
+									order.shipAdd.state +
+									' ' +
+									order.shipAdd.postal_code}
+							</p>
+						</div>
+					)}
 				</div>
 
 				<table className='w-full mb-8 overflow-x-auto'>
@@ -83,9 +85,9 @@ const ViewOrder = ({ order, setViewOrder }) => {
 						<tr>
 							<th className='text-left'>Product</th>
 							<th className='text-left'>Quantity</th>
-							<th className='text-left'>Price</th>
-							<th className='text-left'>Sale</th>
-							<th className='text-left'>Total</th>
+							<th className='text-left max-lg:hidden'>Price</th>
+							<th className='text-left max-lg:hidden'>Sale</th>
+							<th className='text-right'>Total</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -93,9 +95,11 @@ const ViewOrder = ({ order, setViewOrder }) => {
 							<tr key={order.storeId}>
 								<td>{item.productName || 'N/A'}</td>
 								<td>{item.quantity}</td>
-								<td>${item.price.toFixed(2)}</td>
-								<td>${item.sale.toFixed(2) || 'No Sale'}</td>
-								<td>
+								<td className='max-lg:hidden'>${item.price.toFixed(2)}</td>
+								<td className='max-lg:hidden'>
+									${item.sale.toFixed(2) || 'No Sale'}
+								</td>
+								<td className='text-right'>
 									$
 									{(
 										item.quantity * (item.sale ? item.sale : item.price)
@@ -110,25 +114,34 @@ const ViewOrder = ({ order, setViewOrder }) => {
 					<div className='flex justify-between'>
 						<span className='font-semibold'>Discounts:</span>
 						<span className='text-xl'>
-							${(order.prices.discounts / 100).toFixed(2)}
+							$
+							{order.prices.discounts
+								? (order.prices.discounts / 100).toFixed(2)
+								: '0.00'}
 						</span>
 					</div>
 					<div className='flex justify-between'>
 						<span className='font-semibold'>Subtotal:</span>
 						<span className='text-xl'>
-							${(order.prices.subtotal / 100).toFixed(2)}
+							$
+							{order.prices.subtotal
+								? (order.prices.subtotal / 100).toFixed(2)
+								: '0.00'}
 						</span>
 					</div>
 					<div className='flex justify-between'>
 						<span className='font-semibold'>Shipping:</span>
 						<span className='text-xl'>
-							${(order.prices.shipping / 100).toFixed(2)}
+							$
+							{order.prices.shipping
+								? (order.prices.shipping / 100).toFixed(2)
+								: '0.00'}
 						</span>
 					</div>
 					<div className='flex justify-between'>
 						<span className='font-semibold'>Tax:</span>
 						<span className='text-xl'>
-							${(order.prices.tax / 100).toFixed(2)}
+							${order.prices.tax ? (order.prices.tax / 100).toFixed(2) : '0.00'}
 						</span>
 					</div>
 

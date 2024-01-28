@@ -73,31 +73,20 @@ const Orders = () => {
 								<div className='border-4 border-primary rounded-md w-full'>
 									<table className='min-w-full bg-slate-100'>
 										<thead>
-											<tr>
-												<th className='py-2 px-4 border-b text-left'>
-													Order #
-												</th>
-												<th className='py-2 px-4 border-b'>Date</th>
-												<th className='py-2 px-4 border-b max-lg:hidden'>
-													Items
-												</th>
-												<th className='py-2 px-4 border-b max-lg:hidden'>
-													Total
-												</th>
-												<th className='py-2 px-4 border-b max-lg:hidden'>
-													Status
-												</th>
-												<th className='py-2 px-4 border-b'>Actions</th>
+											<tr className='border-b-4'>
+												<th className='py-2 px-4 text-left'>Order #</th>
+												<th className='py-2 px-4 '>Date</th>
+												<th className='py-2 px-4 max-lg:hidden'>Items</th>
+												<th className='py-2 px-4 max-lg:hidden'>Total</th>
+												<th className='py-2 px-4 max-lg:hidden'>Status</th>
+												<th className='py-2 px-4 text-right'></th>
 											</tr>
 										</thead>
-										<tbody>
+										<tbody className='table-auto'>
 											{orders.map((row) => (
-												<tr
-													key={row.orderId}
-													className='border-b-2 border-slate-400 text-left'
-												>
-													<td className='py-2 px-4 border-b'>{row.orderId}</td>
-													<td className='py-2 px-4 border-b'>
+												<tr key={row.orderId} className='border-b-2'>
+													<td className='py-2 px-4 text-left'>{row.orderId}</td>
+													<td className='py-2 px-4 text-center'>
 														{row.createdAt
 															? new Date(row.createdAt).toLocaleString(
 																	'en-US',
@@ -112,14 +101,14 @@ const Orders = () => {
 															  )
 															: ''}
 													</td>
-													<td className='py-2 px-4 border-b max-lg:hidden'>
+													<td className='py-2 px-4 text-center max-lg:hidden'>
 														{row.items.length}
 													</td>
 
-													<td className='py-2 px-4 border-b max-lg:hidden'>
+													<td className='py-2 px-4 text-center max-lg:hidden'>
 														${parseFloat(row.prices.total / 100).toFixed(2)}
 													</td>
-													<td className='py-2 px-4 border-b max-lg:hidden'>
+													<td className='py-2 px-4 text-center max-lg:hidden'>
 														<p
 															className={`${
 																row.status.length > 0
