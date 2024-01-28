@@ -47,6 +47,7 @@ const Orders = () => {
 	// 	'created',
 	// 	'processing',
 	// 	'paid',
+	//  'cash'
 	// 	'crafting',
 	// 	'shipped',
 	// 	'delivered',
@@ -115,9 +116,7 @@ const Orders = () => {
 																	? row.status[row.status.length - 1].type ===
 																			'shipped' ||
 																	  row.status[row.status.length - 1].type ===
-																			'paid' ||
-																	  row.status[row.status.length - 1].type ===
-																			'delivered'
+																			'paid'
 																		? 'text-green-600'
 																		: row.status[row.status.length - 1].type ===
 																				'crafting' ||
@@ -129,7 +128,7 @@ const Orders = () => {
 																		: row.status[row.status.length - 1].type ===
 																		  'payment_failed'
 																		? 'text-red-600'
-																		: ''
+																		: 'text-primary'
 																	: ''
 															}`}
 														>
