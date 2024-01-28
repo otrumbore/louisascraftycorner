@@ -122,11 +122,14 @@ const AdminDashboard = () => {
 
 		const paidOrdersCount = paidOrders.length;
 
-		const thisMonthSales = lastMonthOrders.filter(
-			(order) =>
-				order.status.some((status) => status.type.includes('paid')) ||
-				order.status.some((status) => status.type.includes('cash'))
-		).length;
+		const thisMonthSales = lastMonthOrders.filter((order) => {
+			const hasPaidStatus =
+				order.status && order.status.some((status) => status.type === 'paid');
+			const hasCashStatus =
+				order.status && order.status.some((status) => status.type === 'cash');
+
+			return hasPaidStatus || hasCashStatus;
+		}).length;
 
 		setRevenue(totalRevenue);
 		setSales(thisMonthSales);
