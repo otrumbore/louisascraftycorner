@@ -65,7 +65,7 @@ const EditPage = () => {
 
 					<p className='text-center'>Preview:</p>
 					<div
-						className='border-4 border-primary rounded-md p-4'
+						className='border-4 border-primary rounded-md p-4 adminHTML'
 						dangerouslySetInnerHTML={{ __html: value }}
 					/>
 				</div>
