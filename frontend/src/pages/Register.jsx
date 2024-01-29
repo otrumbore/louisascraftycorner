@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios'; // Import Axios
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { useUser } from '../context/UserContext';
 import { getUserByUsernameAndEmail } from '../api/admin/users.api';
 
 const Register = () => {
+	const { userRole } = useUser();
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
 
 	const [formData, setFormData] = useState({
@@ -205,6 +207,7 @@ const Register = () => {
 								checked={agreeTerms}
 								onChange={handleCheckboxChange}
 								className='mr-2'
+								disabled={true}
 							/>
 							<label htmlFor='agreeTerms'>
 								I agree to the{' '}
