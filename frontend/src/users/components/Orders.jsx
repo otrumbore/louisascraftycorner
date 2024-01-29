@@ -150,7 +150,8 @@ const Orders = () => {
 																<MdOutlineLocalShipping size={30} />
 															</a>
 														) : (
-															<p>Not Shipped</p>
+															row.status[row.status.length - 1].type !==
+																'cash' && <p>Not Shipped</p>
 														)}
 														<button
 															className='btn py-2 w-fit px-3'

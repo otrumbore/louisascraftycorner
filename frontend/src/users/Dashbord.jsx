@@ -10,13 +10,14 @@ import Orders from './components/Orders';
 import Favorites from './components/Favorites';
 import Profile from './components/Profile';
 import Settings from './components/Settings';
+import { getUserTotalSpent } from '../api/orders.api';
 
 const Dashboard = () => {
 	const { userDetails, userRole } = useUser();
 	const navigate = useNavigate();
 	const [dashView, setDashView] = useState('');
-
-	const userRewards = 60;
+	const [userRewards, setUserRewards] = useState(0);
+	const [animation, setAnimation] = useState(true);
 
 	const location = useLocation();
 
@@ -39,13 +40,40 @@ const Dashboard = () => {
 			console.error(error);
 		}
 		window.scrollTo(0, 0);
-	}, []);
+
+		// Invoke calcUserRewards only if userDetails._id is set
+		if (userDetails._id) {
+			calcUserRewards();
+		}
+	}, [userDetails._id]);
 
 	useEffect(() => {
 		currentPage && setDashView(currentPage);
 	}, [currentPage]);
 
-	//console.log(userDetails);
+	const calcUserRewards = async () => {
+		try {
+			if (!userDetails._id) {
+				return;
+			}
+
+			const getTotalSpent = await getUserTotalSpent(
+				userDetails._id,
+				userDetails.email
+			);
+			//console.log(getTotalSpent);
+			const totalSpent = parseInt(getTotalSpent / 100) || 3;
+			//console.log(totalSpent);
+			setAnimation(false);
+			if (totalSpent >= 50) {
+				setUserRewards(50 * 2);
+			} else {
+				setUserRewards(totalSpent * 2); // times 2 to give it to 100% but is for $50 at 100%
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<div className='p-4 mt-[8rem] min-h-[65vh] w-full flex justify-center'>
@@ -60,7 +88,7 @@ const Dashboard = () => {
 							<FaStar size={30} className='text-yellow-400 ml-2' />
 						)}
 					</h2>
-					<h2 className='hidden lg:block text-xl font-bold'>Dashboard</h2>
+					<p className='hidden lg:block'></p>
 					<div className='lg:mt-4 w-full lg:w-auto'>
 						<ul
 							className={`px-6 flex flex-wrap w-full gap-x-8 items-center justify-between md:px-0 md:justify-center`}
@@ -126,29 +154,63 @@ const Dashboard = () => {
 						<p className='hidden'>Loyalty Rewards:</p>
 						<div className='w-full bg-gray-200 h-8 rounded-full relative'>
 							<div className='flex text-yellow-400 justify-center items-center absolute left-0 right-0 z-10'>
-								{userRewards === 50 ? (
-									<FaStar size={30} className='animate-bounce' />
+								{(userRewards >= 50 && userRewards <= 55) || animation ? (
+									<FaStar
+										size={30}
+										className={`${
+											animation ? 'animate-spin' : 'animate-bounce'
+										} `}
+									/>
 								) : (
 									userRewards <= 51 && <FaStar size={30} />
 								)}
 							</div>
 							<div className='flex text-yellow-400 justify-end items-center absolute right-0 px-1 z-10'>
-								<FaStar size={30} />
+								{userRewards === 100 ? (
+									<FaStar
+										size={30}
+										className={`${
+											animation ? 'animate-spin' : 'animate-bounce'
+										} `}
+									/>
+								) : (
+									<FaStar size={30} />
+								)}
 							</div>
 							<div
-								className={`flex bg-primary text-lg h-8 font-medium text-blue-100 items-center justify-center p-0.5 leading-none rounded-full relative`}
+								className={`flex bg-primary text-lg h-8 font-medium text-blue-100 items-center justify-center p-0.5 leading-none rounded-full relative transition-all duration-700`}
 								style={{ width: `${userRewards}%` }}
 							>
-								{userRewards + '%'}
-								{userRewards >= 30 && userRewards <= 50
-									? ' - $5 off'
-									: userRewards >= 51
-									? ' - $10 off'
+								{/* {userRewards !== 50 && userRewards + 50 + '%'} */}
+								{userRewards >= 40 && userRewards <= 49
+									? 'So close...'
+									: userRewards >= 50 && userRewards < 55
+									? 'Got it!'
+									: userRewards >= 55 && userRewards < 100
+									? 'Keep it up'
 									: userRewards === 100
 									? 'Complete!'
 									: ''}
 							</div>
 						</div>
+						<div className='flex w-full justify-between items-center text-gray-600'>
+							<p className='w-1/3'></p>
+							<p className='w-1/3'>{userRewards <= 55 && '5% off'}</p>
+
+							<p className='flex justify-end'>
+								{userRewards > 50
+									? 'Free Gift'
+									: userRewards < 50
+									? 'Secret'
+									: null}
+							</p>
+						</div>
+						{userRewards >= 50 && userRewards < 100 && (
+							<div>5% off will be applied at checkout</div>
+						)}
+						{userRewards >= 100 && (
+							<div>Free gift will be sent with your next order!</div>
+						)}
 					</div>
 				</div>
 

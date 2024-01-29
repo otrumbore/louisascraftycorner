@@ -273,7 +273,7 @@ const Cart = () => {
 							<button
 								className={`btn py-3 w-full ${
 									stripeLoading && 'cursor-not-allowed'
-								}`}
+								} disabled:opacity-25`}
 								onClick={preCheckout}
 								disabled={userRole() < 2 || stripeLoading}
 							>

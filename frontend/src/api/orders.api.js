@@ -83,4 +83,44 @@ export const updateOrder = async (id, data) => {
 	}
 };
 
+export const getUserTotalSpent = async (userId, email) => {
+	try {
+		const token = Cookies.get('token');
+		let url = `${API_URL}/api/orders/${userId}`;
+
+		if (email) {
+			url += `?email=${email}`;
+		}
+
+		const response = await axios.get(url, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+
+		const orders = response.data.data;
+
+		const activeOrders = orders.filter((order) => {
+			return order.active === true;
+		});
+
+		const totalSpent = activeOrders.reduce((acc, order) => {
+			const orderTotal = order.prices.total || 0;
+			const shippingCost = order.prices.shipping || 0;
+
+			// Subtract shipping cost if defined
+			const totalPerOrder = orderTotal - shippingCost;
+
+			const final = acc + totalPerOrder;
+
+			return final;
+		}, 0);
+
+		return totalSpent;
+	} catch (error) {
+		console.error(error);
+		return [];
+	}
+};
+
 export default getOrders;
