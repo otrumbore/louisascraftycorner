@@ -189,15 +189,15 @@ const Shop = () => {
 									</option>
 								))}
 							</select>
-							<select
+							{/* <select
 								className='p-[.80rem] w-full lg:min-w-fit lg:max-w-[20%] input-ghost'
 								//value={}
-								//onChange={/* your corresponding handler */}
+								//onChange={}
 							>
 								<option>All Types</option>
 								<option>Testing</option>
 								<option>Testing</option>
-							</select>
+							</select> */}
 							<label className='flex lg:w-1/3 gap-2 text-lg items-center'>
 								<input
 									className='w-6 h-6 lg:w-5 lg:h-5 text-secondary'
@@ -267,7 +267,7 @@ const Shop = () => {
 								Page {currentPage} of {pageNumbers.length}
 							</div>
 							<div className='mt-4 flex items-center justify-end lg:justify-center'>
-								Results: {products.length}
+								Results: {allProducts.length}
 							</div>
 							<ul className='flex items-center justify-center col-span-2 lg:col-span-1 lg:justify-end gap-2'>
 								{currentPage > 1 && (
