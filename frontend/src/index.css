@@ -22,6 +22,10 @@
 	@apply list-decimal px-12;
 }
 
+.adminHTML a {
+	@apply text-primary underline;
+}
+
 .tooltip {
 	@apply invisible absolute;
 }
