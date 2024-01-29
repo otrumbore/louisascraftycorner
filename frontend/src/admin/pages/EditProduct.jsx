@@ -196,13 +196,11 @@ const EditProduct = () => {
 						<div>
 							<div className='flex flex-col justify-center items-center mb-4'>
 								Current Image:
-								{image && (
-									<img
-										src={!image ? DefaultProductImg : image}
-										alt='Selected Preview'
-										style={{ maxWidth: '50%', marginTop: '8px' }}
-									/>
-								)}
+								<img
+									src={!image ? DefaultProductImg : image}
+									alt='Selected Preview'
+									style={{ maxWidth: '50%', marginTop: '8px' }}
+								/>
 							</div>
 							<ImageUpload />
 						</div>
