@@ -115,7 +115,7 @@ const Cart = () => {
 	};
 
 	return (
-		<div className='p-4 mt-[8rem] min-h-[60vh] w-full flex flex-col justify-center items-center'>
+		<div className='p-4 min-h-[60vh] w-full flex flex-col justify-center items-center'>
 			<div className='flex flex-col w-full justify-center items-center max-w-[1400px]'>
 				<LoadingModal loading={loading} />
 				<div className='flex justify-center'>

@@ -216,7 +216,7 @@ const Login = () => {
 	}, []);
 
 	return (
-		<div className={`p-4 mt-[8rem] w-full min-h-[65vh] flex justify-center`}>
+		<div className={`p-4 w-full min-h-[65vh] flex justify-center`}>
 			<div className='flex flex-col mt-[5%] w-full h-full max-w-[1400px] items-center justify-center'>
 				<h2 className='text-3xl mb-8'>Welcome Back!</h2>
 				<div className='w-full lg:w-[40%]'>

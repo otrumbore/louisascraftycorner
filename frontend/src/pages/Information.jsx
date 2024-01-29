@@ -104,7 +104,7 @@ const ContentPage = () => {
 	}, [section]);
 
 	return (
-		<div className='p-4 mt-[8rem] min-h-[65vh] w-full max-w-[1400px] flex flex-col items-center'>
+		<div className='p-4 min-h-[65vh] w-full max-w-[1400px] flex flex-col items-center'>
 			<h2 className='text-3xl uppercase'>{section}</h2>
 			<div className='mt-8'>
 				{/* Display content based on the URL parameter */}
