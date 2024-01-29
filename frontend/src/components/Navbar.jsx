@@ -71,7 +71,7 @@ const Navbar = () => {
 	const navData = [
 		{ linkName: 'Home', linkTo: '/' },
 		{ linkName: 'Shop', linkTo: '/shop' },
-		{ linkName: 'Events', linkTo: '/' },
+		{ linkName: 'Events', linkTo: '/events' },
 		{ linkName: 'About', linkTo: '/' },
 		{ linkName: 'Contact', linkTo: '/contact' },
 	];
