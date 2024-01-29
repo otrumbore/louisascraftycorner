@@ -306,14 +306,14 @@ const Login = () => {
 							</button>
 							<button
 								type='submit'
-								className={`btn transition-all duration-700 py-2 w-full lg:w-auto mt-4`}
+								className={`btn px-16 py-2 w-full lg:w-auto mt-4`}
 								tabIndex={3}
 								disabled={loading}
 							>
 								{loading ? (
 									<span className='flex'>
 										<AiOutlineLoading3Quarters className='h-5 w-5 mr-2 animate-spin' />
-										Logging In...
+										Crafting...
 									</span>
 								) : (
 									'Login'

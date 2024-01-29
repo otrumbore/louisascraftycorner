@@ -10,8 +10,16 @@
 	@apply text-3xl;
 }
 
+.adminHTML h2 {
+	@apply text-xl;
+}
+
 .adminHTML ul {
 	@apply list-disc px-12;
+}
+
+.adminHTML ol {
+	@apply list-decimal px-12;
 }
 
 .tooltip {
