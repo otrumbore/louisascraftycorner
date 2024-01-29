@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
-const [imageURL, setImageURL] = useState('');
-
 let CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_NAME;
+
+let imageURL = '';
 
 export const sendImageURL = () => {
 	return imageURL;
@@ -10,10 +10,13 @@ export const sendImageURL = () => {
 
 const ImageUpload = () => {
 	const cloudinaryRef = useRef();
-	const widgetRef = useRef(); //	const [imageURL, setImageURL] = useState('');
+	const widgetRef = useRef();
+	const [imageURL, setImageURL] = useState('');
 
 	useEffect(() => {
 		setImageURL('');
+		imageURL = '';
+
 		cloudinaryRef.current = window.cloudinary;
 		widgetRef.current = cloudinaryRef.current.createUploadWidget(
 			{
