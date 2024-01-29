@@ -27,7 +27,7 @@ const Favorites = () => {
 		setLoading(true);
 		try {
 			if (userDetails) {
-				console.log(userFavorites);
+				//console.log(userFavorites);
 				const favoriteProductsPromises = userFavorites.map(async (item) => {
 					try {
 						const favoriteProducts = await axios.get(
@@ -63,8 +63,6 @@ const Favorites = () => {
 	useEffect(() => {
 		if (userFavorites.length !== favorites.length) {
 			getProducts();
-			console.log(favorites);
-			//console.log(userFavorites);
 		} else {
 			setLoading(false);
 		}

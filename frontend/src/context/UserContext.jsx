@@ -149,7 +149,7 @@ export function UserProvider({ children }) {
 
 	useEffect(() => {
 		if (userDetails._id) {
-			console.log(userDetails);
+			//console.log(userDetails);
 			getUserFavorites();
 			sendActivityStatus(true);
 			if (!userDetails.enabled) {
@@ -239,7 +239,7 @@ export function UserProvider({ children }) {
 					},
 				}
 			);
-			console.log(favoritesResponse);
+			//console.log(favoritesResponse);
 			getUserFavorites();
 		} catch (error) {
 			console.error('Error adding to favorites:', error);
