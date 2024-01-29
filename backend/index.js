@@ -14,6 +14,7 @@ import errorLoggingRoute from './routes/errorLoggingRoute.js';
 import stripeCheckoutRoute from './routes/stripeCheckoutRoute.js';
 import activityLoggingRoute from './routes/activityLoggingRoute.js';
 import ordersRoute from './routes/ordersRoute.js';
+import pagesRoute from './routes/pagesRoute.js';
 
 import crypto from 'crypto';
 
@@ -64,6 +65,7 @@ app.use('/api/user/favorites', userFavoritesRoute);
 app.use('/api/error_logging', errorLoggingRoute);
 app.use('/api/activity_logging', activityLoggingRoute);
 app.use('/api/orders', ordersRoute);
+app.use('/api/pages', pagesRoute);
 
 mongoose
 	.connect(mongoDBURL)

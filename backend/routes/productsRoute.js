@@ -16,6 +16,9 @@ const router = express.Router();
 
 router.post('/', verifyToken, async (request, response) => {
 	try {
+		if (request.user.role !== 'admin' && request.user.role !== 'moderator') {
+			return response.status(401).send({ message: 'Unauthorized' });
+		}
 		const {
 			name,
 			description,
@@ -33,10 +36,6 @@ router.post('/', verifyToken, async (request, response) => {
 			active,
 			archived,
 		} = request.body;
-
-		if (request.user.role !== 'admin' && request.user.role !== 'moderator') {
-			return response.status(401).send({ message: 'Unauthorized' });
-		}
 
 		const newProduct = await Product.create({
 			name,

@@ -20,16 +20,21 @@ import Success from './pages/cart/Success';
 import AddProduct from './admin/pages/AddProduct';
 import EditProduct from './admin/pages/EditProduct';
 import ProductPage from './pages/ProductPage';
+import AdminDashboard from './admin/AdminDashboard';
+import EditPage from './admin/pages/EditPage';
 
 //user pages
 import Dashbord from './users/Dashbord';
 import Logout from './users/Logout';
-import AdminDashboard from './admin/AdminDashboard';
+import Events from './pages/Events';
 
 const App = () => {
 	return (
 		<div className='w-full'>
-			<Navbar />
+			<div className='mb-[8rem]'>
+				<Navbar />
+			</div>
+
 			<Routes>
 				{/* Regular Website Routes */}
 				<Route path='/' element={<Home />} />
@@ -43,15 +48,15 @@ const App = () => {
 				<Route path='/info/:section' element={<Information />} />
 				<Route path='/info/:section' element={<Information />} />
 				<Route path='/order/success/:orderId' element={<Success />} />
+				<Route path='/events' element={<Events />} />
 
 				<Route path='*' element={<NotFound />} />
 
-				{/* Admin Product Routes */}
+				{/* Admin Product/Page Routes */}
 				<Route path='/admin' element={<AdminDashboard />} />
 				<Route path='/admin/addproduct' element={<AddProduct />} />
 				<Route path='/admin/editproduct/:id' element={<EditProduct />} />
-
-				{/* Admin Users Routes */}
+				<Route path='/admin/editpage' element={<EditPage />} />
 
 				{/* Store User Routes */}
 				<Route path='/user/dashboard' element={<Dashbord />} />

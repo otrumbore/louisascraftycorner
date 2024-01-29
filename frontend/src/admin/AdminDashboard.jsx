@@ -25,6 +25,7 @@ import ActivityLogs from './components/dashboard/ActivityLogs';
 import ErrorLogs from './components/dashboard/ErrorLogs';
 import Settings from './components/dashboard/Settings';
 import { getAllOrders } from '../api/orders.api';
+import EditPage from './pages/EditPage';
 
 const AdminDashboard = () => {
 	const { userRole, userDetails } = useUser();
@@ -304,7 +305,7 @@ const AdminDashboard = () => {
 			) : dashView === 'products' ? (
 				<Products />
 			) : dashView === 'pages' ? (
-				<Dashboard />
+				<EditPage />
 			) : dashView === 'users' ? (
 				<Users />
 			) : dashView === 'archived' ? (
