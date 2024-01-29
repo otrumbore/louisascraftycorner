@@ -6,6 +6,14 @@
 	@apply bg-slate-100 text-slate-800;
 }
 
+.adminHTML h1 {
+	@apply text-3xl;
+}
+
+.adminHTML ul {
+	@apply list-disc px-12;
+}
+
 .tooltip {
 	@apply invisible absolute;
 }
