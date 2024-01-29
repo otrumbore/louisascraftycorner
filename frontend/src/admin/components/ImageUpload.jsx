@@ -11,12 +11,9 @@ export const sendImageURL = () => {
 const ImageUpload = () => {
 	const cloudinaryRef = useRef();
 	const widgetRef = useRef();
-	const [imageURL, setImageURL] = useState('');
+	const [imageURLState, setImageURLState] = useState('');
 
 	useEffect(() => {
-		setImageURL('');
-		imageURL = '';
-
 		cloudinaryRef.current = window.cloudinary;
 		widgetRef.current = cloudinaryRef.current.createUploadWidget(
 			{
@@ -31,11 +28,17 @@ const ImageUpload = () => {
 				console.log('result: ', result);
 				error && console.log('error: ', error);
 				if (result.event === 'success') {
-					setImageURL(result.info.secure_url);
+					imageURL = result.info.secure_url;
+					setImageURLState(result.info.secure_url);
 					//console.log('image url: ', result.info.secure_url); //info.secure_url
 				}
 			}
 		);
+
+		return () => {
+			// Destroy Cloudinary upload widget
+			widgetRef.current.destroy();
+		};
 	}, []);
 
 	return (
