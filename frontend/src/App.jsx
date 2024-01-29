@@ -27,6 +27,7 @@ import EditPage from './admin/pages/EditPage';
 import Dashbord from './users/Dashbord';
 import Logout from './users/Logout';
 import Events from './pages/Events';
+import About from './pages/About';
 
 const App = () => {
 	return (
@@ -49,6 +50,7 @@ const App = () => {
 				<Route path='/info/:section' element={<Information />} />
 				<Route path='/order/success/:orderId' element={<Success />} />
 				<Route path='/events' element={<Events />} />
+				<Route path='/about' element={<About />} />
 
 				<Route path='*' element={<NotFound />} />
 

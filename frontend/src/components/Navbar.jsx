@@ -72,7 +72,7 @@ const Navbar = () => {
 		{ linkName: 'Home', linkTo: '/' },
 		{ linkName: 'Shop', linkTo: '/shop' },
 		{ linkName: 'Events', linkTo: '/events' },
-		{ linkName: 'About', linkTo: '/' },
+		{ linkName: 'About', linkTo: '/about' },
 		{ linkName: 'Contact', linkTo: '/contact' },
 	];
 	const navAdminData = [

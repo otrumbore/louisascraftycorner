@@ -13,28 +13,41 @@ export const getEventsPage = async () => {
 	}
 };
 
-export const updateEventsPage = async (data) => {
+export const updatePage = async (data) => {
 	try {
-		console.log('running');
+		const { page_name } = data;
 		const token = Cookies.get('token');
-		const response = await axios.put(`${API_URL}/api/pages/events`, data, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		});
+		const response = await axios.put(
+			`${API_URL}/api/pages/${page_name}`,
+			data,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
 		if (response.status === 200) {
 			// Update successful
 			return response.data; // You might want to return specific data if available
 		} else {
 			// Handle other status codes if needed
 			console.error(`Unexpected status code: ${response.status}`);
-			throw new Error('Unexpected server response');
+			//throw new Error('Unexpected server response');
+			return response.status;
 		}
 	} catch (error) {
 		console.log(error);
 	}
 };
 
-export const getAboutPage = async () => {};
+export const getAboutPage = async () => {
+	try {
+		const eventsPage = await axios.get(`${API_URL}/api/pages/about`);
+		//console.log(eventsPage.data.data);
+		return eventsPage.data.data;
+	} catch (error) {
+		console.log(error);
+	}
+};
 
 export default getAboutPage;

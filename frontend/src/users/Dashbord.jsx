@@ -16,7 +16,7 @@ const Dashboard = () => {
 	const { userDetails, userRole } = useUser();
 	const navigate = useNavigate();
 	const [dashView, setDashView] = useState('');
-	const [userRewards, setUserRewards] = useState(0);
+	const [userRewards, setUserRewards] = useState(5);
 	const [animation, setAnimation] = useState(true);
 
 	const location = useLocation();
@@ -166,7 +166,7 @@ const Dashboard = () => {
 								)}
 							</div>
 							<div className='flex text-yellow-400 justify-end items-center absolute right-0 px-1 z-10'>
-								{userRewards === 100 ? (
+								{userRewards === 100 || animation ? (
 									<FaStar
 										size={30}
 										className={`${
@@ -201,7 +201,7 @@ const Dashboard = () => {
 								{userRewards > 50
 									? 'Free Gift'
 									: userRewards < 50
-									? 'Secret'
+									? 'Suprise'
 									: null}
 							</p>
 						</div>

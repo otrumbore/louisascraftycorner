@@ -3,12 +3,14 @@ import { useSnackbar } from 'notistack';
 import { useUser } from '../../context/UserContext';
 import { useNavigate, Link } from 'react-router-dom';
 import LoadingModal from '../../components/LoadingModal';
-import { getEventsPage, updateEventsPage } from '../../api/pages.api';
+import getAboutPage, { getEventsPage, updatePage } from '../../api/pages.api';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 const EditPage = () => {
+	const { enqueueSnackbar } = useSnackbar();
 	const [eventsData, setEventsData] = useState([]);
+	const [aboutData, setAboutData] = useState([]);
 	const [value, setValue] = useState('');
 	const [pageSelector, setPageSelector] = useState('events');
 
@@ -25,37 +27,98 @@ const EditPage = () => {
 		}
 	};
 
-	const updateEventsPageContent = async () => {
+	const updatePageContent = async () => {
 		try {
-			const data = { page_name: 'events', content: value };
-			const update = await updateEventsPage(data);
-			console.log(update);
+			const data = { page_name: pageSelector, content: value };
+			const update = await updatePage(data);
+			enqueueSnackbar(`Updated ${pageSelector} successfully!`, {
+				variant: 'success',
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const fetchAboutPage = async () => {
+		try {
+			const page = await getAboutPage();
+			setAboutData(page);
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
 	useEffect(() => {
-		// Fetch page content only once on mount
-		fetchEventsPage();
-	}, []);
+		if (pageSelector === 'events') {
+			setValue(eventsData.content || '');
+		} else if (pageSelector === 'about') {
+			setValue(aboutData.content || '');
+		} else {
+			console.log('something went wrong with the selection of which page!');
+		}
+	}, [pageSelector]);
 
 	useEffect(() => {
-		// Update the editor content when the page content is changed
-		setValue(eventsData.content || '');
+		fetchEventsPage();
+		fetchAboutPage();
+	}, [pageSelector]);
+
+	useEffect(() => {
+		if (pageSelector === 'events') {
+			setValue(eventsData.content || '');
+		}
 	}, [eventsData]);
 
+	useEffect(() => {
+		if (pageSelector === 'about') {
+			setValue(aboutData.content || '');
+		}
+	}, [aboutData]);
+
 	const handleSave = () => {
-		updateEventsPageContent();
+		updatePageContent();
 	};
 
 	return (
 		<div className='w-full flex justify-center'>
 			<div className='p-4 w-full max-w-[1200px]'>
 				<h2 className='text-2xl mb-8 text-center'>Edit Pages</h2>
+
+				<div className='flex justify-center items-center gap-4 mb-8'>
+					<button
+						className={`${pageSelector === 'events' ? 'btn' : 'btn-outline'}`}
+						onClick={() => setPageSelector('events')}
+					>
+						Events Page
+					</button>
+					<button
+						className={`${pageSelector === 'about' ? 'btn' : 'btn-outline'}`}
+						onClick={() => setPageSelector('about')}
+					>
+						About Page
+					</button>
+				</div>
 				<div className='w-full'>
 					<div className='mb-4 border-4 border-primary rounded-md'>
-						<ReactQuill value={value} onChange={handleChange} theme='snow' />
+						<ReactQuill
+							value={value}
+							onChange={handleChange}
+							theme='snow'
+							modules={{
+								toolbar: [
+									[{ header: [1, 2, false] }],
+									['bold', 'italic', 'underline', 'strike', 'blockquote'],
+									[
+										{ list: 'ordered' },
+										{ list: 'bullet' },
+										{ indent: '-1' },
+										{ indent: '+1' },
+									],
+									['link', 'image'],
+									['clean'],
+								],
+							}}
+						/>
 					</div>
 					<div className='flex justify-end'>
 						<button onClick={() => handleSave()} className='btn'>
