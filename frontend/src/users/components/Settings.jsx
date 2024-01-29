@@ -143,8 +143,8 @@ const Settings = () => {
 									value={userDetails.username}
 									//onChange={onChange}
 									disabled={true}
-									required // Make the username field required
-									minLength='4' // Set minimum length for the username
+									//required // Make the username field required
+									//minLength='4' // Set minimum length for the username
 								/>
 							</div>
 							<div>
@@ -156,33 +156,9 @@ const Settings = () => {
 									value={userDetails.email}
 									disabled={true}
 									//onChange={onChange}
-									required // Make the email field required
+									//required // Make the email field required
 								/>
 							</div>
-							{/* <div>
-							<input
-								type='password'
-								className='input'
-								placeholder='Password'
-								name='password'
-								value={password}
-								onChange={onChange}
-								required // Make the password field required
-								minLength='6' // Set minimum length for the password
-							/>
-							</div>
-							<div>
-							<input
-								type='password'
-								className='input'
-								placeholder='Confirm Password'
-								name='confirmPassword'
-								value={confirmPassword}
-								onChange={onChange}
-								required // Make the password field required
-								minLength='6' // Set minimum length for the password
-							/>
-							</div> */}
 						</div>
 						<div className='flex flex-col gap-4 mt-2'>
 							<div className='text-lg w-full text-center font-bold'>
