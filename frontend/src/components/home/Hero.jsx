@@ -10,7 +10,7 @@ const Hero = () => {
 	};
 
 	return (
-		<div className='w-full h-screen flex items-center justify-center'>
+		<div className='-mt-[8rem] w-full h-screen flex items-center justify-center'>
 			<div className='w-full max-w-[2400px] h-screen lg:h-full flex justify-center'>
 				<img
 					src={HeroPic}
