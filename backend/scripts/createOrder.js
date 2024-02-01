@@ -196,7 +196,7 @@ const updateUserTotalSpent = async (email, subtotal) => {
 		}
 
 		const totalSpent = user.totalSpent + parseFloat(subtotal);
-		let updateRewards = {};
+		let updateRewards = { ...user.rewards };
 
 		if (
 			user.rewards.spent >= 5000 &&
