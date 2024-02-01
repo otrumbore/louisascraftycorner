@@ -45,13 +45,39 @@ const Dashboard = () => {
 		// Invoke calcUserRewards only if userDetails._id is set
 		if (userDetails._id) {
 			setRewards(userDetails.rewards);
-			calcUserRewards();
 		}
 	}, [userDetails._id]);
 
 	useEffect(() => {
 		currentPage && setDashView(currentPage);
 	}, [currentPage]);
+
+	useEffect(() => {
+		try {
+			if (!userDetails._id) {
+				return;
+			}
+
+			// const getTotalSpent = await getUserTotalSpent(
+			// 	userDetails._id,
+			// 	userDetails.email
+			// );
+			const getRewardsSpent = rewards.spent || 0;
+			const getExtraDiscount = rewards.extra_discount || '';
+
+			console.log(getRewardsSpent);
+			const totalSpent = parseInt(getRewardsSpent / 100) || 3;
+			//console.log(totalSpent);
+			setAnimation(false);
+			if (totalSpent >= 50) {
+				setUserRewards(50 * 2);
+			} else {
+				setUserRewards(totalSpent * 2); // times 2 to give it to 100% but is for $50 at 100%
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	}, [rewards]);
 
 	const calcUserRewards = async () => {
 		try {
@@ -66,7 +92,7 @@ const Dashboard = () => {
 			const getRewardsSpent = rewards.spent || 0;
 			const getExtraDiscount = rewards.extra_discount || '';
 
-			//console.log(getTotalSpent);
+			console.log(getRewardsSpent);
 			const totalSpent = parseInt(getRewardsSpent / 100) || 3;
 			//console.log(totalSpent);
 			setAnimation(false);

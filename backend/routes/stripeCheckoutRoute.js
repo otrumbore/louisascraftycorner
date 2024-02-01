@@ -119,7 +119,11 @@ router.post('/', async (req, res) => {
 
 	let discount = {};
 
-	if (user.rewards.spent >= 2500 && !user.rewards.reward1Used) {
+	if (
+		user.rewards.spent >= 2500 &&
+		user.rewards.spent < 5000 &&
+		!user.rewards.reward1Used
+	) {
 		discount = { coupon: '8B9hMg6h' };
 	} else if (
 		user.rewards.spent >= 5000 &&

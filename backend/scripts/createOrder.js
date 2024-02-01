@@ -209,7 +209,11 @@ const updateUserTotalSpent = async (email, subtotal) => {
 				reward2Used: false,
 				received: user.rewards.received + 1,
 			};
-		} else if (user.rewards.spent >= 2500 && !user.rewards.reward1Used) {
+		} else if (
+			user.rewards.spent >= 2500 &&
+			user.rewards.spent < 5000 &&
+			!user.rewards.reward1Used
+		) {
 			const currSpent = user.rewards.spent;
 			updateRewards = {
 				spent: currSpent + parseFloat(subtotal),
