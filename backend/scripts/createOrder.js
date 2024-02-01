@@ -196,26 +196,12 @@ const updateUserTotalSpent = async (email, subtotal) => {
 		}
 
 		const totalSpent = user.totalSpent + parseFloat(subtotal);
-		let updateRewards = { ...user.rewards };
+		const currSpent = user.rewards.spent;
+		let updateRewards = user.rewards;
 
-		if (
-			user.rewards.spent >= 5000 &&
-			user.rewards.reward1Used &&
-			user.rewards.reward2Used
-		) {
+		if (user.rewards.spent >= 2500 && !user.rewards.reward1Used) {
 			updateRewards = {
-				spent: subtotal,
-				reward1Used: false,
-				reward2Used: false,
-				received: user.rewards.received + 1,
-			};
-		} else if (
-			user.rewards.spent >= 2500 &&
-			user.rewards.spent < 5000 &&
-			!user.rewards.reward1Used
-		) {
-			const currSpent = user.rewards.spent;
-			updateRewards = {
+				...updateRewards,
 				spent: currSpent + parseFloat(subtotal),
 				reward1Used: true,
 			};
@@ -224,14 +210,17 @@ const updateUserTotalSpent = async (email, subtotal) => {
 			user.rewards.reward1Used &&
 			!user.rewards.reward2Used
 		) {
-			const currSpent = user.rewards.spent;
 			updateRewards = {
-				spent: currSpent + parseFloat(subtotal),
-				reward2Used: true,
+				spent: parseFloat(subtotal),
+				reward2Used: false,
+				reward1Used: false,
+				received: user.rewards.received + 1,
 			};
 		} else {
-			const currSpent = user.rewards.spent;
-			updateRewards = { spent: currSpent + parseFloat(subtotal) };
+			updateRewards = {
+				...updateRewards,
+				spent: currSpent + parseFloat(subtotal),
+			};
 		}
 
 		console.log(updateRewards);
