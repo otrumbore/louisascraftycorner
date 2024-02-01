@@ -64,11 +64,12 @@ router.use(express.json());
 router.post('/', async (req, res) => {
 	const items = req.body.items;
 	const user = req.body.userData;
+	const cxNotes = req.body.customer_notes;
 
 	const data = {
 		cartItems: items,
 		userDetails: user,
-		other: { customerNotes: '', source: 'website' },
+		other: { customerNotes: cxNotes, source: 'website' },
 		prices: {},
 	};
 
@@ -116,6 +117,18 @@ router.post('/', async (req, res) => {
 		0
 	);
 
+	let discount = {};
+
+	if (user.rewards.spent >= 2500 && !user.rewards.reward1Used) {
+		discount = { coupon: '8B9hMg6h' };
+	} else if (
+		user.rewards.spent >= 5000 &&
+		!user.rewards.reward2Used &&
+		user.rewards.reward1Used
+	) {
+		discount = { coupon: 'VGqvl2TX' };
+	}
+
 	let shipAmount = '';
 
 	if (lineItemsTotal > 7500) {
@@ -139,21 +152,11 @@ router.post('/', async (req, res) => {
 			allowed_countries: ['US'],
 		},
 		mode: 'payment',
-		discounts: [
-			{
-				//coupon: coupon.name,
-				// id: '12345',
-				// currency: 'USD',
-				// percent_off: 10, //amount_off
-				//max_redemptions: 1,
-				//redeem_by
-				//applies_to
-			},
-		],
+		discounts: [discount],
 		invoice_creation: {
 			enabled: true,
 		},
-		allow_promotion_codes: true,
+		//allow_promotion_codes: true,
 		shipping_options: [
 			{
 				shipping_rate_data: {

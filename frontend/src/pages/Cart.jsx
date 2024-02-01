@@ -14,6 +14,7 @@ import { getProduct } from '../api/products.api';
 const Cart = () => {
 	const [loading, setLoading] = useState(false);
 	const [stripeLoading, setStripeLoading] = useState(false);
+	const [cxNotes, setCXNotes] = useState('');
 	const { enqueueSnackbar } = useSnackbar();
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
 	//cart stuff
@@ -97,7 +98,11 @@ const Cart = () => {
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({ items: updatedCart, userData: userDetails }),
+				body: JSON.stringify({
+					items: updatedCart,
+					userData: userDetails,
+					customer_notes: cxNotes.trim(),
+				}),
 			})
 				.then((response) => {
 					return response.json();
@@ -115,7 +120,7 @@ const Cart = () => {
 	};
 
 	return (
-		<div className='p-4 min-h-[60vh] w-full flex flex-col justify-center items-center'>
+		<div className='p-4 min-h-[65vh] w-full flex flex-col justify-evenly items-center'>
 			<div className='flex flex-col w-full justify-center items-center max-w-[1400px]'>
 				<LoadingModal loading={loading} />
 				<div className='flex justify-center'>
@@ -128,7 +133,7 @@ const Cart = () => {
 						) : (
 							cartItems.map((item, i) => (
 								<div
-									className='border-2 border-primary p-4 rounded-lg mb-4'
+									className='border-4 border-primary p-4 rounded-lg mb-4'
 									key={i}
 								>
 									<div className='flex items-center'>
@@ -247,52 +252,64 @@ const Cart = () => {
 					</div>
 				</div>
 				{cartItemsCount > 0 && (
-					<div className='flex flex-col w-full justify-center items-end max-w-[1000px] pr-2'>
-						<div className='flex w-full max-w-[1000px] items-center justify-end text-right'>
-							<div className='mt-2 flex flex-col'>
-								<p>Subtotal: ${cartSubTotal().toFixed(2)}</p>
-								{cartSalesTotal() > 0 && (
-									<div className='flex w-full text-lg items-center justify-end gap-x-1'>
-										<p>Total Savings:</p>
-										<p className='text-red-600'>
-											-${cartSalesTotal().toFixed(2)}
+					<div className='flex flex-col lg:flex-row w-full max-w-[1000px] justify-between'>
+						<div className='w-full'>
+							<p className='pl-1 font-semibold text-lg'>Notes:</p>
+							<textarea
+								className='input'
+								name='cxNotes'
+								value={cxNotes}
+								onChange={(e) => setCXNotes(e.target.value)}
+								rows={3}
+							></textarea>
+						</div>
+						<div className='flex flex-col w-full justify-center items-end pr-2'>
+							<div className='flex w-full items-center justify-end text-right'>
+								<div className='mt-2 flex flex-col'>
+									<p>Subtotal: ${cartSubTotal().toFixed(2)}</p>
+									{cartSalesTotal() > 0 && (
+										<div className='flex w-full text-lg items-center justify-end gap-x-1'>
+											<p>Total Savings:</p>
+											<p className='text-red-600'>
+												-${cartSalesTotal().toFixed(2)}
+											</p>
+										</div>
+									)}
+
+									<div className='mt-2 flex w-full items-start justify-end'>
+										<em className='text-md'>*</em>
+										<p className='font-bold text-2xl'>
+											Total: ${cartTotal().toFixed(2)}
 										</p>
 									</div>
-								)}
-
-								<div className='mt-2 flex w-full items-start justify-end'>
-									<em className='text-md'>*</em>
-									<p className='font-bold text-2xl'>
-										Total: ${cartTotal().toFixed(2)}
-									</p>
 								</div>
 							</div>
-						</div>
 
-						<div className='mt-4 w-full lg:w-[20%] flex flex-col items-end'>
-							<button
-								className={`btn py-3 w-full ${
-									stripeLoading && 'cursor-not-allowed'
-								} disabled:opacity-25`}
-								onClick={preCheckout}
-								disabled={userRole() < 2 || stripeLoading}
-							>
-								{stripeLoading ? (
-									<span className='flex gap-2'>
-										<AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
-										Processing...
-									</span>
-								) : (
-									'Checkout'
+							<div className='mt-4 w-full flex flex-col items-end'>
+								<button
+									className={`btn py-3 w-full lg:w-[50%] ${
+										stripeLoading && 'cursor-not-allowed'
+									} disabled:opacity-25`}
+									onClick={preCheckout}
+									disabled={userRole() < 2 || stripeLoading}
+								>
+									{stripeLoading ? (
+										<span className='flex gap-2'>
+											<AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
+											Processing...
+										</span>
+									) : (
+										'Checkout'
+									)}
+								</button>
+								{userRole() < 2 && (
+									<h2 className='mt-8 lg: lg:mt-2 text-xl w-full text-center lg:text-end'>
+										Checkout is currently disabled.
+									</h2>
 								)}
-							</button>
-							{userRole() < 2 && (
-								<h2 className='text-xl w-full text-center'>
-									Checkout is disabled currently!
-								</h2>
-							)}
-							<div className='flex justify-center w-full'>
-								<p className='mt-4 w-full text-xs text-left'>
+							</div>
+							<div className='flex lg:justify-end w-full'>
+								<p className='mt-4 w-full text-xs text-center lg:text-right'>
 									*Sales tax and shipping cost calculated at checkout
 								</p>
 							</div>

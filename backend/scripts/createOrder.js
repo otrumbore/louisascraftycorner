@@ -1,5 +1,6 @@
 import { Order } from '../models/ordersModel.js';
 import { Product } from '../models/productsModel.js';
+import { User } from '../models/usersModel.js';
 
 const createOrder = async (event) => {
 	try {
@@ -22,20 +23,8 @@ const createOrder = async (event) => {
 			cashTrans = { type: 'cash', timestamp: new Date() };
 			shipName = userDetails.name;
 			isActive = true;
+			updateUserTotalSpent(userDetails.email, prices.total);
 		}
-
-		// const newOrder = {
-		// 	userId: userDetails._id || '',
-		// 	email: userDetails.email || '',
-		// 	username: userDetails.username || '',
-		// 	items: processedCartItems,
-		// 	customerNotes: customerNotes || '',
-		// 	source: source || 'website',
-		// 	status: [{ type: 'created', timestamp: new Date() }, cashTrans],
-		// 	shipName: shipName || '',
-		// };
-
-		//console.log(newOrder);
 
 		const newOrder = await Order.create({
 			userId: userDetails._id || '',
@@ -133,6 +122,10 @@ export const updateOrder = async (event, intent) => {
 					total: event.amount_total,
 				};
 
+				const subtotal = priceData.subtotal;
+				console.log('im running about the total spent');
+				updateUserTotalSpent(event.customer_email, subtotal);
+
 				const data = {
 					email: event.customer_email,
 					stripePaymentId: event.payment_intent,
@@ -189,6 +182,78 @@ export const updateOrder = async (event, intent) => {
 		console.error('Error updating order:', error);
 		// Consider sending a more specific error response
 		throw new Error(`Server Error: ${error}`);
+	}
+};
+
+const updateUserTotalSpent = async (email, subtotal) => {
+	console.log('running rewards update!');
+	try {
+		const user = await User.findOne({ email: email });
+
+		if (!user) {
+			console.log(`User not found with email ${email}`);
+			return;
+		}
+
+		const totalSpent = user.totalSpent + parseFloat(subtotal);
+		let updateRewards = {};
+
+		if (
+			user.rewards.spent >= 5000 &&
+			user.rewards.reward1Used &&
+			user.rewards.reward2Used
+		) {
+			updateRewards = {
+				spent: subtotal,
+				reward1Used: false,
+				reward2Used: false,
+				received: user.rewards.received + 1,
+			};
+		} else if (user.rewards.spent >= 2500 && !user.rewards.reward1Used) {
+			const currSpent = user.rewards.spent;
+			updateRewards = {
+				spent: currSpent + parseFloat(subtotal),
+				reward1Used: true,
+			};
+		} else if (
+			user.rewards.spent >= 5000 &&
+			user.rewards.reward1Used &&
+			!user.rewards.reward2Used
+		) {
+			const currSpent = user.rewards.spent;
+			updateRewards = {
+				spent: currSpent + parseFloat(subtotal),
+				reward2Used: true,
+			};
+		} else {
+			const currSpent = user.rewards.spent;
+			updateRewards = { spent: currSpent + parseFloat(subtotal) };
+		}
+
+		console.log(updateRewards);
+
+		const updatedUser = await User.findOneAndUpdate(
+			{ email: email },
+			{
+				$set: {
+					totalSpent: totalSpent,
+					rewards: updateRewards,
+				},
+			},
+			{
+				new: true,
+			}
+		);
+
+		if (!updatedUser) {
+			console.log(`Could not update users total spent or rewards.`);
+			return;
+		}
+
+		console.log('user total spent has been updated!');
+	} catch (error) {
+		console.log(error);
+		// You might want to handle the error based on your application requirements
 	}
 };
 

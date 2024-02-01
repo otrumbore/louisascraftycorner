@@ -18,6 +18,7 @@ const Dashboard = () => {
 	const [dashView, setDashView] = useState('');
 	const [userRewards, setUserRewards] = useState(5);
 	const [animation, setAnimation] = useState(true);
+	const [rewards, setRewards] = useState({});
 
 	const location = useLocation();
 
@@ -43,6 +44,7 @@ const Dashboard = () => {
 
 		// Invoke calcUserRewards only if userDetails._id is set
 		if (userDetails._id) {
+			setRewards(userDetails.rewards);
 			calcUserRewards();
 		}
 	}, [userDetails._id]);
@@ -57,12 +59,15 @@ const Dashboard = () => {
 				return;
 			}
 
-			const getTotalSpent = await getUserTotalSpent(
-				userDetails._id,
-				userDetails.email
-			);
+			// const getTotalSpent = await getUserTotalSpent(
+			// 	userDetails._id,
+			// 	userDetails.email
+			// );
+			const getRewardsSpent = rewards.spent || 0;
+			const getExtraDiscount = rewards.extra_discount || '';
+
 			//console.log(getTotalSpent);
-			const totalSpent = parseInt(getTotalSpent / 100) || 3;
+			const totalSpent = parseInt(getRewardsSpent / 100) || 3;
 			//console.log(totalSpent);
 			setAnimation(false);
 			if (totalSpent >= 50) {
@@ -149,7 +154,7 @@ const Dashboard = () => {
 						</ul>
 					</div>
 				</div>
-				<div className='w-full flex items-center justify-center'>
+				<div className='flex w-full items-center justify-center'>
 					<div className='mt-8 w-full md:w-[50vw] lg:w-[30vw] flex flex-col justify-center items-center gap-y-2'>
 						<p className='hidden'>Loyalty Rewards:</p>
 						<div className='w-full bg-gray-200 h-8 rounded-full relative'>
@@ -205,10 +210,10 @@ const Dashboard = () => {
 									: null}
 							</p>
 						</div>
-						{userRewards >= 50 && userRewards < 100 && (
+						{userRewards >= 50 && userRewards < 100 && !rewards.reward1Used && (
 							<div>5% off will be applied at checkout</div>
 						)}
-						{userRewards >= 100 && (
+						{userRewards >= 100 && !rewards.reward2Used && (
 							<div>Free gift will be sent with your next order!</div>
 						)}
 					</div>

@@ -92,7 +92,7 @@ const ViewOrder = ({ order, setViewOrder }) => {
 					</thead>
 					<tbody>
 						{order.items.map((item, i) => (
-							<tr key={order.storeId}>
+							<tr key={item.storeId}>
 								<td>{item.productName || 'N/A'}</td>
 								<td>{item.quantity}</td>
 								<td className='max-lg:hidden'>${item.price.toFixed(2)}</td>

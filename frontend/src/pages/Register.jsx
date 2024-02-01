@@ -145,7 +145,7 @@ const Register = () => {
 							<input
 								type='text'
 								className='input'
-								placeholder='Name'
+								placeholder='Full Name'
 								name='name'
 								value={name}
 								onChange={onChange}
@@ -233,6 +233,9 @@ const Register = () => {
 							</button>
 						</div>
 					</form>
+					<div className='mt-8 text-center'>
+						Not accepting new users at this time!
+					</div>
 					<div className='mt-12 mb-20 flex flex-col lg:flex-row w-full justify-center items-center'>
 						<h4 className='mt-4 lg:pr-4 lg:mt-0'>Already have an account?</h4>
 						<Link className='w-full lg:w-auto btn-outline' to='/login'>
