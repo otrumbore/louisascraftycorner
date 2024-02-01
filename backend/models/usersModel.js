@@ -122,7 +122,7 @@ const userSchema = mongoose.Schema(
 			reward1Used: { type: Boolean, default: false },
 			reward2Used: { type: Boolean, default: false },
 			reward3Used: { type: Boolean, default: false },
-			received: { type: Number, default: 0 },
+			completed: { type: Number, default: 0 },
 			extra_discount: { type: String, default: '' },
 		},
 		archived: {

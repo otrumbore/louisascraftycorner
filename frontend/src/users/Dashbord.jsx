@@ -57,11 +57,6 @@ const Dashboard = () => {
 			if (!userDetails._id) {
 				return;
 			}
-
-			// const getTotalSpent = await getUserTotalSpent(
-			// 	userDetails._id,
-			// 	userDetails.email
-			// );
 			const getRewardsSpent = rewards.spent || 0;
 			const getExtraDiscount = rewards.extra_discount || '';
 
@@ -78,33 +73,6 @@ const Dashboard = () => {
 			console.log(error);
 		}
 	}, [rewards]);
-
-	const calcUserRewards = async () => {
-		try {
-			if (!userDetails._id) {
-				return;
-			}
-
-			// const getTotalSpent = await getUserTotalSpent(
-			// 	userDetails._id,
-			// 	userDetails.email
-			// );
-			const getRewardsSpent = rewards.spent || 0;
-			const getExtraDiscount = rewards.extra_discount || '';
-
-			console.log(getRewardsSpent);
-			const totalSpent = parseInt(getRewardsSpent / 100) || 3;
-			//console.log(totalSpent);
-			setAnimation(false);
-			if (totalSpent >= 50) {
-				setUserRewards(50 * 2);
-			} else {
-				setUserRewards(totalSpent * 2); // times 2 to give it to 100% but is for $50 at 100%
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	};
 
 	return (
 		<div className='p-4 mt-[8rem] min-h-[65vh] w-full flex justify-center'>
@@ -181,67 +149,80 @@ const Dashboard = () => {
 					</div>
 				</div>
 				<div className='flex w-full items-center justify-center'>
-					<div className='mt-8 w-full md:w-[50vw] lg:w-[30vw] flex flex-col justify-center items-center gap-y-2'>
-						<p className='hidden'>Loyalty Rewards:</p>
-						<div className='w-full bg-gray-200 h-8 rounded-full relative'>
-							<div className='flex text-yellow-400 justify-center items-center absolute left-0 right-0 z-10'>
-								{(userRewards >= 50 && userRewards <= 55) || animation ? (
-									<FaStar
-										size={30}
-										className={`${
-											animation ? 'animate-spin' : 'animate-bounce'
-										} `}
-									/>
-								) : (
-									userRewards <= 51 && <FaStar size={30} />
-								)}
-							</div>
-							<div className='flex text-yellow-400 justify-end items-center absolute right-0 px-1 z-10'>
-								{userRewards === 100 || animation ? (
-									<FaStar
-										size={30}
-										className={`${
-											animation ? 'animate-spin' : 'animate-bounce'
-										} `}
-									/>
-								) : (
-									<FaStar size={30} />
-								)}
-							</div>
-							<div
-								className={`flex bg-primary text-lg h-8 font-medium text-blue-100 items-center justify-center p-0.5 leading-none rounded-full relative transition-all duration-700`}
-								style={{ width: `${userRewards}%` }}
-							>
-								{/* {userRewards !== 50 && userRewards + 50 + '%'} */}
-								{userRewards >= 40 && userRewards <= 49
-									? 'So close...'
-									: userRewards >= 50 && userRewards < 55
-									? 'Got it!'
-									: userRewards >= 55 && userRewards < 100
-									? 'Keep it up'
-									: userRewards === 100
-									? 'Complete!'
-									: ''}
+					<div className='mt-8 lg:mt-4 w-full md:w-[50vw] lg:w-[30vw] flex flex-col justify-center items-center gap-y-2'>
+						<p className='hidden text-xl'>Rewards:</p>
+						<div className='w-full'>
+							<div className='w-full bg-gray-200 h-8 rounded-full relative'>
+								<div className='flex text-yellow-400 justify-center items-center absolute left-0 right-0 z-10'>
+									{(userRewards >= 50 && userRewards <= 55) || animation ? (
+										<FaStar
+											size={30}
+											className={`${
+												animation ? 'animate-spin' : 'animate-bounce'
+											} `}
+										/>
+									) : (
+										userRewards <= 51 && <FaStar size={30} />
+									)}
+								</div>
+								<div className='flex text-yellow-400 justify-end items-center absolute right-0 px-1 z-10'>
+									{userRewards === 100 || animation ? (
+										<FaStar
+											size={30}
+											className={`${
+												animation ? 'animate-spin' : 'animate-bounce'
+											} `}
+										/>
+									) : (
+										<FaStar size={30} />
+									)}
+								</div>
+								<div
+									className={`flex bg-primary text-lg h-8 font-medium text-blue-100 items-center justify-center p-0.5 leading-none rounded-full relative transition-all duration-700`}
+									style={{ width: `${userRewards}%` }}
+								>
+									{userRewards !== 50 &&
+										userRewards > 25 &&
+										userRewards < 100 &&
+										'$' + userRewards / 2}
+									{userRewards >= 40 && userRewards <= 49
+										? ' - So close...'
+										: userRewards >= 50 && userRewards < 55
+										? 'Got it!'
+										: userRewards >= 55 && userRewards < 100
+										? ' - Keep it up'
+										: userRewards === 100
+										? 'Complete!'
+										: ''}
+								</div>
 							</div>
 						</div>
+
 						<div className='flex w-full justify-between items-center text-gray-600'>
 							<p className='w-1/3'></p>
 							<p className='w-1/3'>{userRewards <= 55 && '5% off'}</p>
 
 							<p className='flex justify-end'>
 								{userRewards > 50
-									? 'Free Gift'
+									? '10% off'
 									: userRewards < 50
 									? 'Suprise'
 									: null}
 							</p>
 						</div>
-						{userRewards >= 50 && userRewards < 100 && !rewards.reward1Used && (
-							<div>5% off will be applied at checkout</div>
+						{userRewards >= 50 && !rewards.reward1Used && (
+							<div className=''>
+								5% off will be applied at checkout
+								{userRewards >= 100 &&
+									'. 10% off will be applied after you used the 5% off.'}
+							</div>
 						)}
-						{userRewards >= 100 && !rewards.reward2Used && (
-							<div>Free gift will be sent with your next order!</div>
-						)}
+						{userRewards >= 100 &&
+							!rewards.reward2Used &&
+							rewards.reward1Used && (
+								<div>10% off will be applied at checkout!</div>
+							)}
+						<div className='text-xs mt-4'>Rewards help?</div>
 					</div>
 				</div>
 

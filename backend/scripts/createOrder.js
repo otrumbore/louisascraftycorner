@@ -214,7 +214,7 @@ const updateUserTotalSpent = async (email, subtotal) => {
 				spent: parseFloat(subtotal),
 				reward2Used: false,
 				reward1Used: false,
-				received: user.rewards.received + 1,
+				completed: user.rewards.received + 1,
 			};
 		} else {
 			updateRewards = {
