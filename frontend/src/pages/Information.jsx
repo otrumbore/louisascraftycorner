@@ -40,20 +40,18 @@ const ContentPage = () => {
                 You agree to indemnify, defend, and hold harmless louisascrafts.com and louisascraftycorner.com from any claims, damages, liabilities, costs, or expenses arising from your use of the Site or violation of these Terms of Use.
                 
                 8. Governing Law
-                These Terms of Use shall be governed by and construed in accordance with the laws of [Your Country/State], without regard to its conflict of law principles.
+                These Terms of Use shall be governed by and construed in accordance with the laws of the United States and Pennsylvania, without regard to its conflict of law principles.
                 
                 9. Changes to Terms
                 louisascrafts.com and louisascraftycorner.com reserves the right to revise or modify these Terms of Use at any time without prior notice. Continued use of the Site after such changes constitutes acceptance of the updated terms.
                 
                 If you have any questions about these Terms of Use, please contact us at help@louisascrafts.com.
                 
-                Last updated: 01/05/2024
+                Last updated: 02/02/2024
                 `);
 				break;
 			case 'privacy':
 				setContent(`Privacy Policy
-
-                Last Updated: 01/05/2024
                 
                 LouisasCrafts.com and LouisasCraftyCorner.com ("we," "our," or "us") are committed to protecting your privacy. This Privacy Policy outlines how we collect, use, disclose, and safeguard your personal information when you visit our website.
                 
@@ -91,6 +89,8 @@ const ContentPage = () => {
                 If you have any questions or concerns about our Privacy Policy or how we handle your information, please contact us at help@louisascrafts.com.
                 
                 By using LouisasCrafts.com and LouisasCraftyCorner.com, you agree to the terms of this Privacy Policy.
+
+                Last Updated: 01/05/2024
                 
                 `);
 				break;
@@ -104,11 +104,13 @@ const ContentPage = () => {
 	}, [section]);
 
 	return (
-		<div className='p-4 min-h-[65vh] w-full max-w-[1400px] flex flex-col items-center'>
-			<h2 className='text-3xl uppercase'>{section}</h2>
-			<div className='mt-8'>
-				{/* Display content based on the URL parameter */}
-				<p className='whitespace-pre-line'>{content}</p>
+		<div className='p-4 min-h-[65vh] w-full flex justify-center'>
+			<div className='flex flex-col items-center w-full max-w-[1400px]'>
+				<h2 className='text-3xl uppercase'>{section}</h2>
+				<div className='mt-8 w-full'>
+					{/* Display content based on the URL parameter */}
+					<p className='whitespace-pre-line'>{content}</p>
+				</div>
 			</div>
 		</div>
 	);
