@@ -87,20 +87,15 @@ const ContactPage = () => {
 								required
 							></textarea>
 						</div>
-						<div className='flex w-full lg:w-auto lg:justify-end'>
+						<div className='flex w-full justify-end'>
 							<button
 								//type='submit'
 								onClick={() => {
 									enqueueSnackbar('Did not submit...Coming soon!', {
 										variant: 'info',
-										anchorOrigin: {
-											horizontal: 'center',
-											vertical: 'top',
-										},
-										autoHideDuration: 2000,
 									});
 								}}
-								className='btn'
+								className='btn disabled:opacity-50 disabled:cursor-not-allowed'
 								disabled={true}
 							>
 								Submit
@@ -111,7 +106,7 @@ const ContactPage = () => {
 					<h3 className='mt-16 text-3xl mb-4'>Issue with the webiste?</h3>
 					<p>Please submit a ticket!</p>
 					<form
-						className='w-full lg:w-[90%] grid grid-cols-2 gap-4 justify-center'
+						className='w-full lg:w-[90%] grid grid-cols-1 lg:grid-cols-2 gap-4 justify-center'
 						onSubmit={handleBugSubmit}
 					>
 						<div className='flex flex-col w-full gap-3'>
@@ -153,20 +148,15 @@ const ContactPage = () => {
 								required
 							></textarea>
 						</div>
-						<div className='flex w-full lg:w-auto lg:justify-end col-span-2'>
+						<div className='flex w-full lg:w-auto justify-end lg:col-span-2'>
 							<button
 								//type='submit'
 								onClick={() => {
 									enqueueSnackbar('Did not submit...Coming soon!', {
 										variant: 'info',
-										anchorOrigin: {
-											horizontal: 'center',
-											vertical: 'top',
-										},
-										autoHideDuration: 2000,
 									});
 								}}
-								className='btn'
+								className='btn disabled:opacity-50 disabled:cursor-not-allowed'
 								disabled={true}
 							>
 								Submit Ticket
