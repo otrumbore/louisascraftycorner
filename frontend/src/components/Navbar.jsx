@@ -122,30 +122,32 @@ const Navbar = () => {
 					<div
 						className={`hidden lg:flex ${userRole() ? 'w-[60%]' : 'w-[40%]'}`}
 					>
-						<ul
-							className={`flex w-full items-center justify-evenly list-none ${
+						<div
+							className={`flex w-full items-center justify-evenly ${
 								scrolled || pathName !== '/' ? 'text-gray-600' : 'text-white'
 							}`}
 						>
 							{navData.map((item, index) => (
-								<li
+								<Link
+									to={item.linkTo}
 									className={`px-3 py-1 btn-ghost hover:bg-opacity-90 cursor-pointer`}
 									key={index}
 								>
-									<Link to={item.linkTo}>{item.linkName}</Link>
-								</li>
+									{item.linkName}
+								</Link>
 							))}
 							{userRole() > 1 && <span className='text-2xl'>|</span>}
 							{userRole() > 1 &&
 								navAdminData.map((item, index) => (
-									<li
+									<Link
+										to={item.linkTo}
 										className={`px-3 py-1 btn-ghost hover:bg-opacity-90 cursor-pointer`}
 										key={index}
 									>
-										<Link to={item.linkTo}>{item.linkName}</Link>
-									</li>
+										{item.linkName}
+									</Link>
 								))}
-						</ul>
+						</div>
 					</div>
 					<div
 						className={`flex items-center gap-x-2  ${
@@ -267,27 +269,25 @@ const Navbar = () => {
 							</p>
 						</Link>
 					</div>
-					<ul className='flex flex-col items-center text-xl'>
+					<div className='flex flex-col items-center text-xl'>
 						{/* Render your mobile menu links here */}
 						{navData.map((item, index) => (
-							<li className='py-4' key={index}>
-								<Link to={item.linkTo} className='text-black'>
-									{/* Update text color */}
-									{item.linkName}
-								</Link>
-							</li>
+							<Link to={item.linkTo} className='text-gray-600 py-4' key={index}>
+								{item.linkName}
+							</Link>
 						))}
 						{userRole() > 1 && <div>------</div>}
 						{userRole() > 1 &&
 							navAdminData.map((item, index) => (
-								<li className='py-2' key={index}>
-									<Link to={item.linkTo} className='text-black'>
-										{/* Update text color */}
-										{item.linkName}
-									</Link>
-								</li>
+								<Link
+									to={item.linkTo}
+									className='text-gray-600 py-2'
+									key={index}
+								>
+									{item.linkName}
+								</Link>
 							))}
-					</ul>
+					</div>
 					<div className='absolute w-full bottom-4 px-4'>
 						<ul className='flex w-full items-center justify-between'>
 							<li>
