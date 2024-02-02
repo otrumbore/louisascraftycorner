@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 //components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import CookiesNotice from './components/CookiesNotice';
 
 //pages
 import Home from './pages/Home';
@@ -65,6 +66,7 @@ const App = () => {
 				<Route path='/user/logout' element={<Logout />} />
 			</Routes>
 			<Footer />
+			<CookiesNotice />
 		</div>
 	);
 };
