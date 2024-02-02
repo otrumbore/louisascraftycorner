@@ -48,7 +48,7 @@ const ContactPage = () => {
 	return (
 		<div className='p-4 mt-[8rem] min-h-[65vh] w-full flex justify-center'>
 			<div className='flex w-full max-w-[1400px] h-full justify-center'>
-				<div className='w-full flex flex-col items-center rounded-md'>
+				<div className='w-full flex flex-col items-center justify center rounded-md'>
 					<h3 className='text-3xl mb-8'>Contact Us</h3>
 					<form className='w-full lg:w-[40%]' onSubmit={handleContactSubmit}>
 						<div className='mb-4 flex items-center gap-4'>
@@ -108,34 +108,40 @@ const ContactPage = () => {
 						</div>
 					</form>
 					{/* WEBSITE ISSUE REPORT SECTION */}
-					<h3 className='text-3xl mb-8'>Issue with the webiste?</h3>
+					<h3 className='mt-16 text-3xl mb-4'>Issue with the webiste?</h3>
 					<p>Please submit a ticket!</p>
-					<form className='w-full lg:w-[40%]' onSubmit={handleBugSubmit}>
-						<div className='mb-4 flex items-center gap-4'>
-							<input
-								type='text'
-								id='name'
-								name='name'
-								value={bugFormData.name}
-								onChange={handleBugChange}
-								className='input'
-								placeholder='Name'
-								required
-							/>
+					<form
+						className='w-full lg:w-[90%] grid grid-cols-2 gap-4 justify-center'
+						onSubmit={handleBugSubmit}
+					>
+						<div className='flex flex-col w-full gap-3'>
+							<div className='flex items-center'>
+								<input
+									type='text'
+									id='name'
+									name='name'
+									value={bugFormData.name}
+									onChange={handleBugChange}
+									className='input'
+									placeholder='Name'
+									required
+								/>
+							</div>
+							<div className='flex items-center'>
+								<input
+									type='email'
+									id='email'
+									name='email'
+									placeholder='Email'
+									value={bugFormData.email}
+									onChange={handleBugChange}
+									className='input'
+									required
+								/>
+							</div>
 						</div>
-						<div className='mb-4 flex items-center gap-4'>
-							<input
-								type='email'
-								id='email'
-								name='email'
-								placeholder='Email'
-								value={bugFormData.email}
-								onChange={handleBugChange}
-								className='input'
-								required
-							/>
-						</div>
-						<div className='mb-4'>
+
+						<div className='w-full'>
 							<textarea
 								id='message'
 								name='message'
@@ -147,7 +153,7 @@ const ContactPage = () => {
 								required
 							></textarea>
 						</div>
-						<div className='flex w-full lg:w-auto lg:justify-end'>
+						<div className='flex w-full lg:w-auto lg:justify-end col-span-2'>
 							<button
 								//type='submit'
 								onClick={() => {
