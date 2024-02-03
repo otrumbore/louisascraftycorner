@@ -1,5 +1,5 @@
 import React from 'react';
-import Logo500 from '../assets/logo500.png';
+import Logo500 from '../assets/logo-cropped-black.png';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
@@ -11,31 +11,28 @@ const Footer = () => {
 						<p>Navigation:</p>
 					</div>
 
-					<ul className='mt-4 flex flex-col items-center space-y-2'>
-						<li>Home</li>
-						<li>Shop</li>
-						<li>Events</li>
-						<li>About Us</li>
-						<li>Contact Us</li>
-					</ul>
+					<div className='mt-4 flex flex-col items-center space-y-2'>
+						<Link to={'/'}>Home</Link>
+						<Link to={'/shop'}>Shop</Link>
+						<Link to={'/events'}>Events</Link>
+						<Link to={'/about'}>About Us</Link>
+						<Link to={'/contact'}>Contact Us</Link>
+					</div>
 				</div>
 				<div className=''>
 					<div className='flex justify-center text-lg font-bold text-gray-600'>
 						<p>Customer:</p>
 					</div>
 
-					<ul className='mt-4 flex flex-col items-center space-y-2'>
-						<li>Track a Package</li>
-						<li>
-							<Link to='/info/help'>Help</Link>
-						</li>
-						<li>
-							<Link to='/info/terms'>Terms of Use</Link>
-						</li>
-						<li>
-							<Link to='/info/privacy'>Privacy Policy</Link>
-						</li>
-					</ul>
+					<div className='mt-4 flex flex-col items-center space-y-2'>
+						<Link>Track a Package</Link>
+
+						<Link to='/info/help'>Help</Link>
+
+						<Link to='/info/terms'>Terms of Use</Link>
+
+						<Link to='/info/privacy'>Privacy Policy</Link>
+					</div>
 				</div>
 				<div className='flex flex-col items-center'>
 					<div className='flex justify-center text-lg font-bold text-gray-600 '>
@@ -47,15 +44,22 @@ const Footer = () => {
 							<p className='font-bold text-gray-600'>Location:</p>
 							<p>Temple, Pa</p>
 						</li>
-						<li className='flex space-x-2'>
+						<li className='flex space-x-2 items-center'>
 							<p className='font-bold text-gray-600'>Email:</p>
-							<p>sales@louisascrafts.com</p>
+							<p>
+								<a
+									href='mailto:louisascraftycorner@gmail.com'
+									className='cursor-pointer text-primary'
+								>
+									louisascraftycorner@gmail.com
+								</a>
+							</p>
 						</li>
 					</ul>
 					<img
 						src={Logo500}
 						alt='louisas crafty corner logo'
-						className='flex -mt-20 w-[250px] lg:w-auto h-[250px]'
+						className='flex mt-4 w-auto h-[75px]'
 					/>
 				</div>
 			</div>

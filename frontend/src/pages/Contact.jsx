@@ -1,5 +1,5 @@
 import { useSnackbar } from 'notistack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const ContactPage = () => {
 	const { enqueueSnackbar } = useSnackbar();
@@ -44,6 +44,9 @@ const ContactPage = () => {
 		console.log(bugFormData); // For demonstration, logs form data to the console
 		// You can perform further actions like sending data to the server
 	};
+	useEffect(() => {
+		window.scroll(0, 0);
+	}, []);
 
 	return (
 		<div className='p-4 mt-[8rem] min-h-[65vh] w-full flex justify-center'>

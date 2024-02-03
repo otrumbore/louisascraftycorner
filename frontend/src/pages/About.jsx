@@ -15,7 +15,9 @@ const About = () => {
 
 	useEffect(() => {
 		fetchAboutPage();
+		window.scroll(0, 0);
 	}, []);
+
 	return (
 		<div className='w-full flex justify-center min-h-[65vh]'>
 			<div className='p-4 w-full max-w-[1200px]'>
