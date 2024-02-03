@@ -7,7 +7,7 @@ const CookiesNotice = () => {
 	const handleAcknowledge = () => {
 		// Set acknowledged to true when the user acknowledges the notice
 		setAcknowledged(true);
-		Cookies.set('cookieAcknowledged', 'true', { expires: 7 }); // Set the cookie with a 7-day duration
+		Cookies.set('cookieAcknowledged', 'true', { expires: 30 }); // Set the cookie with a 30-day duration
 	};
 
 	// Check if the user has already acknowledged the cookie notice
