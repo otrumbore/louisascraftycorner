@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUser } from '../context/UserContext';
 import { useSnackbar } from 'notistack';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie'; // Import the js-cookie library
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
@@ -12,6 +12,7 @@ import { updateUser } from '../api/admin/users.api';
 
 const Login = () => {
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
+	const { status } = useParams();
 	const [loading, setLoading] = useState(false);
 	const [formData, setFormData] = useState({
 		username: '',
@@ -50,6 +51,8 @@ const Login = () => {
 				lastActivity: new Date(),
 			});
 
+			console.log(res);
+
 			// Set token in a cookie with expiration time (adjust the expiry as needed)
 			const now = new Date();
 			const expirationTime = new Date(now.getTime() + 8 * 60 * 60 * 1000); // Expiry in 8 hours
@@ -71,6 +74,26 @@ const Login = () => {
 			};
 			sendErrorLog(errorData);
 			setLoginError('Wrong username or password');
+			// Check if the error message indicates email validation
+			if (
+				error.response &&
+				error.response.data &&
+				error.response.data.message === 'emailValidation'
+			) {
+				// Handle email validation error
+				setLoginError(
+					'Email needs validation. Email has been resent. Please check your email.'
+				);
+			} else if (
+				error.response &&
+				error.response.data &&
+				error.response.data.message === 'tooManyAttempts'
+			) {
+				// Handle email validation error
+				setLoginError(
+					'Account is disbaled due to too many failed login attempts!'
+				);
+			}
 		} finally {
 			setLoading(false);
 		}
@@ -212,6 +235,19 @@ const Login = () => {
 
 		if (token) {
 			fetchUserData();
+		}
+
+		if (status === 'verify-success') {
+			enqueueSnackbar(`Email has been validated, you may log in!`, {
+				variant: 'success',
+			});
+		} else if (status === 'verify-fail') {
+			enqueueSnackbar(
+				`Email verification unsuccessful! Please log in to resend another!`,
+				{
+					variant: 'error',
+				}
+			);
 		}
 	}, []);
 

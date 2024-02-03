@@ -4,12 +4,16 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 
 import verifyToken from '../middleware/tokenChecks.js';
 
 const router = express.Router();
 
 dotenv.config();
+
+const app_url = process.env.FRONT_END_URL;
+const backend_URL = process.env.BACK_END_URL;
 
 const JWTToken = process.env.JWT_SECRET_TOKEN;
 
@@ -23,14 +27,19 @@ const JWTToken = process.env.JWT_SECRET_TOKEN;
 // 	}
 //   };
 
-const nodeEmail = process.env.email;
-const nodePass = process.env.pass;
+const mailerEmail = process.env.email;
+const mailerPass = process.env.pass;
+
+function generateVerificationToken() {
+	const token = crypto.randomBytes(32).toString('hex');
+	return token;
+}
 
 // Creating user
 router.post('/register', async (request, response) => {
 	try {
 		// Generate a verification token (you can use a library like `crypto` for this)
-		//const verificationToken = generateVerificationToken();
+		const verificationToken = generateVerificationToken();
 
 		const {
 			name,
@@ -48,7 +57,6 @@ router.post('/register', async (request, response) => {
 			dateOfBirth,
 			billAddress,
 			shipAddress,
-			//emailVerificationToken,
 			archived,
 		} = request.body;
 
@@ -71,12 +79,12 @@ router.post('/register', async (request, response) => {
 			dateOfBirth,
 			billAddress: billAddress || {},
 			shipAddress: shipAddress || {},
-			//emailVerificationToken: verificationToken,
+			emailVerificationToken: verificationToken,
 			archived,
 		});
 
 		// Send a verification email
-		//sendVerificationEmail(email, verificationToken);
+		sendVerificationEmail(email, verificationToken, newUser.name);
 
 		return response.status(201).send(newUser);
 	} catch (error) {
@@ -86,13 +94,15 @@ router.post('/register', async (request, response) => {
 });
 
 // Function to send a verification email
-function sendVerificationEmail(email, verificationToken) {
+function sendVerificationEmail(email, verificationToken, user) {
 	const transporter = nodemailer.createTransport({
-		// Configure your email service provider here (SMTP settings)
-		service: 'gmail',
+		service: 'Gmail',
+		host: 'smtp.gmail.com',
+		// port: 465,
+		// secure: true,
 		auth: {
-			user: nodeEmail, //needs setup
-			pass: nodePass,
+			user: mailerEmail,
+			pass: mailerPass,
 		},
 	});
 
@@ -100,7 +110,48 @@ function sendVerificationEmail(email, verificationToken) {
 		from: 'noreply@louisascraftycorner.com',
 		to: email,
 		subject: 'Verify Your Email',
-		text: `Click the following link to verify your email: http://www.louisascraftycorner.com/user/verify/${verificationToken}`,
+		//html: `Welcome ${user}, Please click the following link to verify your email: <a href='https://api.louisascraftycorner.com/api/user/verify/${verificationToken}'>Verify Account</a>`,
+		html: `
+		<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+</head>
+
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+
+    <!-- Header Section -->
+    <header style="background-color: #3498db; padding: 20px; text-align: center; color: #ffffff;">
+        <h1>Email Verification</h1>
+    </header>
+
+    <!-- Main Content Section -->
+    <section style="padding: 20px; text-align: center;">
+        <p style="font-size: 18px; color: #555555;">
+            Hello ${user},
+
+            Thank you for signing up! To complete your registration, please click the button below to verify your email address.
+        </p>
+
+        <!-- CTA Button -->
+        <a href="${backend_URL}/api/user/verify/${verificationToken}" style="display: inline-block; padding: 10px 20px; background-color: #3498db; color: #ffffff; text-decoration: none; border-radius: 5px; margin-top: 20px;">
+            Verify Email
+        </a>
+    </section>
+
+    <!-- Footer Section -->
+    <footer style="background-color: #3498db; padding: 10px; text-align: center; color: #ffffff;">
+        © 2024 louisascraftycorner.com. All rights reserved.
+    </footer>
+
+</body>
+
+</html>
+
+		`,
 	};
 
 	transporter.sendMail(mailOptions, (error, info) => {
@@ -114,15 +165,36 @@ function sendVerificationEmail(email, verificationToken) {
 
 // Your verification route
 router.get('/verify/:token', async (req, res) => {
-	// Extract the verification token from the URL parameters
-	const verificationToken = req.params.token;
+	try {
+		// Extract the verification token from the URL parameters
+		const verificationToken = req.params.token;
 
-	// Check if the verification token is valid (compare with the token stored in your database)
+		// Find the user by the verification token
+		const user = await User.findOne({
+			emailVerificationToken: verificationToken,
+		});
 
-	// If valid, mark the user's email as verified in the database
+		// Check if the user exists and the token is valid
+		if (user) {
+			// Update the emailValidated field to true
+			user.emailValidated = true;
+			await user.save();
 
-	// Redirect the user to a page indicating successful verification
-	res.redirect('/verification-success');
+			// Redirect the user to a success page
+			return res.redirect(`${app_url}/login/verify-success`);
+		} else {
+			// Token is invalid or user not found
+			return (
+				res
+					//.status(400)
+					//.json({ message: 'Invalid verification token' })
+					.redirect(`${app_url}/login/verify-fail`)
+			);
+		}
+	} catch (error) {
+		console.error('Error during email verification:', error);
+		res.status(500).send({ message: 'Server Error' });
+	}
 });
 
 // Express route for handling user logout
@@ -149,6 +221,15 @@ router.post('/login', async (request, response) => {
 
 		if (!passwordMatch) {
 			return response.status(401).json({ message: 'Invalid credentials' });
+		}
+
+		if (!user.emailValidated) {
+			// resend a verification email
+			const verificationToken = generateVerificationToken();
+			user.emailVerificationToken = verificationToken;
+			user.save();
+			sendVerificationEmail(user.email, verificationToken, user.name);
+			return response.status(403).json({ message: 'emailValidation' });
 		}
 
 		const userRole = user.role;
