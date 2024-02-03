@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import LoadingModal from '../components/LoadingModal';
-import SantaHat from '../assets/product-img/santa-hat-ordiment.png';
 import DefaultProductImg from '../assets/product-img/default.png';
 import {
 	FaRegHeart,

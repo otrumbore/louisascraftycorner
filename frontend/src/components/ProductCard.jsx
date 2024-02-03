@@ -7,7 +7,6 @@ import {
 	FaRegStar,
 } from 'react-icons/fa';
 import { MdAddShoppingCart } from 'react-icons/md';
-import SantaHat from '../assets/product-img/santa-hat-ordiment.png';
 import DefaultProductImg from '../assets/product-img/default.png';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
