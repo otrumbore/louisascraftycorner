@@ -27,8 +27,8 @@ const JWTToken = process.env.JWT_SECRET_TOKEN;
 // 	}
 //   };
 
-const mailerEmail = process.env.email;
-const mailerPass = process.env.pass;
+const mailerEmail = process.env.gmail_email;
+const mailerPass = process.env.gmail_pass;
 
 function generateVerificationToken() {
 	const token = crypto.randomBytes(32).toString('hex');
