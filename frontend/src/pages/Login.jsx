@@ -12,7 +12,7 @@ import { updateUser } from '../api/admin/users.api';
 
 const Login = () => {
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
-	const { status } = useParams();
+	const { status, userParam } = useParams();
 	const [loading, setLoading] = useState(false);
 	const [formData, setFormData] = useState({
 		username: '',
@@ -237,6 +237,10 @@ const Login = () => {
 			fetchUserData();
 		}
 
+		if (userParam) {
+			setFormData({ ...formData, username: userParam.trim() });
+		}
+
 		if (status === 'verify-success') {
 			enqueueSnackbar(`Email has been validated, you may log in!`, {
 				variant: 'success',
@@ -337,9 +341,9 @@ const Login = () => {
 							)}
 						</div>
 						<div className='flex flex-col-reverse lg:flex-row w-full justify-between items-center'>
-							<button className='mt-4 pl-1 text-sm'>
+							<Link to={'/forgot/username'} className='mt-4 pl-1 text-sm'>
 								Forgot username or password?
-							</button>
+							</Link>
 							<button
 								type='submit'
 								className={`btn px-16 py-2 w-full lg:w-auto mt-4`}

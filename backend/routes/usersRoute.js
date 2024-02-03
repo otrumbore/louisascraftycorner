@@ -5,6 +5,9 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
+import sendVerificationEmail, {
+	sendForgetUsernameEmail,
+} from '../scripts/nodeMailer.js';
 
 import verifyToken from '../middleware/tokenChecks.js';
 
@@ -27,13 +30,10 @@ const JWTToken = process.env.JWT_SECRET_TOKEN;
 // 	}
 //   };
 
-const mailerEmail = process.env.gmail_email;
-const mailerPass = process.env.gmail_pass;
-
-function generateVerificationToken() {
+const generateVerificationToken = () => {
 	const token = crypto.randomBytes(32).toString('hex');
 	return token;
-}
+};
 
 // Creating user
 router.post('/register', async (request, response) => {
@@ -84,7 +84,7 @@ router.post('/register', async (request, response) => {
 		});
 
 		// Send a verification email
-		sendVerificationEmail(email, verificationToken, newUser.name);
+		sendVerificationEmail(newUser.name, verificationToken, newUser.email);
 
 		return response.status(201).send(newUser);
 	} catch (error) {
@@ -92,76 +92,6 @@ router.post('/register', async (request, response) => {
 		response.status(500).send({ message: 'Server Error' });
 	}
 });
-
-// Function to send a verification email
-function sendVerificationEmail(email, verificationToken, user) {
-	const transporter = nodemailer.createTransport({
-		service: 'Gmail',
-		host: 'smtp.gmail.com',
-		// port: 465,
-		// secure: true,
-		auth: {
-			user: mailerEmail,
-			pass: mailerPass,
-		},
-	});
-
-	const mailOptions = {
-		from: 'noreply@louisascraftycorner.com',
-		to: email,
-		subject: 'Verify Your Email',
-		//html: `Welcome ${user}, Please click the following link to verify your email: <a href='https://api.louisascraftycorner.com/api/user/verify/${verificationToken}'>Verify Account</a>`,
-		html: `
-		<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Verification</title>
-</head>
-
-<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
-
-    <!-- Header Section -->
-    <header style="background-color: #3498db; padding: 20px; text-align: center; color: #ffffff;">
-        <h1>Email Verification</h1>
-    </header>
-
-    <!-- Main Content Section -->
-    <section style="padding: 20px; text-align: center;">
-        <p style="font-size: 18px; color: #555555;">
-            Hello ${user},
-
-            Thank you for signing up! To complete your registration, please click the button below to verify your email address.
-        </p>
-
-        <!-- CTA Button -->
-        <a href="${backend_URL}/api/user/verify/${verificationToken}" style="display: inline-block; padding: 10px 20px; background-color: #3498db; color: #ffffff; text-decoration: none; border-radius: 5px; margin-top: 20px;">
-            Verify Email
-        </a>
-    </section>
-
-    <!-- Footer Section -->
-    <footer style="background-color: #3498db; padding: 10px; text-align: center; color: #ffffff;">
-        © 2024 louisascraftycorner.com. All rights reserved.
-    </footer>
-
-</body>
-
-</html>
-
-		`,
-	};
-
-	transporter.sendMail(mailOptions, (error, info) => {
-		if (error) {
-			console.error('Error sending verification email:', error);
-		} else {
-			console.log('Verification email sent:', info.response);
-		}
-	});
-}
 
 // Your verification route
 router.get('/verify/:token', async (req, res) => {
@@ -195,6 +125,22 @@ router.get('/verify/:token', async (req, res) => {
 		console.error('Error during email verification:', error);
 		res.status(500).send({ message: 'Server Error' });
 	}
+});
+
+router.get('/forgot/username/:email', async (request, response) => {
+	try {
+		const { email } = request.params;
+
+		const user = await User.findOne({ email: email });
+
+		if (user) {
+			console.log(user.name, ' found');
+			sendForgetUsernameEmail(user.email, user.username);
+			return response.status(200).json({ message: 'success found username' });
+		} else {
+			return response.status(404).json({ message: 'User not found' });
+		}
+	} catch (error) {}
 });
 
 // Express route for handling user logout
