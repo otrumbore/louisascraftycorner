@@ -56,7 +56,7 @@ const ForgotUsername = ({ setError, error }) => {
 
 const ForgotPassword = ({ setError, error }) => {
 	return (
-		<div className='w-full max-w-[]'>
+		<div className='w-full'>
 			<div className='flex flex-col gap-y-4'>
 				<input
 					type='password'
@@ -69,7 +69,15 @@ const ForgotPassword = ({ setError, error }) => {
 					placeholder='Confirm New Password'
 					className='input'
 				/>
-				<button className='btn'>Reset Password</button>
+				<p>
+					Coming soon! If you need assistance please react out via contact page!
+				</p>
+				<button
+					className='btn disabled:opacity-50 disabled:cursor-not-allowed'
+					disabled={true}
+				>
+					Reset Password
+				</button>
 			</div>
 		</div>
 	);

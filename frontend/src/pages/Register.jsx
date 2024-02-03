@@ -236,7 +236,7 @@ const Register = () => {
 							</button>
 						</div>
 					</form>
-					<div className='mt-8 text-center'>
+					<div className='hidden mt-8 text-center'>
 						Not accepting new users at this time!
 					</div>
 					<div className='mt-12 mb-20 flex flex-col lg:flex-row w-full justify-center items-center'>
