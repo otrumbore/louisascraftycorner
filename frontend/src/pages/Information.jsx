@@ -45,7 +45,7 @@ const ContentPage = () => {
                 9. Changes to Terms
                 louisascrafts.com and louisascraftycorner.com reserves the right to revise or modify these Terms of Use at any time without prior notice. Continued use of the Site after such changes constitutes acceptance of the updated terms.
                 
-                If you have any questions about these Terms of Use, please contact us at help@louisascrafts.com.
+                If you have any questions about these Terms of Use, please contact us at louisascraftycorner@gmail.com.
                 
                 Last updated: 02/02/2024
                 `);
@@ -86,7 +86,7 @@ const ContentPage = () => {
                 a. We reserve the right to modify this Privacy Policy at any time. Updates will be posted on this page with a revised "Last Updated" date.
                 
                 8. Contact Us
-                If you have any questions or concerns about our Privacy Policy or how we handle your information, please contact us at help@louisascrafts.com.
+                If you have any questions or concerns about our Privacy Policy or how we handle your information, please contact us at louisascraftycorner@gmail.com.
                 
                 By using LouisasCrafts.com and LouisasCraftyCorner.com, you agree to the terms of this Privacy Policy.
 

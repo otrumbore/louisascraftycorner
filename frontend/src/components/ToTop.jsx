@@ -25,8 +25,8 @@ const ToTop = () => {
 	return (
 		<div
 			className={`fixed right-4 bottom-4 rounded-full p-4 bg-primary text-white ${
-				isScrolled ? 'opacity-70' : 'opacity-0'
-			} cursor-pointer transition-all duration-700`}
+				isScrolled ? 'z-10 opacity-70' : '-z-10 opacity-0'
+			} cursor-pointer transition-opacity duration-700`}
 			onClick={scrollToTop}
 		>
 			<FaArrowTurnUp size={30} />
