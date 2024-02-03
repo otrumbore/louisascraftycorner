@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'; // Import Axios
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { useUser } from '../context/UserContext';
 import { getUserByUsernameAndEmail } from '../api/admin/users.api';
@@ -8,6 +8,7 @@ import { getUserByUsernameAndEmail } from '../api/admin/users.api';
 const Register = () => {
 	const { userRole } = useUser();
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
+	const navigate = useNavigate();
 
 	const [formData, setFormData] = useState({
 		name: '',
@@ -102,12 +103,6 @@ const Register = () => {
 			// Make a POST request to your backend API
 			const res = await axios.post(`${API_URL}/api/user/register`, newUser);
 
-			enqueueSnackbar(
-				'Welcome ' + name + ', please confirm your email to login!',
-				{
-					variant: 'success',
-				}
-			);
 			//console.log('User registered:', res.data); // Log the response data (for verification, remove in production)
 
 			// Clear form fields after successful registration
@@ -119,6 +114,14 @@ const Register = () => {
 				confirmPassword: '',
 				agreeTerms: false,
 			});
+
+			enqueueSnackbar(
+				'Welcome ' + name + ', please confirm your email address to login!',
+				{
+					variant: 'success',
+				}
+			);
+			navigate('/login');
 
 			// Handle any further actions after successful registration (redirect, show success message, etc.)
 		} catch (error) {
@@ -207,7 +210,7 @@ const Register = () => {
 								checked={agreeTerms}
 								onChange={handleCheckboxChange}
 								className='mr-2'
-								disabled={true}
+								//disabled={true}
 							/>
 							<label htmlFor='agreeTerms'>
 								I agree to the{' '}
