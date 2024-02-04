@@ -1,10 +1,16 @@
 import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_SERVER_API_URL;
+const APIKey = import.meta.env.VITE_APP_APIKEY;
 
 const getSettings = async () => {
 	try {
-		const response = await axios.get(`${API_URL}/api/admin/site_settings`);
+		const response = await axios.get(`${API_URL}/api/admin/site_settings`, {
+			headers: {
+				'api-key': APIKey,
+			},
+		});
+
 		//console.log(response.data.data[0]);
 		return response.data.data[0];
 	} catch (error) {
@@ -16,8 +22,14 @@ const getSettings = async () => {
 export const getSetting = async (id) => {
 	try {
 		const response = await axios.get(
-			`${API_URL}/api/admin/site_settings/${id}`
+			`${API_URL}/api/admin/site_settings/${id}`,
+			{
+				headers: {
+					'api-key': APIKey,
+				},
+			}
 		);
+		console.log(response.data.data);
 		return response.data.data;
 	} catch (error) {
 		console.error(error);

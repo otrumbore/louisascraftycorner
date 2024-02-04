@@ -6,6 +6,7 @@ const siteSettingsSchema = mongoose.Schema(
 			type: String,
 		},
 		collections: [{ name: String }],
+		apiKey: { type: String, default: '' },
 	},
 	{
 		timestamps: true,

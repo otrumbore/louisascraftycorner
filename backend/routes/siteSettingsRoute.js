@@ -1,5 +1,6 @@
 import express from 'express';
 import { siteSettings } from '../models/siteSettingsModel.js';
+import validateApiKey from '../middleware/apiCkecks.js';
 
 const router = express.Router();
 
@@ -30,7 +31,7 @@ router.post('/', async (request, response) => {
 });
 
 // Get all site_settings
-router.get('/', async (request, response) => {
+router.get('/', validateApiKey, async (request, response) => {
 	try {
 		const settings = await siteSettings.find({});
 		return response.status(200).json({
@@ -44,7 +45,7 @@ router.get('/', async (request, response) => {
 });
 
 // Get site_settings by ID
-router.get('/:id', async (request, response) => {
+router.get('/:id', validateApiKey, async (request, response) => {
 	try {
 		const { id } = request.params;
 		const settings = await siteSettings.findById(id);
