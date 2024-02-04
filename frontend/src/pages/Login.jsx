@@ -55,7 +55,7 @@ const Login = () => {
 
 			// Set token in a cookie with expiration time (adjust the expiry as needed)
 			const now = new Date();
-			const expirationTime = new Date(now.getTime() + 8 * 60 * 60 * 1000); // Expiry in 8 hours
+			const expirationTime = new Date(now.getTime() + 2 * 60 * 60 * 1000); // Expiry in 8 hours
 			Cookies.set('token', res.data.token, {
 				expires: expirationTime,
 				path: '/',
@@ -234,7 +234,8 @@ const Login = () => {
 		const token = Cookies.get('token');
 
 		if (token) {
-			fetchUserData();
+			//fetchUserData();
+			navigate('/user/dashboard');
 		}
 
 		if (userParam) {
@@ -247,7 +248,7 @@ const Login = () => {
 			});
 		} else if (status === 'verify-fail') {
 			enqueueSnackbar(
-				`Email verification unsuccessful! Please log in to resend another!`,
+				`Email verification unsuccessful! Please log in to resend another validation  email!`,
 				{
 					variant: 'error',
 				}
@@ -341,7 +342,7 @@ const Login = () => {
 							)}
 						</div>
 						<div className='flex flex-col-reverse lg:flex-row w-full justify-between items-center'>
-							<Link to={'/forgot/username'} className='mt-4 pl-1 text-sm'>
+							<Link to={'/user/forgot/password'} className='mt-4 pl-1 text-sm'>
 								Forgot username or password?
 							</Link>
 							<button

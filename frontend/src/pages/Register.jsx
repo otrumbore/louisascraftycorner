@@ -3,7 +3,10 @@ import axios from 'axios'; // Import Axios
 import { Link, useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { useUser } from '../context/UserContext';
-import { getUserByUsernameAndEmail } from '../api/admin/users.api';
+import {
+	getUserByUsernameAndEmail,
+	createNewUser,
+} from '../api/admin/users.api';
 
 const Register = () => {
 	const { userRole } = useUser();
@@ -65,12 +68,15 @@ const Register = () => {
 			}
 
 			const passwordPattern =
-				/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()]).{8,}$/;
+				/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 			if (confirmPassword !== password) {
 				if (!passwordPattern.test(password)) {
-					setRegisterError('Passwords do not match!');
+					setRegisterError(
+						'Password must contain at least 8 characters, including at least one uppercase letter, one lowercase letter, one number, and one special character.'
+					);
+					return;
 				}
-
+				setRegisterError('Passwords do not match!');
 				window.scroll(0, 0);
 				return;
 			}
@@ -101,11 +107,17 @@ const Register = () => {
 			};
 
 			// Make a POST request to your backend API
-			const res = await axios.post(`${API_URL}/api/user/register`, newUser);
+			const res = await createNewUser(newUser);
 
 			//console.log('User registered:', res.data); // Log the response data (for verification, remove in production)
 
-			// Clear form fields after successful registration
+			enqueueSnackbar(
+				'Welcome ' + name + ', please confirm your email address to login!',
+				{
+					variant: 'success',
+				}
+			);
+
 			setFormData({
 				name: '',
 				username: '',
@@ -114,14 +126,9 @@ const Register = () => {
 				confirmPassword: '',
 				agreeTerms: false,
 			});
-
-			enqueueSnackbar(
-				'Welcome ' + name + ', please confirm your email address to login!',
-				{
-					variant: 'success',
-				}
-			);
 			navigate('/login');
+
+			setRegisterError('Something went wrong!');
 
 			// Handle any further actions after successful registration (redirect, show success message, etc.)
 		} catch (error) {
@@ -139,8 +146,8 @@ const Register = () => {
 				<h2 className='text-3xl mb-8'>Happy to have you join us!</h2>
 				<div className='w-full lg:w-[40%]'>
 					{registerError && (
-						<div className='flex mb-4 py-2 px-2 w-full justify-center border-2 border-red-400 bg-red-200 rounded-md'>
-							{registerError}
+						<div className='flex mb-4 py-2 px-2 w-full justify-center items-center border-2 border-red-400 bg-red-200 rounded-md'>
+							<p>{registerError}</p>
 						</div>
 					)}
 					<form onSubmit={onSubmit} className='flex flex-col gap-4 mt-2'>
@@ -187,7 +194,7 @@ const Register = () => {
 								value={password}
 								onChange={onChange}
 								required // Make the password field required
-								minLength='6' // Set minimum length for the password
+								minLength='8' // Set minimum length for the password
 							/>
 						</div>
 						<div>
@@ -199,7 +206,7 @@ const Register = () => {
 								value={confirmPassword}
 								onChange={onChange}
 								required // Make the password field required
-								minLength='6' // Set minimum length for the password
+								minLength='8' // Set minimum length for the password
 							/>
 						</div>
 						<div className='flex w-full justify-center items-center'>

@@ -18,6 +18,7 @@ import Information from './pages/Information';
 import NotFound from './pages/errors/NotFound';
 import Success from './pages/cart/Success';
 import ForgotUser from './pages/ForgotUser';
+import PasswordReset from './pages/PasswordReset';
 
 //admin pages
 import AddProduct from './admin/pages/AddProduct';
@@ -56,7 +57,6 @@ const App = () => {
 				<Route path='/order/success/:orderId' element={<Success />} />
 				<Route path='/events' element={<Events />} />
 				<Route path='/about' element={<About />} />
-				<Route path='/forgot/:page' element={<ForgotUser />} />
 
 				<Route path='*' element={<NotFound />} />
 
@@ -69,6 +69,11 @@ const App = () => {
 				{/* Store User Routes */}
 				<Route path='/user/dashboard' element={<Dashbord />} />
 				<Route path='/user/logout' element={<Logout />} />
+				<Route path='/user/forgot/:page' element={<ForgotUser />} />
+				<Route
+					path='/user/reset-password/:emailToken'
+					element={<PasswordReset />}
+				/>
 			</Routes>
 			<Footer />
 			<CookiesNotice />

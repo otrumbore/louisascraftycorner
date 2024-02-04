@@ -109,6 +109,13 @@ const userSchema = mongoose.Schema(
 		emailVerificationToken: {
 			type: String,
 		},
+		passwordReset: {
+			lastReset: { type: Date, default: null },
+			verificationToken: {
+				token: { type: String, default: '' },
+				expDate: { type: Date, default: null },
+			},
+		},
 		failedAttempts: {
 			type: Number,
 			default: 0,

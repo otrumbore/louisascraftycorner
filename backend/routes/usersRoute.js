@@ -3,13 +3,15 @@ import { User } from '../models/usersModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import sendVerificationEmail, {
 	sendForgetUsernameEmail,
+	sendForgotPasswordEmail,
+	sendPasswordUpdatedEmail,
 } from '../scripts/nodeMailer.js';
 
 import verifyToken from '../middleware/tokenChecks.js';
+import validateApiKey, { generateApiKey } from '../middleware/apiCkecks.js';
 
 const router = express.Router();
 
@@ -34,6 +36,17 @@ const generateVerificationToken = () => {
 	const token = crypto.randomBytes(32).toString('hex');
 	return token;
 };
+
+// Check for password strength
+const isStrongPassword = (password) =>
+	/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+		password
+	);
+
+function isValidEmail(email) {
+	// Add your email validation logic here
+	return /\S+@\S+\.\S+/.test(email); // Example: Basic email format validation
+}
 
 // Creating user
 router.post('/register', async (request, response) => {
@@ -60,6 +73,20 @@ router.post('/register', async (request, response) => {
 			archived,
 		} = request.body;
 
+		if (!username || username.length < 5) {
+			return response.status(400).json({ message: 'Invalid username' });
+		}
+
+		if (!email || !isValidEmail(email)) {
+			return response.status(400).json({ message: 'Invalid email' });
+		}
+
+		if (!password || !isStrongPassword(password)) {
+			return response
+				.status(400)
+				.json({ message: 'Password does not meet criteria' });
+		}
+
 		// Hash the password before saving it to the database
 		const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -84,7 +111,7 @@ router.post('/register', async (request, response) => {
 		});
 
 		// Send a verification email
-		sendVerificationEmail(newUser.name, verificationToken, newUser.email);
+		sendVerificationEmail(newUser.name, newUser.email, verificationToken);
 
 		return response.status(201).send(newUser);
 	} catch (error) {
@@ -108,6 +135,7 @@ router.get('/verify/:token', async (req, res) => {
 		if (user) {
 			// Update the emailValidated field to true
 			user.emailValidated = true;
+			user.emailVerificationToken = null;
 			await user.save();
 
 			// Redirect the user to a success page
@@ -143,6 +171,102 @@ router.get('/forgot/username/:email', async (request, response) => {
 	} catch (error) {}
 });
 
+router.get('/forgot-password/:emailorusername', async (request, response) => {
+	try {
+		const { emailorusername } = request.params;
+
+		// Find user by username or email
+		let user = await User.findOne({
+			$or: [{ username: emailorusername }, { email: emailorusername }],
+		});
+
+		if (user) {
+			console.log(user.name, ' found');
+
+			// Generate password reset token
+			const passwordResetToken = generateVerificationToken();
+
+			// Set password reset data for the user
+			const expDate = Date.now() + 10 * 60 * 1000; // 10 minutes in milliseconds
+			user.passwordReset = {
+				lastReset: Date.now(),
+				verificationToken: {
+					token: passwordResetToken,
+					expDate: expDate,
+				},
+			};
+
+			// Save the changes to the database
+			await user.save();
+
+			// Send the forgot password email with the token
+			sendForgotPasswordEmail(user.name, user.email, passwordResetToken);
+
+			return response
+				.status(200)
+				.json({ message: 'Success: User found and password reset email sent' });
+		} else {
+			return response.status(404).json({ message: 'Error: User not found' });
+		}
+	} catch (error) {}
+});
+
+router.put(
+	'/reset-password/:token',
+	validateApiKey,
+	async (request, response) => {
+		try {
+			const { token } = request.params;
+			const { username, newPassword } = request.body;
+
+			let user = await User.findOne({
+				'passwordReset.verificationToken.token': token,
+			});
+
+			if (user) {
+				const resetToken = user.passwordReset.verificationToken;
+
+				if (resetToken.token === token && Date.now() < resetToken.expDate) {
+					if (!isStrongPassword(newPassword)) {
+						return response
+							.status(400)
+							.json({ message: 'Password does not meet the criteria' });
+					}
+
+					const hashedPassword = await bcrypt.hash(newPassword, 10);
+					user.password = hashedPassword;
+					user.passwordReset = {
+						lastReset: Date.now(),
+						verificationToken: {
+							token: null,
+							expDate: null,
+						},
+					};
+					await user.save(); // Save changes to the database
+
+					console.log(user.username, ' password was reset');
+					sendPasswordUpdatedEmail(user.name, user.email);
+
+					return response
+						.status(200)
+						.json({ message: 'Password reset successful' });
+				}
+
+				return response
+					.status(401)
+					.json({ message: 'Token expired or invalid token' });
+			} else {
+				return response.status(404).json({ message: 'User not found' });
+			}
+		} catch (error) {
+			console.error('Error resetting password:', error);
+			return response
+				.status(500)
+				.json({ error: 'Error resetting password', message: error.message });
+		}
+	}
+);
+
 // Express route for handling user logout
 router.post('/logout', verifyToken, (req, res) => {
 	res.status(200).json({ message: 'Logout successful' });
@@ -174,7 +298,7 @@ router.post('/login', async (request, response) => {
 			const verificationToken = generateVerificationToken();
 			user.emailVerificationToken = verificationToken;
 			user.save();
-			sendVerificationEmail(user.email, verificationToken, user.name);
+			sendVerificationEmail(user.name, user.email, verificationToken);
 			return response.status(403).json({ message: 'emailValidation' });
 		}
 
@@ -182,11 +306,15 @@ router.post('/login', async (request, response) => {
 
 		// Create JWT token
 		const token = jwt.sign({ userId: user._id, role: userRole }, JWTToken, {
-			expiresIn: '8h',
+			expiresIn: '2h',
 		});
 
 		user.lastActivity = lastActivity;
 		await user.save();
+
+		// if (user.username === 'otrumbore') {
+		// 	generateApiKey();
+		// }
 
 		// Send the token in the response
 		response.status(200).json({ token });
@@ -235,7 +363,7 @@ router.get('/getUser/:usernameEmail', async (req, res) => {
 });
 
 //admin to get all users
-router.get('/getUsers', verifyToken, async (req, res) => {
+router.get('/getUsers', verifyToken, validateApiKey, async (req, res) => {
 	try {
 		//const requesterUserId = req.user.userId;
 

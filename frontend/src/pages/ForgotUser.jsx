@@ -8,6 +8,7 @@ const API_URL = import.meta.env.VITE_SERVER_API_URL;
 const ForgotUsername = ({ setError, error }) => {
 	const [userEmail, setUserEmail] = useState('');
 	const { enqueueSnackbar } = useSnackbar();
+	const navigate = useNavigate();
 
 	const handleGetUsername = async () => {
 		try {
@@ -27,6 +28,7 @@ const ForgotUsername = ({ setError, error }) => {
 			);
 			setUserEmail('');
 			console.log(res);
+			navigate('/login');
 		} catch (err) {
 			console.error('Error fetching username:', err);
 		}
@@ -55,26 +57,51 @@ const ForgotUsername = ({ setError, error }) => {
 };
 
 const ForgotPassword = ({ setError, error }) => {
+	const [username, setUsername] = useState('');
+	const { enqueueSnackbar } = useSnackbar();
+	const navigate = useNavigate();
+	const handleResetPassword = async () => {
+		try {
+			// const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			// if (!emailRegex.test(userEmail)) {
+			// 	setError('Invalid email format');
+			// 	return;
+			// }
+
+			const res = await axios.get(
+				`${API_URL}/api/user/forgot-password/${username.trim()}`
+			);
+
+			enqueueSnackbar(
+				'If the user does exist, you will receive an email with instructions to reset your password!',
+				{ variant: 'info' }
+			);
+			setUsername('');
+			console.log(res);
+			navigate('/login');
+		} catch (err) {
+			console.error('Error fetching username:', err);
+		}
+	};
 	return (
 		<div className='w-full'>
 			<div className='flex flex-col gap-y-4'>
 				<input
-					type='password'
-					placeholder='Temporary Password'
+					type='text'
+					placeholder='Username'
 					className='input'
-				/>
-				<input type='password' placeholder='New Password' className='input' />
-				<input
-					type='password'
-					placeholder='Confirm New Password'
-					className='input'
+					value={username}
+					onChange={(e) => {
+						setUsername(e.target.value);
+					}}
 				/>
 				<p>
 					Coming soon! If you need assistance please react out via contact page!
 				</p>
 				<button
 					className='btn disabled:opacity-50 disabled:cursor-not-allowed'
-					disabled={true}
+					onClick={handleResetPassword}
+					//disabled={true}
 				>
 					Reset Password
 				</button>

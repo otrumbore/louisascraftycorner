@@ -2,6 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const API_URL = import.meta.env.VITE_SERVER_API_URL;
+const apiKey = import.meta.env.VITE_APP_APIKEY;
 
 const getUsers = async () => {
 	try {
@@ -9,6 +10,7 @@ const getUsers = async () => {
 		const response = await axios.get(`${API_URL}/api/user/getUsers`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
+				'api-key': apiKey,
 				'Content-Type': 'application/json',
 			},
 		});
@@ -73,7 +75,16 @@ export const updateUser = async (id, data) => {
 
 export const createNewUser = async (data) => {
 	try {
-	} catch (error) {}
+		// Make a POST request to your backend API
+		const res = await axios.post(`${API_URL}/api/user/register`, data, {
+			headers: {
+				'api-key': apiKey,
+			},
+		});
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
 };
 
 export default getUsers;

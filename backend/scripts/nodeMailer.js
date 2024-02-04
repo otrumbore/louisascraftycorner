@@ -17,7 +17,7 @@ let mailOptions = {
 	//html: `Welcome ${user}, Please click the following link to verify your email: <a href='https://api.louisascraftycorner.com/api/user/verify/${verificationToken}'>Verify Account</a>`,
 };
 
-export const sendVerificationEmail = (user, verificationToken, email) => {
+export const sendVerificationEmail = (user, email, verificationToken) => {
 	mailOptions.html = `
         <!DOCTYPE html>
 <html lang="en">
@@ -149,6 +149,104 @@ export const sendForgetUsernameEmail = (email, username) => {
     `;
 	mailOptions.to = email;
 	mailOptions.subject = 'Forgot Username';
+
+	sendEmail();
+};
+
+export const sendForgotPasswordEmail = (user, email, verificationToken) => {
+	mailOptions.html = `
+        <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset</title>
+</head>
+
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+
+    <!-- Header Section -->
+    <header style="background-color: #3498db; padding: 20px; text-align: center; color: #ffffff;">
+        <h1>Forgot Password</h1>
+    </header>
+
+    <!-- Main Content Section -->
+    <section style="padding: 20px; text-align: center;">
+        <p style="font-size: 18px; color: #555555;">
+            Hello ${user},
+
+            You have requested to reset your password. Please use the link below and follow the steps to complete the password reset, this link will expire in 10 minutes. If you did not make this request, please ignore the email and the password reset request will expire.
+        </p>
+
+        <!-- CTA Button -->
+        <a href="${app_url}/user/reset-password/${verificationToken}" style="display: inline-block; padding: 10px 20px; background-color: #3498db; color: #ffffff; text-decoration: none; border-radius: 5px; margin-top: 20px;">
+            Reset Password
+        </a>
+    </section>
+
+    <!-- Footer Section -->
+    <footer style="background-color: #3498db; padding: 10px; text-align: center; color: #ffffff;">
+        © 2024 louisascraftycorner.com. All rights reserved.
+    </footer>
+
+</body>
+
+</html>
+
+        `;
+
+	mailOptions.to = email;
+	mailOptions.subject = 'Password Reset';
+
+	sendEmail();
+};
+
+export const sendPasswordUpdatedEmail = (user, email) => {
+	mailOptions.html = `
+        <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Updated</title>
+</head>
+
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+
+    <!-- Header Section -->
+    <header style="background-color: #3498db; padding: 20px; text-align: center; color: #ffffff;">
+        <h1>Password Updated</h1>
+    </header>
+
+    <!-- Main Content Section -->
+    <section style="padding: 20px; text-align: center;">
+        <p style="font-size: 18px; color: #555555;">
+            Hello ${user},
+
+            We have sucessfully updated your password. If you did not make this change, please contact us on the website or reply to this email.
+        </p>
+
+        <!-- CTA Button -->
+        <a href="${app_url}/login" style="display: inline-block; padding: 10px 20px; background-color: #3498db; color: #ffffff; text-decoration: none; border-radius: 5px; margin-top: 20px;">
+            Login
+        </a>
+    </section>
+
+    <!-- Footer Section -->
+    <footer style="background-color: #3498db; padding: 10px; text-align: center; color: #ffffff;">
+        © 2024 louisascraftycorner.com. All rights reserved.
+    </footer>
+
+</body>
+
+</html>
+
+        `;
+
+	mailOptions.to = email;
+	mailOptions.subject = 'Password Changed';
 
 	sendEmail();
 };
