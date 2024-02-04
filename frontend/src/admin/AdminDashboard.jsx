@@ -43,10 +43,17 @@ const AdminDashboard = () => {
 		setLoading(true);
 		try {
 			const fetchedOrders = await getAllOrders();
-			const activeOrders = fetchedOrders.filter(
-				(order) => order.active === true
-			);
+			let activeOrders = [];
+			if (userRole() < 3) {
+				activeOrders = fetchedOrders.filter(
+					(order) => order.active === true && order.customerNotes !== 'test'
+				);
+			} else {
+				activeOrders = fetchedOrders.filter((order) => order.active === true);
+			}
+
 			setOrders(activeOrders);
+			console.log(activeOrders);
 		} catch (error) {
 			console.log(error);
 		} finally {
