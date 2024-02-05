@@ -251,6 +251,50 @@ export const sendPasswordUpdatedEmail = (user, email) => {
 	sendEmail();
 };
 
+export const sendContactEmail = (data) => {
+	const { name, email, message } = data;
+	mailOptions.html = `
+        <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Contact</title>
+</head>
+
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+
+    <!-- Header Section -->
+    <header style="background-color: #3498db; padding: 20px; text-align: center; color: #ffffff;">
+        <h1>Website Contact</h1>
+    </header>
+
+    <!-- Main Content Section -->
+    <section style="padding: 20px; text-align: center;">
+        <p style="font-size: 18px; color: #555555;">
+            From: ${name}, ${email}
+        </p>
+        <p style="font-size: 16px; color: #555555;">Message: ${message}</p>
+    </section>
+
+    <!-- Footer Section -->
+    <footer style="background-color: #3498db; padding: 10px; text-align: center; color: #ffffff;">
+        © 2024 louisascraftycorner.com. All rights reserved.
+    </footer>
+
+</body>
+
+</html>
+
+        `;
+
+	mailOptions.to = 'louisascraftycorner@gmail.com';
+	mailOptions.subject = 'Customer Contact';
+
+	sendEmail();
+};
+
 // Function to send a verification email
 export const sendEmail = () => {
 	const transporter = nodemailer.createTransport({
@@ -264,9 +308,9 @@ export const sendEmail = () => {
 
 	transporter.sendMail(mailOptions, (error, info) => {
 		if (error) {
-			console.error('Error sending verification email:', error);
+			console.error('Error sending email:', error);
 		} else {
-			console.log('Verification email sent:', info.response);
+			//console.log('Verification email sent:', info.response);
 		}
 	});
 };

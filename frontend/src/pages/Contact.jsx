@@ -1,5 +1,6 @@
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
+import sendContactEmail from '../api/contact.api';
 
 const ContactPage = () => {
 	const { enqueueSnackbar } = useSnackbar();
@@ -31,11 +32,30 @@ const ContactPage = () => {
 		}));
 	};
 
-	const handleContactSubmit = (e) => {
+	const handleContactSubmit = async (e) => {
 		e.preventDefault();
-		// Handle form submission logic here, such as sending data to backend or displaying it
-		console.log(contactFormData); // For demonstration, logs form data to the console
-		// You can perform further actions like sending data to the server
+		try {
+			const res = await sendContactEmail(contactFormData);
+			console.log(res);
+			if (res.status === 200) {
+				enqueueSnackbar(
+					'Message sent successfully, we will get back to you soon!',
+					{
+						variant: 'success',
+					}
+				);
+				setContactFormData({ name: '', email: '', message: '' });
+			} else {
+				enqueueSnackbar('Failed to send message. Please try again!', {
+					variant: 'error',
+				});
+			}
+		} catch (err) {
+			console.error(err);
+			enqueueSnackbar('Failed to send message!', {
+				variant: 'error',
+			});
+		}
 	};
 
 	const handleBugSubmit = (e) => {
@@ -92,16 +112,16 @@ const ContactPage = () => {
 						</div>
 						<div className='flex w-full justify-end'>
 							<button
-								//type='submit'
-								onClick={() => {
-									enqueueSnackbar('Did not submit...Coming soon!', {
-										variant: 'info',
-									});
-								}}
+								type='submit'
+								// onClick={() => {
+								// 	enqueueSnackbar('Did not submit...Coming soon!', {
+								// 		variant: 'info',
+								// 	});
+								// }}
 								className='btn disabled:opacity-50 disabled:cursor-not-allowed'
-								disabled={true}
+								//disabled={true}
 							>
-								Submit
+								Send Message
 							</button>
 						</div>
 					</form>
