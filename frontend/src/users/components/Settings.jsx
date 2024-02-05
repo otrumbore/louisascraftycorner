@@ -129,7 +129,7 @@ const Settings = () => {
 									className='input'
 									placeholder='Name'
 									name='name'
-									value={formData.name}
+									value={formData.name || ''}
 									onChange={onChange}
 									required // Make the name field required
 								/>
@@ -140,7 +140,7 @@ const Settings = () => {
 									className='input bg-gray-200 cursor-not-allowed'
 									placeholder='Username'
 									name='username'
-									value={userDetails.username}
+									value={userDetails.username || ''}
 									//onChange={onChange}
 									disabled={true}
 									//required // Make the username field required
@@ -153,7 +153,7 @@ const Settings = () => {
 									className='input bg-gray-200 cursor-not-allowed'
 									placeholder='Email Address'
 									name='email'
-									value={userDetails.email}
+									value={userDetails.email || ''}
 									disabled={true}
 									//onChange={onChange}
 									//required // Make the email field required
@@ -170,7 +170,7 @@ const Settings = () => {
 									className='input'
 									placeholder='Address Line 1'
 									name='line1'
-									value={formData.shipAddress.line1}
+									value={formData.shipAddress.line1 || ''}
 									onChange={onChange}
 									//required // Make the name field required
 								/>
@@ -181,7 +181,7 @@ const Settings = () => {
 									className='input'
 									placeholder='Address Line 2'
 									name='line2'
-									value={formData.shipAddress.line2}
+									value={formData.shipAddress.line2 || ''}
 									onChange={onChange}
 									//required // Make the name field required
 								/>
@@ -193,7 +193,7 @@ const Settings = () => {
 										className='input'
 										placeholder='City'
 										name='city'
-										value={formData.shipAddress.city}
+										value={formData.shipAddress.city || ''}
 										onChange={onChange}
 										//required // Make the name field required
 									/>
@@ -205,7 +205,7 @@ const Settings = () => {
 											className='input'
 											placeholder='State'
 											name='state'
-											value={formData.shipAddress.state}
+											value={formData.shipAddress.state || ''}
 											onChange={onChange}
 											//required // Make the email field required
 										/>
@@ -216,7 +216,7 @@ const Settings = () => {
 											className='input'
 											placeholder='Zip Code'
 											name='postalCode'
-											value={formData.shipAddress.postalCode}
+											value={formData.shipAddress.postalCode || ''}
 											onChange={onChange}
 											//disabled={true}
 											//required // Make the username field required
