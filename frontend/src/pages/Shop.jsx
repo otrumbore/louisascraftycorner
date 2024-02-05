@@ -207,6 +207,8 @@ const Shop = () => {
 								/>
 								Sales
 							</label>
+							{/* For filling in space */}
+							<div className='hidden lg:block w-full lg:max-w-[20%]'></div>
 						</div>
 						<div className='flex w-full lg:w-[35%] justify-between lg:justify-end gap-2 items-center'>
 							<button
