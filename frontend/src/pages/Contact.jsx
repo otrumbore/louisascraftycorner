@@ -4,6 +4,7 @@ import sendContactEmail from '../api/contact.api';
 
 const ContactPage = () => {
 	const { enqueueSnackbar } = useSnackbar();
+	const [contactError, setContactError] = useState('');
 
 	const [contactFormData, setContactFormData] = useState({
 		name: '',
@@ -31,12 +32,39 @@ const ContactPage = () => {
 			[name]: value,
 		}));
 	};
+	const isEmailValid = (email) => {
+		// Basic email format validation using a regular expression
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		return emailRegex.test(email);
+	};
 
 	const handleContactSubmit = async (e) => {
 		e.preventDefault();
+
+		// Basic validation checks
+		if (
+			!contactFormData.name ||
+			!contactFormData.email ||
+			!contactFormData.message
+		) {
+			setContactError('Please fill in all required fields.');
+			return;
+		}
+
+		// Additional email validation
+		if (!isEmailValid(contactFormData.email)) {
+			setContactError('Please enter a valid email address.');
+			return;
+		}
+
 		try {
-			const res = await sendContactEmail(contactFormData);
-			console.log(res);
+			const data = {
+				name: contactFormData.name.trim(),
+				email: contactFormData.email.trim(),
+				message: contactFormData.message.trim(),
+			};
+			const res = await sendContactEmail(data);
+			//console.log(res);
 			if (res.status === 200) {
 				enqueueSnackbar(
 					'Message sent successfully, we will get back to you soon!',
@@ -71,8 +99,13 @@ const ContactPage = () => {
 	return (
 		<div className='p-4 mt-[8rem] min-h-[65vh] w-full flex justify-center'>
 			<div className='flex w-full max-w-[1400px] h-full justify-center'>
-				<div className='w-full flex flex-col items-center justify center rounded-md'>
+				<div className='w-full flex flex-col items-center justify-center'>
 					<h3 className='text-3xl mb-8'>Contact Us</h3>
+					{contactError && (
+						<div className='flex mb-4 py-2 px-2 w-full justify-center border-2 border-red-400 bg-red-200 rounded-md'>
+							{contactError}
+						</div>
+					)}
 					<form className='w-full lg:w-[40%]' onSubmit={handleContactSubmit}>
 						<div className='mb-4 flex items-center gap-4'>
 							<input
@@ -111,16 +144,7 @@ const ContactPage = () => {
 							></textarea>
 						</div>
 						<div className='flex w-full justify-end'>
-							<button
-								type='submit'
-								// onClick={() => {
-								// 	enqueueSnackbar('Did not submit...Coming soon!', {
-								// 		variant: 'info',
-								// 	});
-								// }}
-								className='btn disabled:opacity-50 disabled:cursor-not-allowed'
-								//disabled={true}
-							>
+							<button type='submit' className='btn'>
 								Send Message
 							</button>
 						</div>
