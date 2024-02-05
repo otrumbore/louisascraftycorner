@@ -21,9 +21,12 @@ const ImageUpload = () => {
 				cloudName: CLOUD_NAME,
 				uploadPreset: 'product',
 				cropping: true,
+				croppingShowDimensions: true,
+				croppingAspectRatio: 1,
 				sources: ['local'],
 				maxImageWidth: 1000,
-				theme: 'blue',
+				minImageWidth: 750,
+				theme: 'default',
 			},
 			function (error, result) {
 				console.log('result: ', result);
