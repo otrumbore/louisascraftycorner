@@ -24,7 +24,7 @@ const About = () => {
 				<h2 className='text-3xl font-semibold text-center mb-8'>About</h2>
 				<div className='flex justify-center '>
 					<div
-						className='w-[80%] p-4 border-4 border-primary rounded-md adminHTML'
+						className='w-full lg:w-[80%] p-4 adminHTML'
 						dangerouslySetInnerHTML={{ __html: aboutData.content }}
 					/>
 				</div>
