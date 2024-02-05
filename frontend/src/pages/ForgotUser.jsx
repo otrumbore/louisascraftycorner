@@ -98,9 +98,6 @@ const ForgotPassword = ({ setError, error }) => {
 						setUsername(e.target.value);
 					}}
 				/>
-				<p>
-					Coming soon! If you need assistance please react out via contact page!
-				</p>
 				<button
 					className='btn disabled:opacity-50 disabled:cursor-not-allowed'
 					onClick={handleResetPassword}
