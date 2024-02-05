@@ -161,7 +161,7 @@ export const updateOrder = async (event, intent) => {
 					{ new: true }
 				);
 				sendReceiptEmail(orderDetails);
-				console('sending receipt to customer');
+				console.log('sending receipt to customer');
 				break;
 
 			case 'success':
