@@ -1,6 +1,7 @@
 import { Order } from '../models/ordersModel.js';
 import { Product } from '../models/productsModel.js';
 import { User } from '../models/usersModel.js';
+import { sendReceiptEmail } from './nodeMailer.js';
 
 const createOrder = async (event) => {
 	try {
@@ -38,6 +39,10 @@ const createOrder = async (event) => {
 			active: isActive,
 			prices: prices,
 		});
+
+		if (source === 'retail') {
+			sendReceiptEmail(newOrder);
+		}
 
 		updateInventory(processedCartItems);
 
@@ -123,7 +128,6 @@ export const updateOrder = async (event, intent) => {
 				};
 
 				const subtotal = priceData.subtotal;
-				console.log('im running about the total spent');
 				updateUserTotalSpent(event.customer_email, subtotal);
 
 				const data = {
@@ -151,7 +155,13 @@ export const updateOrder = async (event, intent) => {
 					active: true,
 				};
 
-				await Order.findOneAndUpdate({ orderId: orderId }, updatedOrder);
+				const orderDetails = await Order.findOneAndUpdate(
+					{ orderId: orderId },
+					updatedOrder,
+					{ new: true }
+				);
+				sendReceiptEmail(orderDetails);
+				console('sending receipt to customer');
 				break;
 
 			case 'success':
@@ -177,7 +187,7 @@ export const updateOrder = async (event, intent) => {
 				console.log('Invalid intent value');
 		}
 
-		console.log('updated order data: ', updatedOrder);
+		//console.log('updated order data: ', updatedOrder);
 	} catch (error) {
 		console.error('Error updating order:', error);
 		// Consider sending a more specific error response

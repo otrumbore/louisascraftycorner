@@ -295,6 +295,147 @@ export const sendContactEmail = (data) => {
 	sendEmail();
 };
 
+export const sendReceiptEmail = (data) => {
+	mailOptions.html = `
+        <!DOCTYPE html>
+        <html lang="en">
+
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Order Confirmed</title>
+        </head>
+
+        <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+
+            <!-- Header Section -->
+            <header style="background-color: #3498db; padding: 20px; text-align: center; color: #ffffff;">
+                <h1>Purchase was Successful</h1>
+            </header>
+
+            <!-- Main Content Section -->
+            <section style="padding: 20px; text-align: center;">
+                <div style="background-color: #ffffff; padding: 16px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); max-width: 400px; margin: 40px auto; border: 4px dashed #0066b2;">
+                    <div style="grid-template-columns: 1fr 1fr; margin-bottom: 16px; display: grid;">
+                        <div>
+                            <h1 style="font-size: 20px; font-weight: bold; margin-bottom: 8px;">Order Invoice</h1>
+
+                            <div style="margin-bottom: 8px;">
+                                <span style="color: #888;">Order Number:</span> ${
+																	data.orderId
+																}
+                            </div>
+
+                            <div style="margin-bottom: 8px;">
+                                <span style="color: #888;">Order Date:</span> ${new Date(
+																	data.createdAt
+																).toLocaleString('en-US', {
+																	year: 'numeric',
+																	month: 'numeric',
+																	day: 'numeric',
+																	hour: 'numeric',
+																	minute: 'numeric',
+																	hour12: true,
+																})}
+                            </div>
+                        </div>
+
+                        ${
+													data.shipAdd &&
+													data.shipAdd.line1 &&
+													`
+														<div style='text-align: right;'>
+															<strong>Ship To: </strong>
+															<p>${data.shipName}</p>
+															<p>${data.shipAdd.line1}</p>
+															<p>${data.shipAdd.line2 || ''}</p>
+															<p style='display: flex; justify-content: flex-end;'>
+																$
+																{data.shipAdd.city +
+																	', ' +
+																	data.shipAdd.state +
+																	' ' +
+																	data.shipAdd.postal_code}
+															</p>
+														</div>
+													`
+												}
+                    </div>
+
+                    <table style="width: 100%; margin-bottom: 16px; overflow-x: auto;">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left;">ID</th>
+                                <th style="text-align: left;">Product</th>
+                                <th style="text-align: left;">Quantity</th>
+                                <th style="text-align: left; max-width: 100px;">Price</th>
+                                <th style="text-align: left; max-width: 100px;">Sale</th>
+                                <th style="text-align: right;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.items.map(
+															(item, index) => `
+															<tr key={index}>
+																<td>${item.storeId || 'N/A'}</td>
+																<td>${item.productName || 'N/A'}</td>
+																<td>${item.quantity}</td>
+																<td style='max-width: 100px;'>
+																	${item.price.toFixed(2)}
+																</td>
+																<td style='max-width: 100px;'>
+																	${item.sale.toFixed(2) || 'No Sale'}
+																</td>
+																<td style='text-align: right;'>
+																	$
+																	{(
+																		item.quantity *
+																		(item.sale ? item.sale : item.price)
+																	).toFixed(2)}
+																</td>
+															</tr>
+														`
+														)}
+                        </tbody>
+                    </table>
+
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="font-weight: bold;">Discounts:</span>
+                            <span style="font-size: 16px;">${
+															data.prices.discounts
+																? (data.prices.discounts / 100).toFixed(2)
+																: '0.00'
+														}</span>
+                        </div>
+                        <!-- Repeat similar styles for other rows -->
+
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="font-weight: bold;">Total:</span>
+                            <span style="font-size: 16px;">${(
+															data.prices.total / 100
+														).toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer Section -->
+            <footer style="background-color: #3498db; padding: 10px; text-align: center; color: #ffffff;">
+                © 2024 louisascraftycorner.com. All rights reserved.
+            </footer>
+
+        </body>
+
+        </html>
+    `;
+
+	mailOptions.to = data.email;
+	mailOptions.subject = 'Order Confirmation - ' + data.orderId;
+
+	sendEmail();
+};
+
 // Function to send a verification email
 export const sendEmail = () => {
 	const transporter = nodemailer.createTransport({
@@ -310,7 +451,7 @@ export const sendEmail = () => {
 		if (error) {
 			console.error('Error sending email:', error);
 		} else {
-			//console.log('Verification email sent:', info.response);
+			console.log('Verification email sent:', info.response);
 		}
 	});
 };
