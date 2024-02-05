@@ -282,13 +282,10 @@ const Shop = () => {
 								)}
 
 								{pageNumbers.map((number) => (
-									<li
-										key={number}
-										//className={}
-									>
+									<li key={number}>
 										<button
 											onClick={() => paginate(number)}
-											className={` text-lg ${
+											className={`text-lg ${
 												number === currentPage
 													? 'btn px-4'
 													: 'btn-ghost py-2 px-4'
