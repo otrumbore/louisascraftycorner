@@ -82,11 +82,17 @@ const Favorites = () => {
 							<div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
 								{favorites.length > 0 &&
 									favorites.map((item, i) => (
-										<div
+										<Link
+											to={`/product/${item.data._id}`}
 											key={i}
-											className='p-4 flex flex-col gap-y-4 lg:gap-0 lg:flex-row lg:justify-between items-center border-4 border-primary rounded-md'
+											className='relative p-4 flex flex-col gap-y-4 lg:gap-0 lg:flex-row lg:justify-between items-center border-4 border-primary rounded-md'
 										>
-											<div className='flex items-center w-full justify-between'>
+											{item.data.sale > 0 && (
+												<span className='absolute right-2 top-2 lg:hidden z-10 inline-flex items-center rounded-md bg-red-500 px-4 py-2 text-xs font-medium text-white ring-1 ring-inset ring-red-600/10'>
+													SALE
+												</span>
+											)}
+											<div className='flex items-center w-full gap-4'>
 												<Link to={`/product/${item.data._id}`}>
 													<img
 														src={
@@ -107,7 +113,13 @@ const Favorites = () => {
 													/>
 												</Link>
 												<div className=''>{item.data.name}</div>
-												<div>
+											</div>
+											<div className='w-full flex items-center justify-between'>
+												<div
+													className={`${
+														item.data.sale < 1 && 'pl-4'
+													} font-semibold`}
+												>
 													{item.data.archived ? (
 														<p>Out of stock!</p>
 													) : item.data.sale > 0 ? (
@@ -121,67 +133,62 @@ const Favorites = () => {
 														<p>${item.data.price}</p>
 													)}
 												</div>
-											</div>
 
-											<div className='flex w-full items-center justify-between lg:justify-end'>
-												{item.data.name === 'deleted' ? (
-													<p className='text-2xl'>Item no longer for sale</p>
-												) : (
-													<>
-														{!item.data.active && <p>No longer available</p>}
-														<button
-															onClick={() => {
-																removeFromFavorites(item.data.storeId);
-																enqueueSnackbar(
-																	'Deleted ' +
-																		item.data.storeId +
-																		' from favorites',
-																	{ variant: 'success' }
-																);
-															}}
-															className='btn-ghost px-2 text-red-600 hover:text-white ml-4'
-														>
-															<MdOutlineDeleteForever className='text-2xl lg:text-3xl' />
-														</button>
-														<button
-															className={`btn px-4 py-2 ml-4 ${
-																cartItems.some(
-																	(cartItem) => cartItem._id === item.data._id
-																) ||
-																item.data.archived ||
-																!item.data.active
-																	? 'opacity-80 cursor-not-allowed'
-																	: ''
-															}`}
-															onClick={() => {
-																if (
-																	!cartItems.some(
-																		(cartItem) => cartItem._id === item.data._id
-																	)
-																) {
-																	addToCart(item.data, 1);
+												<div className='flex w-full items-center justify-end'>
+													{item.data.name === 'deleted' ? (
+														<p className='text-2xl'>Item no longer for sale</p>
+													) : (
+														<>
+															{!item.data.active && <p>No longer available</p>}
+															<button
+																onClick={(e) => {
+																	e.preventDefault();
+																	removeFromFavorites(item.data.storeId);
 																	enqueueSnackbar(
-																		'Added ' +
-																			item.data.name +
-																			' to cart with quantity 1',
+																		'Deleted ' +
+																			item.data.storeId +
+																			' from favorites',
 																		{ variant: 'success' }
 																	);
+																}}
+																className='btn-ghost px-2 text-red-600 hover:text-white ml-4 z-10'
+															>
+																<MdOutlineDeleteForever className='text-2xl lg:text-3xl' />
+															</button>
+															<button
+																className={`btn px-4 py-2 ml-4 z-10 disabled:opacity-50 disabled:cursor-not-allowed`}
+																onClick={(e) => {
+																	e.preventDefault();
+																	if (
+																		!cartItems.some(
+																			(cartItem) =>
+																				cartItem._id === item.data._id
+																		)
+																	) {
+																		addToCart(item.data, 1);
+																		enqueueSnackbar(
+																			'Added ' +
+																				item.data.name +
+																				' to cart with quantity 1',
+																			{ variant: 'success' }
+																		);
+																	}
+																}}
+																disabled={
+																	cartItems.some(
+																		(cartItem) => cartItem._id === item.data._id
+																	) ||
+																	item.data.archived ||
+																	!item.data.active
 																}
-															}}
-															disabled={
-																cartItems.some(
-																	(cartItem) => cartItem._id === item.data._id
-																) ||
-																item.data.archived ||
-																!item.data.active
-															}
-														>
-															<MdAddShoppingCart size={27} />
-														</button>
-													</>
-												)}
+															>
+																<MdAddShoppingCart size={27} />
+															</button>
+														</>
+													)}
+												</div>
 											</div>
-										</div>
+										</Link>
 									))}
 							</div>
 						</div>
