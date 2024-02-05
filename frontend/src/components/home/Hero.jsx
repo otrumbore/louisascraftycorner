@@ -31,7 +31,7 @@ const Hero = () => {
 						<div className='flex w-full justify-end'>
 							<button
 								onClick={() => goShopping()}
-								className='mt-4 px-8 py-3 bg-[#0066b2] text-white rounded-md hover:bg-[#002D62] transition duration-300'
+								className='mt-4 px-8 py-3 btn'
 							>
 								Shop Now
 							</button>
