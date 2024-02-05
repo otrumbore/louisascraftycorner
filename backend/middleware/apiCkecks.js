@@ -41,7 +41,7 @@ export const validateApiKey = async (req, res, next) => {
 
 		const apiMatch = await bcrypt.compare(apiKey, siteSettingsData.apiKey);
 
-		console.log('api key match: ', apiMatch);
+		//console.log('api key match: ', apiMatch);
 
 		if (!apiMatch) {
 			return res.status(401).json({ error: 'Unauthorized' });
