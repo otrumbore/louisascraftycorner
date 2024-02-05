@@ -1,5 +1,6 @@
 import express from 'express';
 import { errorLogging } from '../models/errorLoggingModel.js';
+import validateApiKey from '../middleware/apiCkecks.js';
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ const router = express.Router();
 //   };
 
 // Creating error log
-router.post('/', async (request, response) => {
+router.post('/', validateApiKey, async (request, response) => {
 	try {
 		const { user, errorData, browser } = request.body;
 
@@ -32,7 +33,7 @@ router.post('/', async (request, response) => {
 });
 
 // Get all error logs
-router.get('/', async (request, response) => {
+router.get('/', validateApiKey, async (request, response) => {
 	try {
 		const errorLogs = await errorLogging.find({});
 		return response.status(200).json({
@@ -46,7 +47,7 @@ router.get('/', async (request, response) => {
 });
 
 // Get error log by ID
-router.get('/:id', async (request, response) => {
+router.get('/:id', validateApiKey, async (request, response) => {
 	try {
 		const { id } = request.params;
 		const errorLog = await errorLogging.findById(id);

@@ -2,6 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const API_URL = import.meta.env.VITE_SERVER_API_URL;
+const apiKey = import.meta.env.VITE_APP_APIKEY;
 
 //requires admin
 export const getAllOrders = async () => {
@@ -10,6 +11,7 @@ export const getAllOrders = async () => {
 		const response = await axios.get(`${API_URL}/api/orders`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
+				'api-key': apiKey,
 			},
 		});
 		return response.data.data;
@@ -32,6 +34,7 @@ export const getOrders = async (userId, email) => {
 		const response = await axios.get(url, {
 			headers: {
 				Authorization: `Bearer ${token}`,
+				'api-key': apiKey,
 			},
 		});
 
@@ -44,7 +47,11 @@ export const getOrders = async (userId, email) => {
 
 export const getOrder = async (id) => {
 	try {
-		const response = await axios.get(`${API_URL}/api/orders/${id}`);
+		const response = await axios.get(`${API_URL}/api/orders/${id}`, {
+			headers: {
+				'api-key': apiKey,
+			},
+		});
 		return response.data.data;
 	} catch (error) {
 		console.error(error);
@@ -58,6 +65,7 @@ export const createOrder = async (data) => {
 		const response = await axios.post(`${API_URL}/api/orders/`, data, {
 			headers: {
 				Authorization: `Bearer ${token}`,
+				'api-key': apiKey,
 			},
 		});
 		return response;
@@ -73,6 +81,7 @@ export const updateOrder = async (id, data) => {
 		const response = await axios.put(`${API_URL}/api/orders/${id}`, data, {
 			headers: {
 				Authorization: `Bearer ${token}`,
+				'api-key': apiKey,
 			},
 		});
 
@@ -95,6 +104,7 @@ export const getUserTotalSpent = async (userId, email) => {
 		const response = await axios.get(url, {
 			headers: {
 				Authorization: `Bearer ${token}`,
+				'api-key': apiKey,
 			},
 		});
 

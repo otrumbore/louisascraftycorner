@@ -3,34 +3,15 @@ import { Favorites } from '../models/userFavoritesModel.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { Product } from '../models/productsModel.js';
+import validateApiKey from '../middleware/apiCkecks.js';
+import verifyToken from '../middleware/tokenChecks.js';
 
 const router = express.Router();
 
 dotenv.config();
 
-const JWTToken = process.env.JWT_SECRET_TOKEN;
-
-// Middleware to verify JWT token and extract user details
-const verifyToken = (req, res, next) => {
-	const authHeader = req.headers.authorization;
-
-	if (!authHeader || !authHeader.startsWith('Bearer ')) {
-		return res.status(401).json({ message: 'Unauthorized' });
-	}
-
-	const token = authHeader.split(' ')[1];
-
-	jwt.verify(token, JWTToken, (err, decoded) => {
-		if (err) {
-			return res.status(403).json({ message: 'Invalid token' });
-		}
-		req.user = decoded; // Attach user details to request object
-		next();
-	});
-};
-
 // Create a favorite
-router.post('/', verifyToken, async (request, response) => {
+router.post('/', verifyToken, validateApiKey, async (request, response) => {
 	try {
 		const { userId, email, items } = request.body;
 
@@ -48,7 +29,7 @@ router.post('/', verifyToken, async (request, response) => {
 });
 
 // Get all favorites
-router.get('/', async (request, response) => {
+router.get('/', validateApiKey, async (request, response) => {
 	try {
 		const favorites = await Favorites.find({});
 		return response.status(200).json({
@@ -62,7 +43,7 @@ router.get('/', async (request, response) => {
 });
 
 // Get favorite by user ID
-router.get('/:id', verifyToken, async (request, response) => {
+router.get('/:id', verifyToken, validateApiKey, async (request, response) => {
 	try {
 		const { id } = request.params;
 		const favorite = await Favorites.findOne({ userId: id });
@@ -82,7 +63,7 @@ router.get('/:id', verifyToken, async (request, response) => {
 
 //Get favorite products
 // Get product by ID
-router.get('/product/:id', async (request, response) => {
+router.get('/product/:id', validateApiKey, async (request, response) => {
 	try {
 		const { id } = request.params;
 		const product = await Product.findOne({ storeId: id });
@@ -101,7 +82,7 @@ router.get('/product/:id', async (request, response) => {
 });
 
 // Update a favorite by ID
-router.put('/:id', verifyToken, async (request, response) => {
+router.put('/:id', verifyToken, validateApiKey, async (request, response) => {
 	try {
 		const { id } = request.params;
 		const { email, items } = request.body;
@@ -151,22 +132,27 @@ const createFavorite = async (userId, email, items) => {
 };
 
 // Delete a favorite by ID
-router.delete('/:id', verifyToken, async (request, response) => {
-	try {
-		const { id } = request.params;
-		const deletedFavorite = await Favorites.findByIdAndDelete(id);
+router.delete(
+	'/:id',
+	verifyToken,
+	validateApiKey,
+	async (request, response) => {
+		try {
+			const { id } = request.params;
+			const deletedFavorite = await Favorites.findByIdAndDelete(id);
 
-		if (!deletedFavorite) {
-			return response.status(404).send({ message: 'Favorite not found' });
+			if (!deletedFavorite) {
+				return response.status(404).send({ message: 'Favorite not found' });
+			}
+
+			return response
+				.status(200)
+				.send({ message: 'Favorite deleted successfully' });
+		} catch (error) {
+			console.error(error.message);
+			response.status(500).send({ message: 'Server Error' });
 		}
-
-		return response
-			.status(200)
-			.send({ message: 'Favorite deleted successfully' });
-	} catch (error) {
-		console.error(error.message);
-		response.status(500).send({ message: 'Server Error' });
 	}
-});
+);
 
 export default router;

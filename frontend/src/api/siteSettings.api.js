@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const API_URL = import.meta.env.VITE_SERVER_API_URL;
 const APIKey = import.meta.env.VITE_APP_APIKEY;
@@ -39,11 +40,13 @@ export const getSetting = async (id) => {
 
 export const updateSetting = async (data) => {
 	const id = '658722f06968a772f2cdde55'; //sitesettings id temp needs fix
+	const token = Cookies.get('token');
 	try {
 		const token = Cookies.get('token');
 		const response = await axios.put(
 			`${API_URL}/api/admin/site_settings/${id}`,
-			data
+			data,
+			{ headers: { Authorization: `Bearer ${token}`, 'api-key': APIKey } }
 		);
 		//console.log(response);
 		return response;

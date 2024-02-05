@@ -1,6 +1,7 @@
 import express from 'express';
 import { Product } from '../models/productsModel.js';
 import verifyToken from '../middleware/tokenChecks.js';
+import validateApiKey from '../middleware/apiCkecks.js';
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ const router = express.Router();
 // 	}
 //   };
 
-router.post('/', verifyToken, async (request, response) => {
+router.post('/', verifyToken, validateApiKey, async (request, response) => {
 	try {
 		if (request.user.role !== 'admin' && request.user.role !== 'moderator') {
 			return response.status(401).send({ message: 'Unauthorized' });
@@ -64,7 +65,7 @@ router.post('/', verifyToken, async (request, response) => {
 });
 
 // Get all products
-router.get('/', async (request, response) => {
+router.get('/', validateApiKey, async (request, response) => {
 	try {
 		const products = await Product.find({});
 
@@ -79,7 +80,7 @@ router.get('/', async (request, response) => {
 });
 
 // Get product by ID
-router.get('/:id', async (request, response) => {
+router.get('/:id', validateApiKey, async (request, response) => {
 	try {
 		const { id } = request.params;
 		const product = await Product.findById(id);
@@ -98,7 +99,7 @@ router.get('/:id', async (request, response) => {
 });
 
 // Update a product by ID
-router.put('/:id', verifyToken, async (request, response) => {
+router.put('/:id', verifyToken, validateApiKey, async (request, response) => {
 	try {
 		const { id } = request.params;
 		if (request.user.role !== 'admin' && request.user.role !== 'moderator') {
@@ -123,25 +124,30 @@ router.put('/:id', verifyToken, async (request, response) => {
 });
 
 // Delete a product by ID
-router.delete('/:id', verifyToken, async (request, response) => {
-	try {
-		const { id } = request.params;
-		if (request.user.role !== 'admin' && request.user.role !== 'moderator') {
-			return response.status(401).send({ message: 'Unauthorized' });
-		}
-		const deletedProduct = await Product.findByIdAndDelete(id);
+router.delete(
+	'/:id',
+	verifyToken,
+	validateApiKey,
+	async (request, response) => {
+		try {
+			const { id } = request.params;
+			if (request.user.role !== 'admin' && request.user.role !== 'moderator') {
+				return response.status(401).send({ message: 'Unauthorized' });
+			}
+			const deletedProduct = await Product.findByIdAndDelete(id);
 
-		if (!deletedProduct) {
-			return response.status(404).send({ message: 'Product not found' });
-		}
+			if (!deletedProduct) {
+				return response.status(404).send({ message: 'Product not found' });
+			}
 
-		return response
-			.status(200)
-			.send({ message: 'Product deleted successfully' });
-	} catch (error) {
-		console.error(error.message);
-		response.status(500).send({ message: 'Server Error' });
+			return response
+				.status(200)
+				.send({ message: 'Product deleted successfully' });
+		} catch (error) {
+			console.error(error.message);
+			response.status(500).send({ message: 'Server Error' });
+		}
 	}
-});
+);
 
 export default router;

@@ -11,7 +11,7 @@ import sendVerificationEmail, {
 } from '../scripts/nodeMailer.js';
 
 import verifyToken from '../middleware/tokenChecks.js';
-import validateApiKey, { generateApiKey } from '../middleware/apiCkecks.js';
+import validateApiKey from '../middleware/apiCkecks.js';
 
 const router = express.Router();
 
@@ -49,7 +49,7 @@ function isValidEmail(email) {
 }
 
 // Creating user
-router.post('/register', async (request, response) => {
+router.post('/register', validateApiKey, async (request, response) => {
 	try {
 		// Generate a verification token (you can use a library like `crypto` for this)
 		const verificationToken = generateVerificationToken();
@@ -155,61 +155,69 @@ router.get('/verify/:token', async (req, res) => {
 	}
 });
 
-router.get('/forgot/username/:email', async (request, response) => {
-	try {
-		const { email } = request.params;
+router.get(
+	'/forgot-username/:email',
+	validateApiKey,
+	async (request, response) => {
+		try {
+			const { email } = request.params;
 
-		const user = await User.findOne({ email: email });
+			const user = await User.findOne({ email: email });
 
-		if (user) {
-			console.log(user.name, ' found');
-			sendForgetUsernameEmail(user.email, user.username);
-			return response.status(200).json({ message: 'success found username' });
-		} else {
-			return response.status(404).json({ message: 'User not found' });
-		}
-	} catch (error) {}
-});
+			if (user) {
+				console.log(user.name, ' found');
+				sendForgetUsernameEmail(user.email, user.username);
+				return response.status(200).json({ message: 'success found username' });
+			} else {
+				return response.status(404).json({ message: 'User not found' });
+			}
+		} catch (error) {}
+	}
+);
 
-router.get('/forgot-password/:emailorusername', async (request, response) => {
-	try {
-		const { emailorusername } = request.params;
+router.get(
+	'/forgot-password/:emailorusername',
+	validateApiKey,
+	async (request, response) => {
+		try {
+			const { emailorusername } = request.params;
 
-		// Find user by username or email
-		let user = await User.findOne({
-			$or: [{ username: emailorusername }, { email: emailorusername }],
-		});
+			// Find user by username or email
+			let user = await User.findOne({
+				$or: [{ username: emailorusername }, { email: emailorusername }],
+			});
 
-		if (user) {
-			console.log(user.name, ' found');
+			if (user) {
+				console.log(user.name, ' found');
 
-			// Generate password reset token
-			const passwordResetToken = generateVerificationToken();
+				// Generate password reset token
+				const passwordResetToken = generateVerificationToken();
 
-			// Set password reset data for the user
-			const expDate = Date.now() + 10 * 60 * 1000; // 10 minutes in milliseconds
-			user.passwordReset = {
-				lastReset: Date.now(),
-				verificationToken: {
-					token: passwordResetToken,
-					expDate: expDate,
-				},
-			};
+				// Set password reset data for the user
+				const expDate = Date.now() + 10 * 60 * 1000; // 10 minutes in milliseconds
+				user.passwordReset = {
+					lastReset: Date.now(),
+					verificationToken: {
+						token: passwordResetToken,
+						expDate: expDate,
+					},
+				};
 
-			// Save the changes to the database
-			await user.save();
+				// Save the changes to the database
+				await user.save();
 
-			// Send the forgot password email with the token
-			sendForgotPasswordEmail(user.name, user.email, passwordResetToken);
+				// Send the forgot password email with the token
+				sendForgotPasswordEmail(user.name, user.email, passwordResetToken);
 
-			return response
-				.status(200)
-				.json({ message: 'Success: User found and password reset email sent' });
-		} else {
-			return response.status(404).json({ message: 'Error: User not found' });
-		}
-	} catch (error) {}
-});
+				return response.status(200).json({
+					message: 'Success: User found and password reset email sent',
+				});
+			} else {
+				return response.status(404).json({ message: 'Error: User not found' });
+			}
+		} catch (error) {}
+	}
+);
 
 router.put(
 	'/reset-password/:token',
@@ -268,12 +276,12 @@ router.put(
 );
 
 // Express route for handling user logout
-router.post('/logout', verifyToken, (req, res) => {
+router.post('/logout', verifyToken, validateApiKey, (req, res) => {
 	res.status(200).json({ message: 'Logout successful' });
 });
 
 // Login route
-router.post('/login', async (request, response) => {
+router.post('/login', validateApiKey, async (request, response) => {
 	try {
 		const { username, password, lastActivity } = request.body;
 
@@ -325,7 +333,7 @@ router.post('/login', async (request, response) => {
 });
 
 // Assuming you have an endpoint to fetch user data after successful login
-router.get('/getUser', verifyToken, async (req, res) => {
+router.get('/getUser', verifyToken, validateApiKey, async (req, res) => {
 	try {
 		const userId = req.user.userId; // Assuming 'userId' is the key used in the token payload
 
@@ -345,7 +353,7 @@ router.get('/getUser', verifyToken, async (req, res) => {
 });
 
 // Get user by username or email
-router.get('/getUser/:usernameEmail', async (req, res) => {
+router.get('/getUser/:usernameEmail', validateApiKey, async (req, res) => {
 	try {
 		const { usernameEmail } = req.params;
 
@@ -390,39 +398,44 @@ router.get('/getUsers', verifyToken, validateApiKey, async (req, res) => {
 });
 
 // Update user data route
-router.put('/updateUser/:userId', verifyToken, async (req, res) => {
-	try {
-		const requesterUserId = req.user.userId; // Extract userId from the decoded token
-		const userIdToUpdate = req.params.userId; // Extract userId from request parameters
-		const updatedUserData = req.body; // New user data to update
+router.put(
+	'/updateUser/:userId',
+	verifyToken,
+	validateApiKey,
+	async (req, res) => {
+		try {
+			const requesterUserId = req.user.userId; // Extract userId from the decoded token
+			const userIdToUpdate = req.params.userId; // Extract userId from request parameters
+			const updatedUserData = req.body; // New user data to update
 
-		// Check if the requester has the appropriate authorization (admin or the user themselves)
-		if (
-			requesterUserId !== userIdToUpdate &&
-			req.user.role !== 'admin' &&
-			req.user.role !== 'moderator'
-		) {
-			return res
-				.status(403)
-				.json({ message: 'Unauthorized to update this user' });
+			// Check if the requester has the appropriate authorization (admin or the user themselves)
+			if (
+				requesterUserId !== userIdToUpdate &&
+				req.user.role !== 'admin' &&
+				req.user.role !== 'moderator'
+			) {
+				return res
+					.status(403)
+					.json({ message: 'Unauthorized to update this user' });
+			}
+
+			// Find the user by ID and update the user data
+			const updatedUser = await User.findByIdAndUpdate(
+				userIdToUpdate,
+				{ $set: updatedUserData },
+				{ new: true } // Return the updated document
+			);
+
+			if (!updatedUser) {
+				return res.status(404).json({ message: 'User not found' });
+			}
+
+			res.status(200).json(updatedUser);
+		} catch (error) {
+			console.error('User data update error:', error.message);
+			res.status(500).json({ message: 'Server Error' });
 		}
-
-		// Find the user by ID and update the user data
-		const updatedUser = await User.findByIdAndUpdate(
-			userIdToUpdate,
-			{ $set: updatedUserData },
-			{ new: true } // Return the updated document
-		);
-
-		if (!updatedUser) {
-			return res.status(404).json({ message: 'User not found' });
-		}
-
-		res.status(200).json(updatedUser);
-	} catch (error) {
-		console.error('User data update error:', error.message);
-		res.status(500).json({ message: 'Server Error' });
 	}
-});
+);
 
 export default router;

@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import LoadingModal from '../../components/LoadingModal';
 import { addProduct } from '../../api/products.api';
-import errorLogging, { sendActivityLog } from '../../api/admin/logging.api';
+import errorLogging, { sendActivityLog } from '../../api/logging.api';
 import { useUser } from '../../context/UserContext';
 import ImageUpload, { sendImageURL } from '../components/ImageUpload';
 import { MdAttachMoney } from 'react-icons/md';

@@ -1,6 +1,7 @@
 import express from 'express';
 import { Page } from '../models/pagesModel.js';
 import verifyToken from '../middleware/tokenChecks.js';
+import validateApiKey from '../middleware/apiCkecks.js';
 
 const router = express.Router();
 
@@ -15,34 +16,39 @@ const router = express.Router();
 // });
 
 // Update a page by page name
-router.put('/:pageName', verifyToken, async (request, response) => {
-	try {
-		const { pageName } = request.params;
-		let updatedPage = null;
-		if (request.user.role === 'admin' || request.user.role === 'moderator') {
-			console.log(request.body);
-			updatedPage = await Page.findOneAndUpdate(
-				{ page_name: pageName },
-				{ content: request.body.content },
-				{ new: true }
-			);
-		}
+router.put(
+	'/:pageName',
+	verifyToken,
+	validateApiKey,
+	async (request, response) => {
+		try {
+			const { pageName } = request.params;
+			let updatedPage = null;
+			if (request.user.role === 'admin' || request.user.role === 'moderator') {
+				console.log(request.body);
+				updatedPage = await Page.findOneAndUpdate(
+					{ page_name: pageName },
+					{ content: request.body.content },
+					{ new: true }
+				);
+			}
 
-		if (!updatedPage) {
-			return response.status(404).send({ message: 'Page not found' });
-		}
+			if (!updatedPage) {
+				return response.status(404).send({ message: 'Page not found' });
+			}
 
-		return response
-			.status(200)
-			.send({ message: 'Page updated successfully', updates: updatedPage });
-	} catch (error) {
-		console.error(error.message);
-		response.status(500).send({ message: 'Server Error' });
+			return response
+				.status(200)
+				.send({ message: 'Page updated successfully', updates: updatedPage });
+		} catch (error) {
+			console.error(error.message);
+			response.status(500).send({ message: 'Server Error' });
+		}
 	}
-});
+);
 
 // Get page by page name
-router.get('/:pageName', async (request, response) => {
+router.get('/:pageName', validateApiKey, async (request, response) => {
 	try {
 		const { pageName } = request.params;
 		const page = await Page.findOne({ page_name: pageName });

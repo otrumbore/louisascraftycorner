@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getErrorLogs } from '../../../api/admin/logging.api';
+import { getErrorLogs } from '../../../api/logging.api';
 import LoadingModal from '../../../components/LoadingModal';
 
 const ErrorLogs = () => {

@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 import LoadingModal from '../../components/LoadingModal';
 import { getProduct, updateProduct } from '../../api/products.api';
 import { useUser } from '../../context/UserContext';
-import { sendActivityLog } from '../../api/admin/logging.api';
+import { sendActivityLog } from '../../api/logging.api';
 import ImageUpload, { sendImageURL } from '../components/ImageUpload';
 import DefaultProductImg from '../../assets/product-img/default.png';
 import getSettings from '../../api/siteSettings.api';

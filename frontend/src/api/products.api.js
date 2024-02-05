@@ -2,10 +2,15 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const API_URL = import.meta.env.VITE_SERVER_API_URL;
+const apiKey = import.meta.env.VITE_APP_APIKEY;
 
 export const getProducts = async () => {
 	try {
-		const response = await axios.get(`${API_URL}/api/products`);
+		const response = await axios.get(`${API_URL}/api/products`, {
+			headers: {
+				'api-key': apiKey,
+			},
+		});
 		return response.data.data;
 	} catch (error) {
 		console.log(error);
@@ -15,7 +20,11 @@ export const getProducts = async () => {
 
 export const getProduct = async (id) => {
 	try {
-		const response = await axios.get(`${API_URL}/api/products/${id}`);
+		const response = await axios.get(`${API_URL}/api/products/${id}`, {
+			headers: {
+				'api-key': apiKey,
+			},
+		});
 		return response.data.data;
 	} catch (error) {
 		console.error(error);
@@ -29,6 +38,7 @@ export const addProduct = async (data) => {
 		const response = await axios.post(`${API_URL}/api/products/`, data, {
 			headers: {
 				Authorization: `Bearer ${token}`,
+				'api-key': apiKey,
 			},
 		});
 		return response;
@@ -44,6 +54,7 @@ export const updateProduct = async (id, data) => {
 		const response = await axios.put(`${API_URL}/api/products/${id}`, data, {
 			headers: {
 				Authorization: `Bearer ${token}`,
+				'api-key': apiKey,
 			},
 		});
 		return response;
@@ -55,7 +66,11 @@ export const updateProduct = async (id, data) => {
 
 export const getProductStoreIds = async () => {
 	try {
-		const response = await axios.get(`${API_URL}/api/products`);
+		const response = await axios.get(`${API_URL}/api/products`, {
+			headers: {
+				'api-key': apiKey,
+			},
+		});
 
 		const data = response.data.data.map((product) => ({
 			name: product.name,

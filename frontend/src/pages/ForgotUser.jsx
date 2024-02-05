@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 
 const API_URL = import.meta.env.VITE_SERVER_API_URL;
+const apiKey = import.meta.env.VITE_APP_APIKEY;
 
 const ForgotUsername = ({ setError, error }) => {
 	const [userEmail, setUserEmail] = useState('');
@@ -19,7 +20,12 @@ const ForgotUsername = ({ setError, error }) => {
 			}
 
 			const res = await axios.get(
-				`${API_URL}/api/user/forgot/username/${userEmail}`
+				`${API_URL}/api/user/forgot-username/${userEmail.trim()}`,
+				{
+					headers: {
+						'api-key': apiKey,
+					},
+				}
 			);
 
 			enqueueSnackbar(
@@ -33,8 +39,6 @@ const ForgotUsername = ({ setError, error }) => {
 			console.error('Error fetching username:', err);
 		}
 	};
-
-	const handleChange = () => {};
 
 	return (
 		<div className='w-full'>
@@ -62,14 +66,13 @@ const ForgotPassword = ({ setError, error }) => {
 	const navigate = useNavigate();
 	const handleResetPassword = async () => {
 		try {
-			// const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			// if (!emailRegex.test(userEmail)) {
-			// 	setError('Invalid email format');
-			// 	return;
-			// }
-
 			const res = await axios.get(
-				`${API_URL}/api/user/forgot-password/${username.trim()}`
+				`${API_URL}/api/user/forgot-password/${username.trim()}`,
+				{
+					headers: {
+						'api-key': apiKey,
+					},
+				}
 			);
 
 			enqueueSnackbar(

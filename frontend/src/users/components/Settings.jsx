@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../../context/UserContext';
-import { updateUser } from '../../api/admin/users.api';
+import { updateUser } from '../../api/users.api';
 import LoadingModal from '../../components/LoadingModal';
 import { useSnackbar } from 'notistack';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';

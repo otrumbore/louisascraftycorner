@@ -1,6 +1,7 @@
 import express from 'express';
 import { siteSettings } from '../models/siteSettingsModel.js';
 import validateApiKey from '../middleware/apiCkecks.js';
+import verifyToken from '../middleware/tokenChecks.js';
 
 const router = express.Router();
 
@@ -64,22 +65,27 @@ router.get('/:id', validateApiKey, async (request, response) => {
 });
 
 // Update a site_settings by ID
-router.put('/:id', async (request, response) => {
+router.put('/:id', verifyToken, validateApiKey, async (request, response) => {
 	try {
 		const { id } = request.params;
-		const updatedSiteSettings = await siteSettings.findByIdAndUpdate(
-			id,
-			request.body,
-			{
-				new: true,
-			}
-		);
-		//console.log(request.body.storeId);
+		let updatedSiteSettings; // Declare the variable outside the if block
+
+		if (request.user.role === 'admin' || request.user.role === 'moderator') {
+			updatedSiteSettings = await siteSettings.findByIdAndUpdate(
+				id,
+				request.body,
+				{
+					new: true,
+				}
+			);
+		}
+
+		// console.log(request.body.storeId);
 		if (!updatedSiteSettings) {
 			return response.status(404).send({ message: 'Settings not found' });
 		}
 
-		//console.log('updated settings with ', request.body);
+		// console.log('updated settings with ', request.body);
 
 		return response
 			.status(200)

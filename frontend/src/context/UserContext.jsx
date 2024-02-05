@@ -5,11 +5,12 @@ import { useSnackbar } from 'notistack';
 import LoadingModal from '../components/LoadingModal';
 
 import { useNavigate } from 'react-router-dom';
-import { getUser } from '../api/admin/users.api';
+import { getUser } from '../api/users.api';
 
 const UserContext = createContext();
 
 export function UserProvider({ children }) {
+	const apiKey = import.meta.env.VITE_APP_APIKEY;
 	const navigate = useNavigate();
 	const [userDetails, setUserDetails] = useState([]);
 	const [userFavorites, setUserFavorites] = useState([]);
@@ -78,6 +79,7 @@ export function UserProvider({ children }) {
 					(await axios.get(`${API_URL}/api/user/favorites/${userDetails._id}`, {
 						headers: {
 							Authorization: `Bearer ${token}`,
+							'api-key': apiKey,
 						},
 					})) || '';
 
@@ -102,6 +104,7 @@ export function UserProvider({ children }) {
 			const config = {
 				headers: {
 					Authorization: `Bearer ${token}`,
+					'api-key': apiKey,
 				},
 			};
 
@@ -109,18 +112,11 @@ export function UserProvider({ children }) {
 				isActive,
 				// Include other relevant data if needed
 			};
-			axios
-				.put(
-					`${API_URL}/api/user/updateUser/${userDetails._id}`,
-					activityData,
-					config
-				)
-				.then((response) => {
-					//console.log('Activity status updated:', response.data);
-				})
-				.catch((error) => {
-					//console.error('Error updating activity status:', error.message);
-				});
+			axios.put(
+				`${API_URL}/api/user/updateUser/${userDetails._id}`,
+				activityData,
+				config
+			);
 		}
 	};
 
@@ -181,16 +177,17 @@ export function UserProvider({ children }) {
 	};
 
 	const userRole = () => {
-		if (
-			userDetails &&
-			(userDetails.role === 'admin' || userDetails.role === 'moderator')
-		) {
+		if (userDetails) {
 			if (userDetails.role === 'admin') {
 				return 3;
+			} else if (userDetails.role === 'moderator') {
+				return 2;
+			} else if (userDetails.role === 'tester') {
+				return 1.5;
+			} else {
+				return 1;
 			}
-			return 2;
 		}
-		return 1;
 	};
 
 	const removeFromFavorites = async (storeId) => {
@@ -214,6 +211,7 @@ export function UserProvider({ children }) {
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
+						'api-key': apiKey,
 					},
 				}
 			);
@@ -236,6 +234,7 @@ export function UserProvider({ children }) {
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
+						'api-key': apiKey,
 					},
 				}
 			);

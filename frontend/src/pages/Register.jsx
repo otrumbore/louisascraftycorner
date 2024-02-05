@@ -3,10 +3,7 @@ import axios from 'axios'; // Import Axios
 import { Link, useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { useUser } from '../context/UserContext';
-import {
-	getUserByUsernameAndEmail,
-	createNewUser,
-} from '../api/admin/users.api';
+import { getUserByUsernameAndEmail, createNewUser } from '../api/users.api';
 
 const Register = () => {
 	const { userRole } = useUser();

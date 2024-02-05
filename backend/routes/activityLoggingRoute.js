@@ -1,5 +1,6 @@
 import express from 'express';
 import { activityLogging } from '../models/activityLoggingModel.js';
+import validateApiKey from '../middleware/apiCkecks.js';
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ const router = express.Router();
 //   };
 
 // Creating activity log
-router.post('/', async (request, response) => {
+router.post('/', validateApiKey, async (request, response) => {
 	try {
 		const { user, activityData, browser } = request.body;
 
@@ -34,7 +35,7 @@ router.post('/', async (request, response) => {
 });
 
 // Get all activity logs
-router.get('/', async (request, response) => {
+router.get('/', validateApiKey, async (request, response) => {
 	try {
 		const activityLogs = await activityLogging.find({});
 		return response.status(200).json({
@@ -50,7 +51,7 @@ router.get('/', async (request, response) => {
 });
 
 // Get activity log by ID
-router.get('/:id', async (request, response) => {
+router.get('/:id', validateApiKey, async (request, response) => {
 	try {
 		const { id } = request.params;
 		const activityLog = await activityLogging.findById(id);

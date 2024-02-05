@@ -6,12 +6,13 @@ import { useNavigate, Link, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie'; // Import the js-cookie library
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
-import sendErrorLog, { sendActivityLog } from '../api/admin/logging.api';
+import sendErrorLog, { sendActivityLog } from '../api/logging.api';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { updateUser } from '../api/admin/users.api';
+import { updateUser } from '../api/users.api';
 
 const Login = () => {
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
+	const apiKey = import.meta.env.VITE_APP_APIKEY;
 	const { status, userParam } = useParams();
 	const [loading, setLoading] = useState(false);
 	const [formData, setFormData] = useState({
@@ -45,11 +46,19 @@ const Login = () => {
 
 	const loginUser = async () => {
 		try {
-			const res = await axios.post(`${API_URL}/api/user/login`, {
-				username,
-				password,
-				lastActivity: new Date(),
-			});
+			const res = await axios.post(
+				`${API_URL}/api/user/login`,
+				{
+					username,
+					password,
+					lastActivity: new Date(),
+				},
+				{
+					headers: {
+						'api-key': apiKey,
+					},
+				}
+			);
 
 			console.log(res);
 
@@ -109,7 +118,7 @@ const Login = () => {
 			}
 
 			const res = await axios.get(`${API_URL}/api/user/getUser`, {
-				headers: { Authorization: `Bearer ${token}` },
+				headers: { Authorization: `Bearer ${token}`, 'api-key': apiKey },
 			});
 
 			if (!res.data.enabled || !res.data.emailValidated) {

@@ -27,6 +27,7 @@ export const getUser = async (token) => {
 		const response = await axios.get(`${API_URL}/api/user/getUser`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
+				'api-key': apiKey,
 			},
 		});
 		return response;
@@ -39,7 +40,12 @@ export const getUser = async (token) => {
 export const getUserByUsernameAndEmail = async (usernameEmail) => {
 	try {
 		const response = await axios.get(
-			`${API_URL}/api/user/getUser/${usernameEmail}`
+			`${API_URL}/api/user/getUser/${usernameEmail}`,
+			{
+				headers: {
+					'api-key': apiKey,
+				},
+			}
 		);
 		return response.data.exists || false;
 	} catch (error) {
@@ -62,6 +68,7 @@ export const updateUser = async (id, data) => {
 				headers: {
 					Authorization: `Bearer ${token}`,
 					'Content-Type': 'application/json',
+					'api-key': apiKey,
 				},
 			}
 		);

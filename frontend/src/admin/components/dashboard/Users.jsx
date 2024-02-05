@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import getUsers, { updateUser } from '../../../api/admin/users.api';
+import getUsers, { updateUser } from '../../../api/users.api';
 import LoadingModal from '../../../components/LoadingModal';
 import productModal from './ProductModal';
 import DeleteModal from '../DeleteModal';

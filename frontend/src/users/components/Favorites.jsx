@@ -10,6 +10,7 @@ import { useCart } from '../../context/CartContext';
 
 const Favorites = () => {
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
+	const apiKey = import.meta.env.VITE_APP_APIKEY;
 	const navigate = useNavigate();
 	const { userFavorites, userDetails, removeFromFavorites } = useUser();
 	const [favorites, setFavorites] = useState([]);
@@ -24,7 +25,8 @@ const Favorites = () => {
 				const favoriteProductsPromises = userFavorites.map(async (item) => {
 					try {
 						const favoriteProducts = await axios.get(
-							`${API_URL}/api/user/favorites/product/${item.itemId}`
+							`${API_URL}/api/user/favorites/product/${item.itemId}`,
+							{ headers: { 'api-key': apiKey } }
 						);
 						return favoriteProducts.data;
 					} catch (error) {
