@@ -344,18 +344,19 @@ export const sendReceiptEmail = (data) => {
 													data.shipAdd &&
 													data.shipAdd.line1 &&
 													`
-														<div style='text-align: right;'>
+														<div style='text-align: center;'>
 															<strong>Ship To: </strong>
 															<p>${data.shipName}</p>
 															<p>${data.shipAdd.line1}</p>
 															<p>${data.shipAdd.line2 || ''}</p>
 															<p style='display: flex; justify-content: flex-end;'>
-																$
-																{data.shipAdd.city +
+																${
+																	data.shipAdd.city +
 																	', ' +
 																	data.shipAdd.state +
 																	' ' +
-																	data.shipAdd.postal_code}
+																	data.shipAdd.postal_code
+																}
 															</p>
 														</div>
 													`
@@ -365,33 +366,19 @@ export const sendReceiptEmail = (data) => {
                     <table style="width: 100%; margin-bottom: 16px; overflow-x: auto;">
                         <thead>
                             <tr>
-                                <th style="text-align: left;">ID</th>
                                 <th style="text-align: left;">Product</th>
                                 <th style="text-align: left;">Quantity</th>
-                                <th style="text-align: left; max-width: 100px;">Price</th>
-                                <th style="text-align: left; max-width: 100px;">Sale</th>
-                                <th style="text-align: right;">Total</th>
+                                <th style="text-align: right;">Price</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${data.items.map(
 															(item, index) => `
 															<tr key={index}>
-																<td>${item.storeId || 'N/A'}</td>
 																<td>${item.productName || 'N/A'}</td>
 																<td>${item.quantity}</td>
-																<td style='max-width: 100px;'>
-																	${item.price.toFixed(2)}
-																</td>
-																<td style='max-width: 100px;'>
-																	${item.sale.toFixed(2) || 'No Sale'}
-																</td>
 																<td style='text-align: right;'>
-																	$
-																	{(
-																		item.quantity *
-																		(item.sale ? item.sale : item.price)
-																	).toFixed(2)}
+																	${(item.quantity * (item.sale ? item.sale : item.price)).toFixed(2)}
 																</td>
 															</tr>
 														`
