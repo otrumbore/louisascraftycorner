@@ -344,21 +344,29 @@ export const sendReceiptEmail = (data) => {
 													data.shipAdd &&
 													data.shipAdd.line1 &&
 													`
-														<div style='text-align: center;'>
-															<strong>Ship To: </strong>
-															<p>${data.shipName}</p>
-															<p>${data.shipAdd.line1}</p>
-															<p>${data.shipAdd.line2 || ''}</p>
-															<p>
-																${
-																	data.shipAdd.city +
-																	', ' +
-																	data.shipAdd.state +
-																	' ' +
-																	data.shipAdd.postal_code
-																}
-															</p>
-														</div>
+                                                    <div style='text-align: center;'>
+                                                    <strong>Ship To: </strong>
+                                                    <p style="margin-bottom: 2px;">${
+																											data.shipName
+																										}</p>
+                                                    <p style="margin-bottom: 2px;">${
+																											data.shipAdd.line1
+																										}</p>
+                                                    <p style="margin-bottom: 2px;">${
+																											data.shipAdd.line2 || ''
+																										}</p>
+                                                    <p style="margin-bottom: 2px;">
+                                                        ${
+																													data.shipAdd.city +
+																													', ' +
+																													data.shipAdd.state +
+																													' ' +
+																													data.shipAdd
+																														.postal_code
+																												}
+                                                    </p>
+                                                </div>
+                                                
 													`
 												}
                     </div>
@@ -374,7 +382,7 @@ export const sendReceiptEmail = (data) => {
                         <tbody>
                             ${data.items.map(
 															(item, index) => `
-															<tr key={index}>
+															<tr key={${index}}>
 																<td style="text-align: left;">${item.productName || 'N/A'}</td>
 																<td style="text-align: left;">${item.quantity}</td>
 																<td style='text-align: right;'>
@@ -386,23 +394,49 @@ export const sendReceiptEmail = (data) => {
                         </tbody>
                     </table>
 
-                        <div style="display: flex; justify-content: right; margin-bottom: 8px;">
+                        <div style="display: flex; justify-content: flex-end; margin-bottom: 8px; margin-top: 8px;">
                             <span style="font-weight: bold;">Discounts:</span>
                             <span style="font-size: 16px;">${
 															data.prices.discounts
-																? '$' + (data.prices.discounts / 100).toFixed(2)
-																: '$0.00'
+																? ' $' +
+																  (data.prices.discounts / 100).toFixed(2)
+																: ' $0.00'
+														}</span>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end;">
+                            <span style="font-weight: bold;">Subtotal:</span>
+                            <span style="font-size: 16px;">${
+															' $' + (data.prices.subtotal / 100).toFixed(2)
+														}</span>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end;">
+                            <span style="font-weight: bold;">Shipping:</span>
+                            <span style="font-size: 16px;">${
+															data.prices.shipping
+																? ' $' + (data.prices.shipping / 100).toFixed(2)
+																: ' $0.00'
+														}</span>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end;">
+                            <span style="font-weight: bold;">Subtotal:</span>
+                            <span style="font-size: 16px;">${
+															data.prices.tax
+																? ' $' + (data.prices.tax / 100).toFixed(2)
+																: ' $0.00'
 														}</span>
                         </div>
                         <!-- Repeat similar styles for other rows -->
 
-                        <div style="display: flex; justify-content: right;">
+                        <div style="display: flex; justify-content: flex-end;">
                             <span style="font-weight: bold;">Total:</span>
                             <span style="font-size: 16px;">${
-															'$' + (data.prices.total / 100).toFixed(2)
+															' $' + (data.prices.total / 100).toFixed(2)
 														}</span>
                         </div>
-                </div>
+                        </div>
             </section>
 
             <!-- Footer Section -->
