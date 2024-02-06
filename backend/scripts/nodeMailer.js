@@ -347,16 +347,16 @@ export const sendReceiptEmail = (data) => {
 													`
                                                     <div style='text-align: center;'>
                                                     <strong>Ship To: </strong>
-                                                    <p style="margin-bottom: 2px;">${
+                                                    <p style="margin-bottom: 0px;">${
 																											data.shipName
 																										}</p>
-                                                    <p style="margin-bottom: 2px;">${
+                                                    <p style="margin-bottom: 0px;">${
 																											data.shipAdd.line1
 																										}</p>
-                                                    <p style="margin-bottom: 2px;">${
+                                                    <p style="margin-bottom: 0px;">${
 																											data.shipAdd.line2 || ''
 																										}</p>
-                                                    <p style="margin-bottom: 2px;">
+                                                    <p style="margin-bottom: 0px;">
                                                         ${
 																													data.shipAdd.city +
 																													', ' +
@@ -394,8 +394,8 @@ export const sendReceiptEmail = (data) => {
 														)}
                         </tbody>
                     </table>
-
-                        <div style="display: flex; justify-content: flex-end; margin-bottom: 8px; margin-top: 8px;">
+                            <div style="text-align: right;">
+                        <div style="display: flex; justify-content: flex-end; margin-bottom: 8px; margin-top: 16px;">
                             <span style="font-weight: bold;">Discounts:</span>
                             <span style="font-size: 16px;">${
 															data.prices.discounts
@@ -405,14 +405,14 @@ export const sendReceiptEmail = (data) => {
 														}</span>
                         </div>
 
-                        <div style="display: flex; justify-content: flex-end;">
+                        <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
                             <span style="font-weight: bold;">Subtotal:</span>
                             <span style="font-size: 16px;">${
 															' $' + (data.prices.subtotal / 100).toFixed(2)
 														}</span>
                         </div>
 
-                        <div style="display: flex; justify-content: flex-end;">
+                        <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
                             <span style="font-weight: bold;">Shipping:</span>
                             <span style="font-size: 16px;">${
 															data.prices.shipping
@@ -421,7 +421,7 @@ export const sendReceiptEmail = (data) => {
 														}</span>
                         </div>
 
-                        <div style="display: flex; justify-content: flex-end;">
+                        <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
                             <span style="font-weight: bold;">Subtotal:</span>
                             <span style="font-size: 16px;">${
 															data.prices.tax
@@ -431,13 +431,14 @@ export const sendReceiptEmail = (data) => {
                         </div>
                         <!-- Repeat similar styles for other rows -->
 
-                        <div style="display: flex; justify-content: flex-end;">
+                        <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
                             <span style="font-weight: bold;">Total:</span>
                             <span style="font-size: 16px;">${
 															' $' + (data.prices.total / 100).toFixed(2)
 														}</span>
                         </div>
-                        </div>
+                        <div>
+                </div>
             </section>
 
             <!-- Footer Section -->
