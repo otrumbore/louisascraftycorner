@@ -35,6 +35,7 @@ const discountsSchema = new mongoose.Schema({
 
 const ordersSchema = mongoose.Schema(
 	{
+		date: { type: Date },
 		email: { type: String },
 		username: { type: String },
 		userId: { type: String, unique: false },

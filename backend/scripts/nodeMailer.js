@@ -328,7 +328,7 @@ export const sendReceiptEmail = (data) => {
 
                             <div style="margin-bottom: 8px;">
                                 <span style="color: #888;">Order Date:</span> ${new Date(
-																	data.createdAt
+																	data.date
 																).toLocaleString('en-US', {
 																	year: 'numeric',
 																	month: 'numeric',
