@@ -328,7 +328,7 @@ export const sendReceiptEmail = (data) => {
 
                             <div style="margin-bottom: 8px;">
                                 <span style="color: #888;">Order Date:</span> ${new Date(
-																	data.date
+																	data.createdAt
 																).toLocaleString('en-US', {
 																	year: 'numeric',
 																	month: 'numeric',
@@ -435,14 +435,13 @@ export const sendReceiptEmail = (data) => {
                     </div>
                     <!-- Repeat similar styles for other rows -->
                 
-                    <div style="margin-bottom: 8px;">
-                        <span style="font-weight: bold;">Total:</span>
-                        <span style="font-size: 16px;">
+                    <div style="margin-top: 8px; margin-bottom: 8px;">
+                        <span style="font-weight: bold; font-size: 20px;">Total:</span>
+                        <span style="font-size: 20px;">
                             ${' $' + (data.prices.total / 100).toFixed(2)}
                         </span>
                     </div>
                 </div>
-                
             </section>
 
             <!-- Footer Section -->
