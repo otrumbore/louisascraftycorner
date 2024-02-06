@@ -196,7 +196,7 @@ export const updateOrder = async (event, intent) => {
 };
 
 const updateUserTotalSpent = async (email, subtotal) => {
-	console.log('running rewards update!');
+	console.log('running rewards update');
 	try {
 		const user = await User.findOne({ email: email });
 
@@ -207,6 +207,7 @@ const updateUserTotalSpent = async (email, subtotal) => {
 
 		const totalSpent = user.totalSpent + parseFloat(subtotal);
 		const currSpent = user.rewards.spent;
+		const currCompleted = user.rewards.completed || 0;
 		let updateRewards = user.rewards;
 
 		if (user.rewards.spent >= 2500 && !user.rewards.reward1Used) {
@@ -224,7 +225,7 @@ const updateUserTotalSpent = async (email, subtotal) => {
 				spent: parseFloat(subtotal),
 				reward2Used: false,
 				reward1Used: false,
-				completed: user.rewards.received + 1,
+				completed: currCompleted + 1,
 			};
 		} else {
 			updateRewards = {
