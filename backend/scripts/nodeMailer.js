@@ -318,7 +318,7 @@ export const sendReceiptEmail = (data) => {
                 <div style="background-color: #ffffff; padding: 16px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); max-width: 400px; margin: 40px auto; border: 4px dashed #0066b2;">
                     <div style="grid-template-columns: 1fr 1fr; margin-bottom: 16px; display: grid;">
                         <div>
-                            <h1 style="font-size: 20px; font-weight: bold; margin-bottom: 8px;">Order Invoice</h1>
+                            <h1 style="font-size: 20px; font-weight: bold; margin-bottom: 8px;">Order Confirmation</h1>
 
                             <div style="margin-bottom: 8px;">
                                 <span style="color: #888;">Order Number:</span> ${
@@ -349,21 +349,19 @@ export const sendReceiptEmail = (data) => {
                                                     <strong>Ship To: </strong>
                                                     <p style="margin-bottom: 0px;">${
 																											data.shipName
-																										}</p>
-                                                    <p style="margin-bottom: 0px;">${
-																											data.shipAdd.line1
-																										}</p>
-                                                    <p style="margin-bottom: 0px;">${
+																										}<br />
+                                                    ${data.shipAdd.line1}<br />
+                                                    ${
 																											data.shipAdd.line2 || ''
-																										}</p>
-                                                    <p style="margin-bottom: 0px;">
+																										}<br />
+                                                    
                                                         ${
 																													data.shipAdd.city +
 																													', ' +
 																													data.shipAdd.state +
 																													' ' +
-																													data.shipAdd
-																														.postal_code
+																													data.shipAdd +
+																													data.postal_code
 																												}
                                                     </p>
                                                 </div>
@@ -376,7 +374,7 @@ export const sendReceiptEmail = (data) => {
                         <thead>
                             <tr>
                                 <th style="text-align: left;">Product</th>
-                                <th style="text-align: left;">Quantity</th>
+                                <th style="text-align: left;">QTY</th>
                                 <th style="text-align: right;">Price</th>
                             </tr>
                         </thead>
@@ -422,7 +420,7 @@ export const sendReceiptEmail = (data) => {
                         </div>
 
                         <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
-                            <span style="font-weight: bold;">Subtotal:</span>
+                            <span style="font-weight: bold;">Tax:</span>
                             <span style="font-size: 16px;">${
 															data.prices.tax
 																? ' $' + (data.prices.tax / 100).toFixed(2)

@@ -28,7 +28,9 @@ const createOrder = async (event) => {
 		}
 
 		const newOrder = await Order.create({
-			date: new Date(),
+			date: new Date().toLocaleString('en-US', {
+				timeZone: 'America/New_York',
+			}),
 			userId: userDetails._id || '',
 			email: userDetails.email || '',
 			username: userDetails.username || '',
