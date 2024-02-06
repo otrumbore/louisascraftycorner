@@ -328,7 +328,7 @@ export const sendReceiptEmail = (data) => {
 
                             <div style="margin-bottom: 8px;">
                                 <span style="color: #888;">Order Date:</span> ${new Date(
-																	data.date.getHours() - 5
+																	data.date
 																).toLocaleString('en-US', {
 																	year: 'numeric',
 																	month: 'numeric',
@@ -336,8 +336,10 @@ export const sendReceiptEmail = (data) => {
 																	hour: 'numeric',
 																	minute: 'numeric',
 																	hour12: true,
+																	timeZone: 'America/New_York', // Use timeZone option to set the desired timezone
 																	timeZoneName: 'short',
 																})}
+                                  
                             </div>
                         </div>
 
