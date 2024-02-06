@@ -349,7 +349,7 @@ export const sendReceiptEmail = (data) => {
 															<p>${data.shipName}</p>
 															<p>${data.shipAdd.line1}</p>
 															<p>${data.shipAdd.line2 || ''}</p>
-															<p style='display: flex; justify-content: flex-end;'>
+															<p>
 																${
 																	data.shipAdd.city +
 																	', ' +
@@ -375,10 +375,10 @@ export const sendReceiptEmail = (data) => {
                             ${data.items.map(
 															(item, index) => `
 															<tr key={index}>
-																<td>${item.productName || 'N/A'}</td>
-																<td>${item.quantity}</td>
+																<td style="text-align: left;">${item.productName || 'N/A'}</td>
+																<td style="text-align: left;">${item.quantity}</td>
 																<td style='text-align: right;'>
-																	${(item.quantity * (item.sale ? item.sale : item.price)).toFixed(2)}
+																	${'$' + (item.quantity * (item.sale ? item.sale : item.price)).toFixed(2)}
 																</td>
 															</tr>
 														`
@@ -386,24 +386,22 @@ export const sendReceiptEmail = (data) => {
                         </tbody>
                     </table>
 
-                    <div style="display: flex; flex-direction: column;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <div style="display: flex; justify-content: right; margin-bottom: 8px;">
                             <span style="font-weight: bold;">Discounts:</span>
                             <span style="font-size: 16px;">${
 															data.prices.discounts
-																? (data.prices.discounts / 100).toFixed(2)
-																: '0.00'
+																? '$' + (data.prices.discounts / 100).toFixed(2)
+																: '$0.00'
 														}</span>
                         </div>
                         <!-- Repeat similar styles for other rows -->
 
-                        <div style="display: flex; justify-content: space-between;">
+                        <div style="display: flex; justify-content: right;">
                             <span style="font-weight: bold;">Total:</span>
-                            <span style="font-size: 16px;">${(
-															data.prices.total / 100
-														).toFixed(2)}</span>
+                            <span style="font-size: 16px;">${
+															'$' + (data.prices.total / 100).toFixed(2)
+														}</span>
                         </div>
-                    </div>
                 </div>
             </section>
 

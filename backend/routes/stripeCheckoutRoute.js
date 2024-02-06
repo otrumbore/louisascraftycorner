@@ -31,7 +31,7 @@ router.post(
 			return response.status(400).send(`Webhook Error: ${err.message}`);
 		}
 
-		console.log(event);
+		//console.log(event);
 
 		let intent = null;
 

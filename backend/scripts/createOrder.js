@@ -46,7 +46,7 @@ const createOrder = async (event) => {
 
 		updateInventory(processedCartItems);
 
-		// // Access orderId directly from the newOrder object
+		// Access orderId directly from the newOrder object
 		const orderId = newOrder.orderId;
 
 		console.log('success: ' + orderId);
