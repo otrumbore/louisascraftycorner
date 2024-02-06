@@ -336,6 +336,7 @@ export const sendReceiptEmail = (data) => {
 																	hour: 'numeric',
 																	minute: 'numeric',
 																	hour12: true,
+																	timeZoneName: 'short',
 																})}
                             </div>
                         </div>
