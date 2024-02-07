@@ -442,6 +442,10 @@ export const sendReceiptEmail = (data) => {
                         </span>
                     </div>
                 </div>
+                <p>
+                Thank you for your business,<br />
+                Louisa's Crafty Corner    
+                </p>
             </section>
 
             <!-- Footer Section -->
@@ -460,6 +464,76 @@ export const sendReceiptEmail = (data) => {
 	sendEmail();
 };
 
+export const sendOrderUpdateEmail = (data) => {
+	const { name, email, status, orderId, tracking } = data;
+	mailOptions.html = `
+        <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Status Update</title>
+</head>
+
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+
+    <!-- Header Section -->
+    <header style="background-color: #3498db; padding: 20px; text-align: center; color: #ffffff;">
+        <h1>Order #${orderId} Update</h1>
+    </header>
+
+    <!-- Main Content Section -->
+    <section style="padding: 20px; text-align: center;">
+        <p style="font-size: 18px; color: #555555;">
+            Hello ${name},<br /><br />
+
+            We are pleasee to informed you that your order (#${orderId}) ${
+		status === 'crafting'
+			? `is currently being crafted`
+			: `has successfully been ${status}`
+	}!<br /><br />
+
+    ${
+			tracking &&
+			`Tracking Number: <a href='https://tools.usps.com/go/TrackConfirmAction?tRef=fullpage&tLc=2&text28777=&tLabels=${tracking}'>${tracking}</a><br /><br />`
+		}
+
+            Thanks again for your business,<br />
+
+            Louisa's Crafty Corner
+        </p>
+    </section>
+
+    <!-- Footer Section -->
+    <footer style="background-color: #3498db; padding: 10px; text-align: center; color: #ffffff;">
+        © 2024 louisascraftycorner.com. All rights reserved.
+    </footer>
+
+</body>
+
+</html>
+
+        `;
+
+	mailOptions.to = email;
+	mailOptions.subject = `Order #${orderId} Update`;
+
+	sendEmail();
+};
+
+export const sendNewOrderTextEmail = (data) => {
+	const { total, orderId } = data;
+	mailOptions.text = `New order created for $${total}! Order ID: ${orderId}`;
+	// Assuming the phone numbers are valid for the carriers
+	mailOptions.to = '6105131385@txt.att.net, 6104062668@txt.att.net'; //'4843365538@tmomail.net';
+	mailOptions.subject = `New Order!`;
+
+	sendEmail();
+};
+
+//6105131385@txt.att.net 6104062668@txt.att.net
+
 // Function to send a verification email
 export const sendEmail = () => {
 	const transporter = nodemailer.createTransport({
@@ -475,7 +549,7 @@ export const sendEmail = () => {
 		if (error) {
 			console.error('Error sending email:', error);
 		} else {
-			console.log('Verification email sent:', info.response);
+			console.log('Email sent:', info.response);
 		}
 	});
 };

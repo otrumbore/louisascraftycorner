@@ -1,7 +1,7 @@
 import { Order } from '../models/ordersModel.js';
 import { Product } from '../models/productsModel.js';
 import { User } from '../models/usersModel.js';
-import { sendReceiptEmail } from './nodeMailer.js';
+import { sendNewOrderTextEmail, sendReceiptEmail } from './nodeMailer.js';
 
 const createOrder = async (event) => {
 	try {
@@ -161,6 +161,11 @@ export const updateOrder = async (event, intent) => {
 					{ new: true }
 				);
 				sendReceiptEmail(orderDetails);
+				const textData = {
+					total: orderDetails.prices.total,
+					orderId: orderDetails.orderId,
+				};
+				sendNewOrderTextEmail(textData);
 				console.log('sending receipt to customer');
 				break;
 

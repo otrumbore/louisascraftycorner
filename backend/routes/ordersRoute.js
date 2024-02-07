@@ -3,6 +3,10 @@ import { Order } from '../models/ordersModel.js';
 import verifyToken from '../middleware/tokenChecks.js';
 import createOrder from '../scripts/createOrder.js';
 import validateApiKey from '../middleware/apiCkecks.js';
+import {
+	sendNewOrderTextEmail,
+	sendOrderUpdateEmail,
+} from '../scripts/nodeMailer.js';
 
 const router = express.Router();
 
@@ -123,6 +127,8 @@ router.put(
 	async (request, response) => {
 		try {
 			const { orderId } = request.params;
+			const data = request.body;
+			//console.log(data);
 			let updatedOrder = null;
 			if (request.user.role === 'admin' || request.user.role === 'moderator') {
 				updatedOrder = await Order.findOneAndUpdate(
@@ -137,6 +143,30 @@ router.put(
 			if (!updatedOrder) {
 				return response.status(404).send({ message: 'Order not found' });
 			}
+			if (data.email) {
+				let emailData = {
+					name: data.shipName,
+					email: data.email,
+					status: data.status[data.status.length - 1].type,
+					orderId: data.orderId,
+					tracking: data.shipping.tracking || '',
+				};
+				sendOrderUpdateEmail(emailData);
+				//sendNewOrderTextEmail({ total: 12, orderId: 123456 });
+			}
+
+			// switch (data.status[data.status.length - 1].type) {
+			// 	case 'delivered':
+			// 		console.log('email to be sent is delviered');
+			// 		sendOrderUpdateEmail(emailData);
+			// 		break;
+			// 	case 'shipped':
+			// 		console.log('email to be sent is shipped');
+			// 		break;
+			// 	default:
+			// 		console.log('error sending status email');
+			// 		break;
+			// }
 
 			return response
 				.status(200)
