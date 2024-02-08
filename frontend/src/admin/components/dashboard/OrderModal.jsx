@@ -32,10 +32,11 @@ const OrderModal = ({ order, onClose }) => {
 		try {
 			const data = order;
 			data.status.push({ type: status, timestamp: new Date() });
-			if (tracking !== '') {
+			if (tracking !== undefined) {
 				data.shipping.tracking = tracking;
+			} else {
+				data.shipping.tracking = order.shipping.tracking || null;
 			}
-			console.log(data);
 			const update = await updateOrder(orderDetails.orderId, data);
 			setOrderDetails(data);
 			enqueueSnackbar(

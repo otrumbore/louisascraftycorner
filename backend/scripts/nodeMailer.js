@@ -524,7 +524,9 @@ export const sendOrderUpdateEmail = (data) => {
 
 export const sendNewOrderTextEmail = (data) => {
 	const { total, orderId } = data;
-	mailOptions.text = `New order created for $${total}! Order ID: ${orderId}`;
+	mailOptions.text = `New order created for $${parseFloat(total / 100).toFixed(
+		2
+	)}! Order ID: ${orderId}`;
 	// Assuming the phone numbers are valid for the carriers
 	(mailOptions.to = '6105131385@txt.att.net, 6104062668@txt.att.net'),
 		'louisascraftycorner@gmail.com'; //'4843365538@tmomail.net';
