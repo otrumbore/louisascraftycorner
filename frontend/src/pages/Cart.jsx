@@ -41,19 +41,37 @@ const Cart = () => {
 	const updateCartPrices = async () => {
 		setLoading(true);
 		try {
-			newCart = await Promise.all(
+			let removedAnItem = false;
+			const newCart = await Promise.all(
 				cartItems.map(async (item) => {
 					const product = await getProduct(item._id);
+
+					if (!product.active || product.archived) {
+						removedAnItem = true;
+						return null;
+					}
+
 					return {
 						...item,
-						price: product.price, // Update the price in the cart item
+						price: product.price,
 						sale: product.sale,
 					};
 				})
 			);
-			//console.log(newCart);
-			updateAllCartItems(newCart);
-			return newCart;
+
+			if (removedAnItem) {
+				enqueueSnackbar(
+					'Some items were removed since they are no longer available',
+					{
+						variant: 'info',
+					}
+				);
+				removedAnItem = false;
+			}
+			const filteredCart = newCart.filter((item) => item !== null);
+			newCart = filteredCart;
+			updateAllCartItems(filteredCart);
+			return filteredCart;
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -81,7 +99,7 @@ const Cart = () => {
 		} catch (error) {
 			console.log(error);
 			enqueueSnackbar(
-				'Try checking out again...Needed to update some prices.',
+				'Refresh and try checking out again...Needed to update some prices.',
 				{
 					variant: 'info',
 				}
