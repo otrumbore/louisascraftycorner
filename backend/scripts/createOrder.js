@@ -161,11 +161,15 @@ export const updateOrder = async (event, intent) => {
 					{ new: true }
 				);
 				sendReceiptEmail(orderDetails);
+				let testOrder = false;
+				if ((orderDetails.customerNotes = 'test')) {
+					testOrder === true;
+				}
 				const textData = {
 					total: orderDetails.prices.total,
 					orderId: orderDetails.orderId,
 				};
-				sendNewOrderTextEmail(textData);
+				sendNewOrderTextEmail(textData, testOrder);
 				console.log('sending receipt to customer');
 				break;
 
