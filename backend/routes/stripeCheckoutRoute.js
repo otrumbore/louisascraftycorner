@@ -80,37 +80,41 @@ router.post('/', async (req, res) => {
 	let lineItems = [];
 	let totalQty = 0;
 
-	items.forEach((item) => {
-		let price = item.sale ? item.sale : item.price;
-		totalQty += item.qty;
+	try {
+		items.forEach((item) => {
+			let price = item.sale ? item.sale : item.price;
+			totalQty += item.qty;
 
-		const lineItem = {
-			price_data: {
-				currency: 'usd',
-				product_data: {
-					name: item.name,
-					images: [
-						item.image ||
-							'https://res.cloudinary.com/dedinrpix/image/upload/v1705796629/product-images/orqxgg7sbw9hmdh7b8i8.png',
-					],
-					description: item.description,
+			const lineItem = {
+				price_data: {
+					currency: 'usd',
+					product_data: {
+						name: item.name,
+						images: [
+							item.image ||
+								'https://res.cloudinary.com/dedinrpix/image/upload/v1705796629/product-images/orqxgg7sbw9hmdh7b8i8.png',
+						],
+						description: item.description,
+					},
+					unit_amount: price * 100, //2 * 100 = $2 use cents
 				},
-				unit_amount: price * 100, //2 * 100 = $2 use cents
-			},
-			quantity: item.qty,
-		};
+				quantity: item.qty,
+			};
 
-		// // Check if adjustable quantity is needed
-		// if (item.inventory > 1) {
-		// 	lineItem.adjustable_quantity = {
-		// 		enabled: true,
-		// 		minimum: 1,
-		// 		maximum: item.inventory,
-		// 	};
-		// }
+			// // Check if adjustable quantity is needed
+			// if (item.inventory > 1) {
+			// 	lineItem.adjustable_quantity = {
+			// 		enabled: true,
+			// 		minimum: 1,
+			// 		maximum: item.inventory,
+			// 	};
+			// }
 
-		lineItems.push(lineItem);
-	});
+			lineItems.push(lineItem);
+		});
+	} catch (error) {
+		console.log('error with stripe checkout items loop - ', error);
+	}
 
 	const lineItemsTotal = lineItems.reduce(
 		(total, item) => total + item.price_data.unit_amount * item.quantity,

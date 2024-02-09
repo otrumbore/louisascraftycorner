@@ -488,7 +488,7 @@ export const sendOrderUpdateEmail = (data) => {
         <p style="font-size: 18px; color: #555555;">
             Hello ${name},<br /><br />
 
-            We are pleasee to informed you that your order (#${orderId}) ${
+            We are pleased to informed you that your order (#${orderId}) ${
 		status === 'crafting'
 			? `is currently being crafted`
 			: `has successfully been ${status}`

@@ -69,7 +69,7 @@ const Cart = () => {
 				removedAnItem = false;
 			}
 			const filteredCart = newCart.filter((item) => item !== null);
-			newCart = filteredCart;
+			//newCart = filteredCart;
 			updateAllCartItems(filteredCart);
 			return filteredCart;
 		} catch (error) {
