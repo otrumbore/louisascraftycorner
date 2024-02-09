@@ -93,25 +93,23 @@ const Favorites = () => {
 												</span>
 											)}
 											<div className='flex items-center w-full gap-4'>
-												<Link to={`/product/${item.data._id}`}>
-													<img
-														src={
-															item.data.image
-																? item.data.image
-																: DefaultProductImg
-														}
-														alt={
-															item.data.image
-																? item.data.name + 'Product Image'
-																: 'Default Product Image'
-														}
-														onError={(e) => {
-															e.target.src = DefaultProductImg;
-															e.target.alt = 'Default Product Image';
-														}}
-														className='object-cover h-16 w-16 rounded-md'
-													/>
-												</Link>
+												<img
+													src={
+														item.data.image
+															? item.data.image
+															: DefaultProductImg
+													}
+													alt={
+														item.data.image
+															? item.data.name + 'Product Image'
+															: 'Default Product Image'
+													}
+													onError={(e) => {
+														e.target.src = DefaultProductImg;
+														e.target.alt = 'Default Product Image';
+													}}
+													className='object-cover h-16 w-16 rounded-md'
+												/>
 												<div className=''>{item.data.name}</div>
 											</div>
 											<div className='w-full flex items-center justify-between'>
