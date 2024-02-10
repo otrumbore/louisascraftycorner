@@ -28,11 +28,11 @@ const createOrder = async (event) => {
 		}
 
 		const newOrder = await Order.create({
-			userId: userDetails._id || '',
-			email: userDetails.email || '',
-			username: userDetails.username || '',
+			userId: userDetails._id || null,
+			email: userDetails.email || null,
+			username: userDetails.username || null,
 			items: processedCartItems,
-			customerNotes: customerNotes || '',
+			customerNotes: customerNotes || null,
 			source: source || 'website',
 			status: [{ type: 'created', timestamp: new Date() }, cashTrans],
 			shipName: shipName || '',
@@ -139,8 +139,8 @@ export const updateOrder = async (event, intent) => {
 					shipName: event.shipping_details.name,
 					shipAdd: event.shipping_details.address,
 					phone: event.customer_details
-						? event.customer_details.phone || ''
-						: '',
+						? event.customer_details.phone || null
+						: null,
 				};
 
 				updatedOrder = {
