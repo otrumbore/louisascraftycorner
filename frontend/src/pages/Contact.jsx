@@ -101,6 +101,21 @@ const ContactPage = () => {
 			<div className='flex w-full max-w-[1400px] h-full justify-center'>
 				<div className='w-full flex flex-col items-center justify-center'>
 					<h3 className='text-3xl mb-8'>Contact Us</h3>
+					<div className='mb-8 text-xl text-center space-y-8'>
+						<p>
+							<strong>Email: </strong>
+							<a
+								href='mailto:louisascraftycorner@gmail.com'
+								className='text-primary hover:underline hover:underline-offset-4'
+							>
+								LouisasCraftyCorner@gmail.com
+							</a>
+						</p>
+
+						<p className='text-2xl'>OR</p>
+
+						<p>Send us a message below.</p>
+					</div>
 					{contactError && (
 						<div className='flex mb-4 py-2 px-2 w-full justify-center border-2 border-red-400 bg-red-200 rounded-md'>
 							{contactError}
