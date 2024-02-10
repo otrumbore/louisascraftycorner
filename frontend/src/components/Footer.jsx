@@ -1,6 +1,7 @@
 import React from 'react';
 import Logo500 from '../assets/logo-cropped-black.png';
 import { Link } from 'react-router-dom';
+import { FaInstagram, FaFacebookSquare } from 'react-icons/fa';
 
 const Footer = () => {
 	return (
@@ -39,7 +40,7 @@ const Footer = () => {
 						<p>Contact:</p>
 					</div>
 
-					<ul className='mt-4 flex flex-col items-center space-y-2'>
+					<ul className='mt-4 flex flex-col items-center space-y-3'>
 						<li className='flex space-x-2'>
 							<p className='font-bold text-gray-600'>Location:</p>
 							<p>Temple, Pa</p>
@@ -52,6 +53,22 @@ const Footer = () => {
 									className='cursor-pointer text-primary'
 								>
 									louisascraftycorner@gmail.com
+								</a>
+							</p>
+						</li>
+						<li className='flex items-center'>
+							<p className='flex gap-2 font-semibold text-gray-600 text-4xl'>
+								<a
+									target='_blank'
+									href='http://www.facebook.com/LouisasCraftyCorner'
+								>
+									<FaFacebookSquare />
+								</a>
+								<a
+									target='_blank'
+									href='http://instagram.com/LouisasCraftyCorner'
+								>
+									<FaInstagram />
 								</a>
 							</p>
 						</li>
