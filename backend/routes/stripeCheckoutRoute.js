@@ -8,11 +8,11 @@ const router = express.Router();
 
 dotenv.config();
 
-const stripeApiKey = process.env.STRIPE_SECRET_KEY; //STRIPE_SECRET_TEST_KEY
+const stripeApiKey = process.env.STRIPE_SECRET_TEST_KEY; //STRIPE_SECRET_TEST_KEY
+const endpointSecret = process.env.WEBHOOK_TEST_SECRET;
+
 const frontendURL = process.env.FRONT_END_URL;
 const stripeClient = new stripe(stripeApiKey);
-
-const endpointSecret = process.env.WEBHOOK_SECRET;
 
 router.post(
 	'/webhook',
@@ -21,17 +21,12 @@ router.post(
 		const sig = request.headers['stripe-signature'];
 
 		let event;
-
-		// Verify webhook signature and extract the event.
-		// See https://stripe.com/docs/webhooks#verify-events for more information.
 		try {
 			event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
 		} catch (err) {
 			console.log(err.message);
 			return response.status(400).send(`Webhook Error: ${err.message}`);
 		}
-
-		//console.log(event);
 
 		let intent = null;
 
