@@ -130,12 +130,12 @@ export const updateOrder = async (event, intent) => {
 
 				const subtotal = priceData.subtotal;
 				updateUserTotalSpent(
-					event.email || event.data.customer_email,
+					event.customer_details.email || event.customer_email,
 					subtotal
 				);
 
 				const data = {
-					email: event.email || event.customer_email,
+					email: event.customer_details.email || event.customer_email,
 					stripePaymentId: event.payment_intent,
 					shipping: shippingData,
 					prices: priceData,
