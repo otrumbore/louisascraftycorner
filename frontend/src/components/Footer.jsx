@@ -13,11 +13,36 @@ const Footer = () => {
 					</div>
 
 					<div className='mt-4 flex flex-col items-center space-y-2'>
-						<Link to={'/'}>Home</Link>
-						<Link to={'/shop'}>Shop</Link>
-						<Link to={'/events'}>Events</Link>
-						<Link to={'/about'}>About Us</Link>
-						<Link to={'/contact'}>Contact Us</Link>
+						<Link
+							className='hover:underline hover:underline-offset-4 hover:text-primary'
+							to={'/'}
+						>
+							Home
+						</Link>
+						<Link
+							className='hover:underline hover:underline-offset-4 hover:text-primary'
+							to={'/shop'}
+						>
+							Shop
+						</Link>
+						<Link
+							className='hover:underline hover:underline-offset-4 hover:text-primary'
+							to={'/events'}
+						>
+							Events
+						</Link>
+						<Link
+							className='hover:underline hover:underline-offset-4 hover:text-primary'
+							to={'/about'}
+						>
+							About Us
+						</Link>
+						<Link
+							className='hover:underline hover:underline-offset-4 hover:text-primary'
+							to={'/contact'}
+						>
+							Contact Us
+						</Link>
 					</div>
 				</div>
 				<div className=''>
@@ -26,13 +51,33 @@ const Footer = () => {
 					</div>
 
 					<div className='mt-4 flex flex-col items-center space-y-2'>
-						<Link>Track a Package</Link>
+						<Link
+							className='hover:underline hover:underline-offset-4 hover:text-primary'
+							to={'/'}
+						>
+							Track a Package
+						</Link>
 
-						<Link to='/info/help'>Help</Link>
+						<Link
+							className='hover:underline hover:underline-offset-4 hover:text-primary'
+							to='/info/help'
+						>
+							Help
+						</Link>
 
-						<Link to='/info/terms'>Terms of Use</Link>
+						<Link
+							className='hover:underline hover:underline-offset-4 hover:text-primary'
+							to='/info/terms'
+						>
+							Terms of Use
+						</Link>
 
-						<Link to='/info/privacy'>Privacy Policy</Link>
+						<Link
+							className='hover:underline hover:underline-offset-4 hover:text-primary'
+							to='/info/privacy'
+						>
+							Privacy Policy
+						</Link>
 					</div>
 				</div>
 				<div className='flex flex-col items-center'>
@@ -50,7 +95,7 @@ const Footer = () => {
 							<p>
 								<a
 									href='mailto:louisascraftycorner@gmail.com'
-									className='cursor-pointer text-primary'
+									className='cursor-pointer text-primary hover:underline hover:underline-offset-4'
 								>
 									louisascraftycorner@gmail.com
 								</a>
@@ -61,12 +106,14 @@ const Footer = () => {
 								<a
 									target='_blank'
 									href='http://www.facebook.com/LouisasCraftyCorner'
+									className='hover:text-primary'
 								>
 									<FaFacebookSquare />
 								</a>
 								<a
 									target='_blank'
 									href='http://instagram.com/LouisasCraftyCorner'
+									className='hover:text-primary'
 								>
 									<FaInstagram />
 								</a>
