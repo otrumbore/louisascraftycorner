@@ -18,12 +18,12 @@ const createOrder = async (event) => {
 		const { customerNotes, source } = other;
 		let cashTrans = {};
 		let shipName = '';
-		let isActive = false;
+		let isProcessed = false;
 
 		if (source === 'retail') {
 			cashTrans = { type: 'cash', timestamp: new Date() };
 			shipName = userDetails.name;
-			isActive = true;
+			isProcessed = true;
 			updateUserTotalSpent(userDetails.email, prices.total);
 		}
 
@@ -36,7 +36,8 @@ const createOrder = async (event) => {
 			source: source || 'website',
 			status: [{ type: 'created', timestamp: new Date() }, cashTrans],
 			shipName: shipName || '',
-			active: isActive,
+			active: isProcessed,
+			processed: isProcessed,
 			prices: prices,
 		});
 
