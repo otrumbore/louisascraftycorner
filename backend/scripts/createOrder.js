@@ -109,6 +109,7 @@ export const updateOrder = async (event, intent) => {
 		let updatedOrder = null;
 
 		const orderId = event?.metadata?.order_id;
+		let loggedIn = false;
 
 		switch (intent) {
 			case 'completed':
@@ -127,12 +128,6 @@ export const updateOrder = async (event, intent) => {
 					tax: event.total_details.amount_tax,
 					total: event.amount_total,
 				};
-
-				const subtotal = priceData.subtotal;
-				updateUserTotalSpent(
-					event.customer_details.email || event.customer_email,
-					subtotal
-				);
 
 				const data = {
 					email: event.customer_details.email || event.customer_email,
@@ -166,6 +161,15 @@ export const updateOrder = async (event, intent) => {
 					{ new: true }
 				);
 				sendReceiptEmail(orderDetails);
+				if (orderDetails.userId !== null || orderDetails.userId !== '') {
+					loggedIn = true;
+				}
+				const subtotal = priceData.subtotal;
+				updateUserTotalSpent(
+					event.customer_details.email || event.customer_email,
+					subtotal,
+					loggedIn
+				);
 				let testOrder = false;
 				if (orderDetails.customerNotes === 'test') {
 					testOrder = true;
@@ -209,8 +213,11 @@ export const updateOrder = async (event, intent) => {
 	}
 };
 
-const updateUserTotalSpent = async (email, subtotal) => {
+const updateUserTotalSpent = async (email, subtotal, loggedIn) => {
 	console.log('running rewards update');
+	if (!loggedIn) {
+		return;
+	}
 	try {
 		const user = await User.findOne({ email: email });
 
