@@ -309,7 +309,7 @@ const Cart = () => {
 										stripeLoading && 'cursor-not-allowed'
 									} disabled:opacity-25`}
 									onClick={preCheckout}
-									disabled={userRole() < 2 || stripeLoading}
+									//disabled={userRole() < 2 || stripeLoading}
 								>
 									{stripeLoading ? (
 										<span className='flex gap-2'>
@@ -320,11 +320,11 @@ const Cart = () => {
 										'Checkout'
 									)}
 								</button>
-								{userRole() < 2 && (
+								{/* {userRole() < 2 && (
 									<h2 className='mt-8 lg: lg:mt-2 text-xl w-full text-center lg:text-end'>
 										Checkout is currently disabled.
 									</h2>
-								)}
+								)} */}
 							</div>
 							<div className='flex lg:justify-end w-full'>
 								<p className='mt-4 w-full text-xs text-center lg:text-right'>

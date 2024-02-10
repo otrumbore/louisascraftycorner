@@ -66,6 +66,8 @@ router.post('/', async (req, res) => {
 	const user = req.body.userData;
 	const cxNotes = req.body.customer_notes;
 
+	console.log(user);
+
 	const data = {
 		cartItems: items,
 		userDetails: user,
@@ -124,12 +126,14 @@ router.post('/', async (req, res) => {
 	let discount = {};
 
 	if (
+		user.length > 0 &&
 		user.rewards.spent >= 2500 &&
 		user.rewards.spent < 5000 &&
 		!user.rewards.reward1Used
 	) {
 		discount = { coupon: '8B9hMg6h' };
 	} else if (
+		user.length > 0 &&
 		user.rewards.spent >= 5000 &&
 		!user.rewards.reward2Used &&
 		user.rewards.reward1Used
