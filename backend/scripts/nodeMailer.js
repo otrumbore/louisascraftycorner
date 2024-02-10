@@ -526,11 +526,13 @@ export const sendNewOrderTextEmail = (data, testOrder) => {
 	const { total, orderId } = data;
 	mailOptions.text = `New order created for $${parseFloat(total / 100).toFixed(
 		2
-	)}! Order ID: ${orderId} ${testOrder && ' - This is a test order!!'}`;
+	)}! Order ID: ${orderId} ${
+		testOrder === true && ' - This is a test order!!'
+	}`;
 	// Assuming the phone numbers are valid for the carriers
-	mailOptions.to =
-		('6105131385@txt.att.net, 6104062668@txt.att.net',
-		'louisascraftycorner@gmail.com'); //'4843365538@tmomail.net';
+	mailOptions.to = '4843365538@tmomail.net';
+	// ('6105131385@txt.att.net, 6104062668@txt.att.net',
+	// 'louisascraftycorner@gmail.com'); //'4843365538@tmomail.net';
 	mailOptions.subject = `New Order!`;
 
 	sendEmail();
