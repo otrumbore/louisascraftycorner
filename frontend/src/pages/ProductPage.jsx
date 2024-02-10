@@ -203,7 +203,7 @@ const ProductPage = () => {
 
 						<div className='px-4 h-full items-center mt-12 lg:mt-0'>
 							<div className='w-full mb-10 flex items-center justify-between'>
-								<div className='text-sm'>Store ID: {product.storeId}</div>
+								<div className='text-sm'>Product ID: {product.storeId}</div>
 
 								<div className='hidden lg:flex text-sm space-x-1'>
 									<p>Collection:</p>
