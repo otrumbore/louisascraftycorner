@@ -163,7 +163,7 @@ export const updateOrder = async (event, intent) => {
 				sendReceiptEmail(orderDetails);
 				let testOrder = false;
 				if (orderDetails.customerNotes === 'test') {
-					testOrder === true;
+					testOrder = true;
 				}
 				const textData = {
 					total: orderDetails.prices.total,
