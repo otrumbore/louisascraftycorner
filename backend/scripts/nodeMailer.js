@@ -530,9 +530,9 @@ export const sendNewOrderTextEmail = (data, testOrder) => {
 		testOrder ? 'This is a test order, do not panic!' : ''
 	}`;
 	// Assuming the phone numbers are valid for the carriers
-	mailOptions.to = '4843365538@tmomail.net';
-	// ('6105131385@txt.att.net, 6104062668@txt.att.net',
-	// 'louisascraftycorner@gmail.com'); //'4843365538@tmomail.net';
+	mailOptions.to =
+		('6105131385@txt.att.net, 6104062668@txt.att.net',
+		'louisascraftycorner@gmail.com'); //'4843365538@tmomail.net';
 	mailOptions.subject = `New Order!`;
 
 	sendEmail();
