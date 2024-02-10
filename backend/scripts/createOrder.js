@@ -146,6 +146,7 @@ export const updateOrder = async (event, intent) => {
 
 				updatedOrder = {
 					stripePaymentId: data.stripePaymentId,
+					email: data.email,
 					shipping: data.shipping,
 					prices: data.prices,
 					discounts: data.discounts,
