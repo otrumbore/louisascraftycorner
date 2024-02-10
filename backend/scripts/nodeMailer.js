@@ -526,8 +526,8 @@ export const sendNewOrderTextEmail = (data, testOrder) => {
 	const { total, orderId } = data;
 	mailOptions.text = `New order created for $${parseFloat(total / 100).toFixed(
 		2
-	)}! Order ID: ${orderId} ${
-		testOrder === true && ' - This is a test order!!'
+	)}! Order ID: ${orderId}. ${
+		testOrder ? 'This is a test order, do not panic!' : ''
 	}`;
 	// Assuming the phone numbers are valid for the carriers
 	mailOptions.to = '4843365538@tmomail.net';
