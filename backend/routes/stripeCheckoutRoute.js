@@ -8,7 +8,7 @@ const router = express.Router();
 
 dotenv.config();
 
-const stripeApiKey = process.env.STRIPE_SECRET_TEST_KEY;
+const stripeApiKey = process.env.STRIPE_SECRET_KEY; //STRIPE_SECRET_TEST_KEY
 const frontendURL = process.env.FRONT_END_URL;
 const stripeClient = new stripe(stripeApiKey);
 
