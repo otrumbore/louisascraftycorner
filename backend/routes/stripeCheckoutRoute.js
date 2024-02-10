@@ -8,11 +8,11 @@ const router = express.Router();
 
 dotenv.config();
 
-const stripeApiKey = process.env.STRIPE_SECRET_TEST_KEY; //STRIPE_SECRET_TEST_KEY
-const endpointSecret = process.env.WEBHOOK_TEST_SECRET;
+// const stripeApiKey = process.env.STRIPE_SECRET_TEST_KEY; //STRIPE_SECRET_TEST_KEY
+// const endpointSecret = process.env.WEBHOOK_TEST_SECRET;
 
-// const stripeApiKey = process.env.STRIPE_SECRET_KEY; //STRIPE_SECRET_TEST_KEY
-// const endpointSecret = process.env.WEBHOOK_SECRET;
+const stripeApiKey = process.env.STRIPE_SECRET_KEY; //STRIPE_SECRET_TEST_KEY
+const endpointSecret = process.env.WEBHOOK_SECRET;
 
 const frontendURL = process.env.FRONT_END_URL;
 const stripeClient = new stripe(stripeApiKey);
