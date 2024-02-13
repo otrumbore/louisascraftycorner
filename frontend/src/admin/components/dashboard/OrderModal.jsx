@@ -165,22 +165,30 @@ const OrderModal = ({ order, onClose }) => {
 					<div>
 						{order.shipping && (
 							<>
+								{order.shipping.method !== 'local' && (
+									<>
+										<p>
+											<strong>Shipping Carrier:</strong>{' '}
+											{order.shipping.carrier}
+										</p>
+										<p>
+											<strong>Tracking # </strong>
+											{order.shipping.tracking ? (
+												<a
+													className='underline text-primary'
+													target={'_blank'}
+													href={`https://tools.usps.com/go/TrackConfirmAction?tRef=fullpage&tLc=2&text28777=&tLabels=${order.shipping.tracking}`}
+												>
+													{order.shipping.tracking}
+												</a>
+											) : (
+												'N/A'
+											)}
+										</p>
+									</>
+								)}
 								<p>
-									<strong>Shipping Carrier:</strong> {order.shipping.carrier}
-								</p>
-								<p>
-									<strong>Tracking # </strong>
-									{order.shipping.tracking ? (
-										<a
-											className='underline text-primary'
-											target={'_blank'}
-											href={`https://tools.usps.com/go/TrackConfirmAction?tRef=fullpage&tLc=2&text28777=&tLabels=${order.shipping.tracking}`}
-										>
-											{order.shipping.tracking}
-										</a>
-									) : (
-										'N/A'
-									)}
+									<strong>Shipping Method:</strong> {order.shipping.method}
 								</p>
 							</>
 						)}

@@ -118,7 +118,14 @@ export const updateOrder = async (event, intent) => {
 				const shippingData = {
 					tracking: '',
 					carrier: 'USPS',
-					method: event.shipping_cost.amount_total === 0 ? 'standard' : '2day',
+					method:
+						event.shipping_cost.amount_total === 0 && event.subtotal < 75
+							? 'local'
+							: event.shipping_cost.amount_total === 0 && event.subtotal > 75
+							? 'standard'
+							: event.shipping_cost.amount_total === 3000
+							? '2day'
+							: 'standard',
 				};
 
 				const priceData = {
