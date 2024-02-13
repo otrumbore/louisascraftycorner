@@ -208,6 +208,26 @@ router.post('/', async (req, res) => {
 					},
 				},
 			},
+			{
+				shipping_rate_data: {
+					type: 'fixed_amount',
+					fixed_amount: {
+						amount: 0,
+						currency: 'usd',
+					},
+					display_name: 'Local Pickup',
+					delivery_estimate: {
+						minimum: {
+							unit: 'business_day',
+							value: 2,
+						},
+						maximum: {
+							unit: 'business_day',
+							value: 5,
+						},
+					},
+				},
+			},
 		],
 		success_url: `${frontendURL}/order/success/${orderId}`,
 		cancel_url: `${frontendURL}/cart?orderCancel`,
