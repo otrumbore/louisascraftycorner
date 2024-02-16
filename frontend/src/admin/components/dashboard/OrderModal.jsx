@@ -211,6 +211,7 @@ const OrderModal = ({ order, onClose }) => {
 							)}
 
 						{!orderDetails.status.some((status) => status.type === 'cash') &&
+							order.shipping.method !== 'local' &&
 							!orderDetails.status.some(
 								(status) => status.type === 'shipped'
 							) && (

@@ -24,14 +24,7 @@ const ProductCard = ({
 	const { enqueueSnackbar } = useSnackbar();
 	const [loggedIn, setLoggedIn] = useState(false);
 
-	const {
-		cartItems,
-		addToCart,
-		removeFromCart,
-		clearCart,
-		cartTotal,
-		cartItemsCount,
-	} = useCart();
+	const { cartItems, addToCart } = useCart();
 
 	const { userDetails, addToFavorites, userFavorites, userRole } = useUser();
 
@@ -101,14 +94,14 @@ const ProductCard = ({
 				>
 					<Link
 						to={`/product/${item._id}`}
-						className='flex flex-col gap-y-4 bg-black w-full rounded-md'
+						className='relative flex flex-col gap-y-4 bg-black w-full rounded-md'
 					>
 						{item.sale > 0 && (
 							<span className='absolute ml-4 mt-4 inline-flex items-center rounded-md bg-red-500 px-4 py-2 text-xs font-medium text-white ring-1 ring-inset ring-red-600/10'>
 								SALE
 							</span>
 						)}
-						<div className='w-full h-[250px] lg:h-[300px] flex justify-center items-center overflow-hidden rounded-t-lg bg-black'>
+						<div className='w-full h-[200px] max-h-[300px] flex justify-center items-center overflow-hidden rounded-t-lg bg-black'>
 							<img
 								src={item.image ? item.image : DefaultProductImg}
 								alt={
@@ -123,36 +116,32 @@ const ProductCard = ({
 								className='aspect-square object-contain h-auto overflow-hidden w-auto'
 							/>
 						</div>
+						<div className='absolute bottom-3 right-3 text-amber-300'>
+							{item.rating > 0 ? (
+								<div className='flex mt-2'>
+									{[...Array(Math.floor(item.rating))].map((_, index) => (
+										<FaStar key={index} />
+									))}
+									{item.rating % 1 !== 0 && <FaStarHalfAlt />}
+									{[...Array(5 - Math.ceil(item.rating))].map((_, index) => (
+										<FaRegStar key={index} />
+									))}
+								</div>
+							) : null}
+						</div>
 					</Link>
 					<Link
-						className='flex px-4 w-full items-center justify-between'
+						className='flex px-4 w-full items-start justify-between'
 						to={`/product/${item._id}`}
 					>
-						<div className='flex w-[80%] flex-wrap items-center gap-2'>
+						<div className='flex flex-col w-[80%] gap-2'>
 							<h4 className='text-3xl flex flex-wrap'>{item.name}</h4>
-							<p className='hidden lg:block text-sm flex-wrap'>
-								{' '}
-								- {item.type}
-							</p>
+							<p className='block flex-wrap'>{item.type}</p>
 						</div>
-
-						{item.rating > 0 ? (
-							<div className='flex'>
-								{[...Array(Math.floor(item.rating))].map((_, index) => (
-									<FaStar key={index} />
-								))}
-								{item.rating % 1 !== 0 && <FaStarHalfAlt />}
-								{[...Array(5 - Math.ceil(item.rating))].map((_, index) => (
-									<FaRegStar key={index} />
-								))}
-							</div>
-						) : (
-							''
-						)}
 					</Link>
-					<Link to={`/product/${item._id}`} className='px-4 text-lg'>
+					{/* <Link to={`/product/${item._id}`} className='px-4 text-lg'>
 						{item.description.slice(0, 75) + '...'}
-					</Link>
+					</Link> */}
 
 					<div className='flex px-4 w-full justify-between items-center'>
 						<Link to={`/product/${item._id}`}>

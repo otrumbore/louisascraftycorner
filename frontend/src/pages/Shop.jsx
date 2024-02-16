@@ -13,7 +13,7 @@ const Shop = () => {
 	const [collections, setCollections] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [productsPerPage] = useState(9);
+	const [productsPerPage] = useState(12);
 	const [searchText, setSearchText] = useState('');
 	const [selectedCollection, setSelectedCollection] = useState('');
 	const [onSaleOnly, setOnSaleOnly] = useState(false);
@@ -152,7 +152,7 @@ const Shop = () => {
 	}
 
 	return (
-		<div className='p-4 mt-[8rem] w-full flex justify-center'>
+		<div className='mt-[8rem] w-full flex justify-center'>
 			{/* <LoadingModal loading={loading} /> */}
 			<div className='w-full max-w-[1800px]'>
 				<div className='flex flex-col justify-center items-center'>
@@ -227,7 +227,7 @@ const Shop = () => {
 					</div>
 					{/* <div className='mt-4'>Results: {products.length}</div> */}
 					<div
-						className={`mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-[90%]`}
+						className={`mt-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 w-[90%]`}
 					>
 						{loading &&
 							Array.from({ length: 6 }).map((_, index) => (
