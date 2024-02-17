@@ -22,6 +22,7 @@ const EditProduct = () => {
 	const [tags, setTags] = useState('');
 	const [inventory, setInventory] = useState('');
 	const [image, setImage] = useState('');
+	const [images, setImages] = useState([]);
 	const [sale, setSale] = useState(0);
 	const [manCost, setManCost] = useState(0);
 	const [storageLocation, setStorageLocation] = useState('');
@@ -55,6 +56,7 @@ const EditProduct = () => {
 			setStorageLocation(response.storageLocation);
 			setInventory(response.inventory);
 			setImage(response.image);
+			setImages(response.images || []);
 			setActive(response.active);
 			setManCost(response.manCost);
 			setMeasurements(response.measurements);
@@ -97,9 +99,25 @@ const EditProduct = () => {
 		window.scroll(0, 0);
 	}, []);
 
+	const removeImage = (img) => {
+		setImages((currentImages) =>
+			currentImages.filter((image) => image !== img)
+		);
+	};
+
+	const setDefaultImg = (img) => {
+		setImage(img);
+	};
+
 	const handleEditProduct = async () => {
 		//const id = storeId;
 		let img = sendImageURL();
+		let newImages = [];
+		if (img && Array.isArray(img) && images && Array.isArray(images)) {
+			newImages = [...img, ...images];
+		}
+
+		console.log(newImages);
 		const data = {
 			storeId,
 			name,
@@ -114,7 +132,8 @@ const EditProduct = () => {
 			storageLocation,
 			measurements,
 			inventory,
-			image: !img ? image : img,
+			image: image || images[0] || newImages[0] || img[0] || '',
+			images: newImages || images || img || [],
 			active,
 			archived,
 		};
@@ -195,12 +214,49 @@ const EditProduct = () => {
 						</div>
 						<div>
 							<div className='flex flex-col justify-center items-center mb-4'>
-								Current Image:
-								<img
-									src={!image ? DefaultProductImg : image}
-									alt='Selected Preview'
-									style={{ maxWidth: '50%', marginTop: '8px' }}
-								/>
+								{images && images.length > 0 ? (
+									<>
+										<div className='flex flex-col'>
+											<p className='text-center'>Main Image:</p>
+											<img
+												src={image || images[0] || DefaultProductImg}
+												alt={`Main image`}
+												className='max-w-[200px] max-h-[200px] rounded-md'
+											/>
+										</div>
+										<p className='text-center'>Current Image(s):</p>
+										<div className='flex p-2 min-h-[100px] max-h-[150px] border-4 border-primary rounded-md w-full'>
+											<div className='flex gap-2 w-full overflow-x-scroll'>
+												{images.map((url, i) => (
+													<div key={i} className='relative '>
+														<img
+															src={url}
+															alt={`Thumbnail ${i}`}
+															//key={i}
+															className='w-auto h-[75px] inline-block rounded-md'
+															onClick={() => setDefaultImg(url)}
+														/>
+														<span
+															onClick={() => removeImage(url)}
+															className='absolute cursor-pointer px-1 py-[.05rem] bg-red-600 top-0 -right-1 bg-opacity-75 rounded-md text-sm text-white'
+														>
+															X
+														</span>
+													</div>
+												))}
+											</div>
+										</div>
+									</>
+								) : (
+									<div className='flex flex-col'>
+										<p className='text-center'>Main Image:</p>
+										<img
+											src={image || images[0] || DefaultProductImg}
+											alt={`Main image`}
+											className='max-w-[200px] max-h-[200px] rounded-md'
+										/>
+									</div>
+								)}
 							</div>
 							<ImageUpload />
 						</div>

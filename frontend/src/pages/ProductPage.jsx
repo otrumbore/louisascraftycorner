@@ -22,7 +22,8 @@ import { useUser } from '../context/UserContext';
 import { getProduct, getProducts } from '../api/products.api';
 
 const ProductPage = () => {
-	const [product, setProduct] = useState([]);
+	const [product, setProduct] = useState({});
+	const [productImage, setProductImage] = useState('');
 	const [relatedProducts, setRelatedProducts] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [qty, setQty] = useState(1);
@@ -64,13 +65,14 @@ const ProductPage = () => {
 		try {
 			const response = await getProduct(id);
 			setBase64ImageData(response.image);
-			console.log(response.image);
+			//console.log(response.images);
 			if (response.image !== undefined) {
 				setBase64ImageData(response.image);
 				console.log(base64ImageData);
 				//console.log(response.data.data.image);
 			}
-			//console.log(response);
+			console.log(response);
+			setProductImage(response.image || DefaultProductImg);
 			setProduct(response);
 		} catch (error) {
 			console.error(error);
@@ -181,9 +183,9 @@ const ProductPage = () => {
 				<div className='flex justify-center'>
 					<div className='w-full grid grid-cols-1 lg:grid-cols-2 max-w-[1400px] items-end justify-end gap-y-12'>
 						<div className='flex w-full justify-center'>
-							<div className='max-h-[500px] aspect-square flex flex-col justify-center items-center'>
+							<div className='max-h-[800px] max-w-[1024px] aspect-square flex flex-col justify-center items-center'>
 								<img
-									src={product.image ? product.image : DefaultProductImg}
+									src={productImage}
 									alt={
 										product.image
 											? product.name + ' Product Image'
@@ -193,15 +195,81 @@ const ProductPage = () => {
 										e.target.src = DefaultProductImg; // Fallback to default image on error
 										e.target.alt = 'Default Product Image';
 									}}
-									className='max-h-full max-w-full object-contain rounded-2xl shadow-2xl shadow-gray-400 lg:hover:scale-110'
+									className='hidden lg:block max-h-[500px] max-w-full object-contain rounded-2xl shadow-2xl shadow-gray-400'
 								/>
-								<div className='flex w-full items-center text-sm mt-4 justify-center'>
-									Measurements: {product.measurements}
+
+								<div className='flex lg:hidden overflow-x-auto snap-x snap-mandatory items-center rounded-2xl'>
+									{/* Default product image */}
+									<div
+										className='snap-center shrink-0 w-full flex-shrink-0 rounded-2xl'
+										key='default-image'
+									>
+										<img
+											src={product.image || DefaultProductImg}
+											alt={
+												product.name
+													? `${product.name} Product Image`
+													: 'Default Product Image'
+											}
+											onError={(e) => {
+												e.target.src = DefaultProductImg; // Fallback to default image on error
+												e.target.alt = 'Default Product Image';
+											}}
+											className='h-auto max-h-[500px] w-full object-contain rounded-2xl shadow-2xl shadow-gray-400'
+										/>
+									</div>
+
+									{/* Additional images excluding the default if it's in the array */}
+									{product.images &&
+										product.images.length > 0 &&
+										product.images
+											.filter((url) => url !== product.image) // Exclude the default image if it's in the array
+											.map((url, i) => (
+												<div
+													className='snap-center shrink-0 w-full flex-shrink-0 rounded-2xl'
+													key={i}
+												>
+													<img
+														src={url}
+														alt={`${product.name} Additional Image ${i + 1}`}
+														className='h-auto max-h-[500px] w-full object-contain rounded-2xl shadow-2xl shadow-gray-400'
+													/>
+												</div>
+											))}
+								</div>
+
+								<div className='flex flex-col gap-y-4 lg:hidden pt-4 text-center'>
+									<p className='font-semibold text-lg'>
+										Swipe for more images...{' '}
+									</p>
+									<p className='text-sm'>
+										Measurements: {product.measurements}
+									</p>
+								</div>
+
+								<div className='hidden lg:flex flex-col w-full items-center mt-4 justify-center'>
+									{product.images && product.images.length > 0 && (
+										<div className='flex p-2 min-h-[100px] max-h-[150px] border-4 border-primary rounded-md w-full'>
+											<div className='flex gap-2 w-full overflow-x-scroll'>
+												{product.images.map((image, i) => (
+													<img
+														src={image}
+														alt={`Thumbnail ${i}`}
+														key={i}
+														className='w-auto h-[75px] inline-block rounded-md hover:scale-110 cursor-pointer'
+														onClick={() => setProductImage(image)}
+													/>
+												))}
+											</div>
+										</div>
+									)}
+									<p className='text-sm mt-4'>
+										Measurements: {product.measurements}
+									</p>
 								</div>
 							</div>
 						</div>
-
-						<div className='px-4 h-full items-center mt-12 lg:mt-0'>
+						<div className='px-4 h-full items-center mt-2 lg:mt-0'>
 							<div className='w-full mb-10 flex items-center justify-between'>
 								<div className='text-sm'>Product ID: {product.storeId}</div>
 

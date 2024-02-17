@@ -34,6 +34,7 @@ router.post('/', verifyToken, validateApiKey, async (request, response) => {
 			storageLocation,
 			inventory,
 			image,
+			images,
 			active,
 			archived,
 		} = request.body;
@@ -52,6 +53,7 @@ router.post('/', verifyToken, validateApiKey, async (request, response) => {
 			storageLocation,
 			inventory,
 			image,
+			images,
 			active,
 			archived,
 		});

@@ -133,7 +133,8 @@ const AddProduct = () => {
 				manCost: manCost.trim(),
 				storageLocation: storageLocation.trim(),
 				inventory: inventory.trim(),
-				image: img,
+				image: img[0],
+				images: img,
 				active,
 				archived,
 			};

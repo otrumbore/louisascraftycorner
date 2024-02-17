@@ -101,7 +101,7 @@ const ProductCard = ({
 								SALE
 							</span>
 						)}
-						<div className='w-full h-[200px] max-h-[300px] flex justify-center items-center overflow-hidden rounded-t-lg bg-black'>
+						<div className='w-full h-[250px] max-h-[300px] flex justify-center items-center overflow-hidden rounded-t-lg bg-black'>
 							<img
 								src={item.image ? item.image : DefaultProductImg}
 								alt={
@@ -113,7 +113,7 @@ const ProductCard = ({
 									e.target.src = DefaultProductImg; // Fallback to default image on error
 									e.target.alt = 'Default Product Image';
 								}}
-								className='aspect-square object-contain h-auto overflow-hidden w-auto'
+								className='aspect-square object-contain object-center h-auto overflow-hidden w-auto'
 							/>
 						</div>
 						<div className='absolute bottom-3 right-3 text-amber-300'>
