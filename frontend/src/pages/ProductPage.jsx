@@ -239,9 +239,12 @@ const ProductPage = () => {
 								</div>
 
 								<div className='flex flex-col gap-y-4 lg:hidden pt-4 text-center'>
-									<p className='font-semibold text-lg'>
-										Swipe for more images...{' '}
-									</p>
+									{product.images.length > 0 && (
+										<p className='font-semibold text-lg'>
+											Swipe for more images...{' '}
+										</p>
+									)}
+
 									<p className='text-sm'>
 										Measurements: {product.measurements}
 									</p>
