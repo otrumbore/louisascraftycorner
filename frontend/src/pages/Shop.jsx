@@ -194,9 +194,11 @@ const Shop = () => {
 								//value={}
 								//onChange={}
 							>
-								<option>All Types</option>
-								<option>Testing</option>
-								<option>Testing</option>
+								<option>Sort By</option>
+								<option>Price: Lowest to Highest</option>
+								<option>Price: Highest to Lowest</option>
+								<option>Date: Newest to Oldest</option>
+								<option>Date: Oldest to Newest</option>
 							</select> */}
 							<label className='flex lg:w-1/3 gap-2 text-lg items-center'>
 								<input
@@ -208,7 +210,7 @@ const Shop = () => {
 								Sales
 							</label>
 							{/* For filling in space */}
-							<div className='hidden lg:block w-full lg:max-w-[20%]'></div>
+							{/* <div className='hidden lg:block w-full lg:max-w-[20%]'></div> */}
 						</div>
 						<div className='flex w-full lg:w-[35%] justify-between lg:justify-end gap-2 items-center'>
 							<button
@@ -230,7 +232,7 @@ const Shop = () => {
 						className={`mt-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 w-[90%]`}
 					>
 						{loading &&
-							Array.from({ length: 6 }).map((_, index) => (
+							Array.from({ length: 12 }).map((_, index) => (
 								<div
 									key={index}
 									className='border-4 border-primary shadow rounded-lg w-full mx-auto'
@@ -256,11 +258,11 @@ const Shop = () => {
 							))}
 						{!loading && products.length > 0 ? (
 							<ProductCard products={products} numProducts={productsPerPage} />
-						) : (
+						) : !loading ? (
 							<div className='flex w-full justify-center'>
 								<h3 className='text-2xl'>No products found...😔</h3>
 							</div>
-						)}
+						) : null}
 					</div>
 					{/* Pagination */}
 					<div className='w-full flex justify-center items-center mt-12'>
