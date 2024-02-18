@@ -17,7 +17,7 @@ const CookiesNotice = () => {
 		// Render the notice only if it has not been acknowledged
 		!acknowledged &&
 		!isAcknowledged && (
-			<div className='fixed top-0 left-0 bg-primary bg-opacity-50 w-full h-full z-50 flex items-end justify-center'>
+			<div className='fixed top-0 left-0 bg-primary bg-opacity-0 w-full h-full z-50 flex items-end justify-center'>
 				<div className='bg-gray-200 w-full h-auto p-4 rounded-md bg-opacity-80 flex flex-col lg:flex-row justify-center'>
 					<div className='w-full flex items-center max-w-[1200px]'>
 						<p className=''>
