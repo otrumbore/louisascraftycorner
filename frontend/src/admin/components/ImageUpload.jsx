@@ -24,9 +24,9 @@ const ImageUpload = () => {
 				croppingAspectRatio: 4 / 3,
 				sources: ['local'],
 				//maxImageWidth: ,
-				minImageWidth: 1024,
+				//minImageWidth: 524,
 				//maxImageHeight: 2048,
-				minImageHeight: 512,
+				//minImageHeight: ,
 				theme: 'default',
 			},
 			(error, result) => {
