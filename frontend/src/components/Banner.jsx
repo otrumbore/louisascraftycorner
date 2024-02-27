@@ -15,7 +15,7 @@ export default function Banner({ style }) {
 					>
 						<circle cx={1} cy={1} r={1} />
 					</svg>
-					Feel free to browse!
+					Now accepting orders!
 				</p>
 				{/* <a
 					href='#'
