@@ -42,14 +42,7 @@ const ProductPage = () => {
 	const [loggedIn, setLoggedIn] = useState(false);
 
 	//cart stuff
-	const {
-		cartItems,
-		addToCart,
-		removeFromCart,
-		clearCart,
-		cartTotal,
-		updateCartItem,
-	} = useCart();
+	const { cartItems, addToCart, updateCartItem } = useCart();
 
 	//user Stuff
 	const { userDetails, addToFavorites, userFavorites, removeFromFavorites } =
@@ -74,6 +67,7 @@ const ProductPage = () => {
 			console.log(response);
 			setProductImage(response.image || DefaultProductImg);
 			setProduct(response);
+			fetchRelatedProducts(response);
 		} catch (error) {
 			console.error(error);
 			enqueueSnackbar('Product does not exist!', {
@@ -83,10 +77,22 @@ const ProductPage = () => {
 		}
 	};
 
-	const fetchRelatedProducts = async () => {
+	const fetchRelatedProducts = async (currProduct) => {
 		try {
 			const response = await getProducts();
-			setRelatedProducts(response);
+			const filteredProducts = response
+				.filter(
+					(product) =>
+						product._id !== currProduct._id &&
+						(product.type === currProduct.type ||
+							product.category === currProduct.category) &&
+						product.active === true &&
+						product.archived === false &&
+						product.type !== 'test' &&
+						product.type !== 'Test'
+				)
+				.slice(0, 4);
+			setRelatedProducts(filteredProducts);
 		} catch (error) {
 			console.error(error);
 			enqueueSnackbar('Could not fetch related products', {
@@ -98,7 +104,6 @@ const ProductPage = () => {
 	useEffect(() => {
 		setLoading(true);
 		fetchProduct();
-		fetchRelatedProducts();
 		userDetails._id ? setLoggedIn(true) : setLoggedIn(false);
 		window.scrollTo(0, 0);
 	}, [id]);
@@ -108,6 +113,7 @@ const ProductPage = () => {
 			product &&
 			Array.isArray(product) &&
 			product.length !== 0 &&
+			product.name !== undefined &&
 			relatedProducts &&
 			Array.isArray(relatedProducts) &&
 			relatedProducts.length !== 0
@@ -178,7 +184,7 @@ const ProductPage = () => {
 
 	return (
 		<>
-			<div className='p-4 mt-[8rem] h-full lg:mt-[8rem]'>
+			<div className='p-4 mt-[8rem] h-full lg:mt-[8rem] w-full'>
 				<LoadingModal loading={loading} />
 				<div className='flex justify-center'>
 					<div className='w-full grid grid-cols-1 lg:grid-cols-2 max-w-[1400px] items-end justify-end gap-y-12'>
@@ -201,7 +207,7 @@ const ProductPage = () => {
 								<div className='flex lg:hidden overflow-x-auto snap-x snap-mandatory items-center rounded-2xl'>
 									{/* Default product image */}
 									<div
-										className='snap-center shrink-0 w-full flex-shrink-0 rounded-2xl'
+										className='snap-center w-full flex-shrink-0 rounded-2xl'
 										key='default-image'
 									>
 										<img
@@ -226,7 +232,7 @@ const ProductPage = () => {
 											.filter((url) => url !== product.image) // Exclude the default image if it's in the array
 											.map((url, i) => (
 												<div
-													className='snap-center shrink-0 w-full flex-shrink-0 rounded-2xl'
+													className='snap-center w-full flex-shrink-0 rounded-2xl'
 													key={i}
 												>
 													<img
@@ -450,21 +456,17 @@ const ProductPage = () => {
 				</div>
 			</div>
 			<div className='mt-10 w-full p-4 flex justify-center'>
-				<div className='w-full max-w-[1400px] flex'>
+				<div className='w-full max-w-[1500px] flex'>
 					{/* Links to new products */}
 					<div className='w-full py-4 flex flex-col items-center justify-center'>
 						<h3 className='text-3xl lg:text-4xl'>
 							<span className=''>More products like this</span>
 						</h3>
 						{/* <p>Newest Christmas Products:</p> */}
-						<div className='mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8 w-[100%]'>
-							<ProductCard
-								numProducts={3}
-								products={relatedProducts}
-								filterCategory={product.category}
-								filterType={product.type}
-								currProduct={product._id}
-							/>
+						<div className='mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 w-full'>
+							{relatedProducts.map((product, idx) => (
+								<ProductCard key={idx} product={product} />
+							))}
 						</div>
 					</div>
 				</div>

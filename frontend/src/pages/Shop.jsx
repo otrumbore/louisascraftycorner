@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ProductCard from '../components/ProductCard';
+import ProductCard from '../components/ProductCard.jsx';
 import getProducts from '../api/products.api.js';
 import { MdCheckBox, MdClose } from 'react-icons/md';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
@@ -29,7 +29,10 @@ const Shop = () => {
 				// Additional filters to exclude archived and inactive products
 				const excludeArchived = product.archived !== true;
 				const excludeInactive = product.active !== false;
-				const excludeTest = product.type !== 'Test' && product.type !== 'test';
+				let excludeTest = true;
+				userRole() < 3
+					? (excludeTest = product.type !== 'Test' && product.type !== 'test')
+					: true;
 
 				const isNumericSearch = !isNaN(searchText);
 
@@ -152,12 +155,12 @@ const Shop = () => {
 	}
 
 	return (
-		<div className='mt-[8rem] w-full flex justify-center'>
+		<div className='w-full flex justify-center min-h-[65vh]'>
 			{/* <LoadingModal loading={loading} /> */}
 			<div className='w-full max-w-[1800px]'>
 				<div className='flex flex-col justify-center items-center'>
 					<h3 className='text-3xl lg:text-4xl'>Lets get shopping...</h3>
-					<div className='mt-8 gap-4 w-[90%] flex flex-col lg:flex-row items-center justify-between bg-slate-300 p-4 rounded-md'>
+					<div className='mt-8 gap-4 w-[95%] flex flex-col lg:flex-row items-center justify-between bg-slate-300 p-4 rounded-md'>
 						<div className='flex w-full flex-col lg:flex-row items-center justify-between gap-4'>
 							<div className='relative w-full lg:w-[30%] focus-within:w-full focus-within:transform ease-in-out duration-700'>
 								<input
@@ -232,7 +235,7 @@ const Shop = () => {
 						className={`mt-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 w-[90%]`}
 					>
 						{loading &&
-							Array.from({ length: 12 }).map((_, index) => (
+							Array.from({ length: productsPerPage }).map((_, index) => (
 								<div
 									key={index}
 									className='border-4 border-primary shadow rounded-lg w-full mx-auto'
@@ -256,63 +259,74 @@ const Shop = () => {
 									</div>
 								</div>
 							))}
-						{!loading && products.length > 0 ? (
-							<ProductCard products={products} numProducts={productsPerPage} />
-						) : !loading ? (
-							<div className='flex w-full justify-center'>
-								<h3 className='text-2xl'>No products found...😔</h3>
-							</div>
-						) : null}
 					</div>
-					{/* Pagination */}
-					<div className='w-full flex justify-center items-center mt-12'>
-						<div className='px-4 grid max-w-[1450px] grid-cols-2 lg:grid-cols-3 w-full gap-y-6'>
-							<div className='flex items-center mt-4'>
-								Page {currentPage} of {pageNumbers.length}
-							</div>
-							<div className='mt-4 flex items-center justify-end lg:justify-center'>
-								Results: {allProducts.length}
-							</div>
-							<ul className='flex items-center justify-center col-span-2 lg:col-span-1 lg:justify-end gap-2'>
-								{currentPage > 1 && (
-									<li className=''>
-										<button
-											onClick={() => paginate(currentPage - 1)}
-											className='btn-outline px-2'
-										>
-											<FaChevronLeft size={25} />
-										</button>
-									</li>
-								)}
-
-								{pageNumbers.map((number) => (
-									<li key={number}>
-										<button
-											onClick={() => paginate(number)}
-											className={`text-lg ${
-												number === currentPage
-													? 'btn px-4'
-													: 'btn-ghost py-2 px-4'
-											}`}
-										>
-											{number}
-										</button>
-									</li>
+					{!loading && products.length > 0 ? (
+						<>
+							<div
+								className={`mt-4 grid grid-cols-1 md:grid-cols-2 mx-auto lg:grid-cols-3 xl:grid-cols-4 gap-4 w-[95%]`}
+							>
+								{products.map((product, idx) => (
+									<ProductCard
+										key={product + ' count ' + idx}
+										product={product}
+									/>
 								))}
+							</div>
+							{/* Pagination */}
+							<div className='w-full flex justify-center items-center mt-12'>
+								<div className='px-4 grid max-w-[1450px] grid-cols-2 lg:grid-cols-3 w-full gap-y-6'>
+									<div className='flex items-center mt-4'>
+										Page {currentPage} of {pageNumbers.length}
+									</div>
+									<div className='mt-4 flex items-center justify-end lg:justify-center'>
+										Results: {allProducts.length} Total
+									</div>
+									<ul className='flex items-center justify-center col-span-2 lg:col-span-1 lg:justify-end gap-2'>
+										{currentPage > 1 && (
+											<li className=''>
+												<button
+													onClick={() => paginate(currentPage - 1)}
+													className='btn-outline px-2'
+												>
+													<FaChevronLeft size={25} />
+												</button>
+											</li>
+										)}
 
-								{currentPage < pageNumbers.length && (
-									<li className=''>
-										<button
-											onClick={() => paginate(currentPage + 1)}
-											className='btn-outline px-2'
-										>
-											<FaChevronRight className='text-2xl' />
-										</button>
-									</li>
-								)}
-							</ul>
+										{pageNumbers.map((number) => (
+											<li key={number}>
+												<button
+													onClick={() => paginate(number)}
+													className={`text-lg ${
+														number === currentPage
+															? 'btn px-4'
+															: 'btn-ghost py-2 px-4'
+													}`}
+												>
+													{number}
+												</button>
+											</li>
+										))}
+
+										{currentPage < pageNumbers.length && (
+											<li className=''>
+												<button
+													onClick={() => paginate(currentPage + 1)}
+													className='btn-outline px-2'
+												>
+													<FaChevronRight className='text-2xl' />
+												</button>
+											</li>
+										)}
+									</ul>
+								</div>
+							</div>
+						</>
+					) : !loading ? (
+						<div className='mt-4 flex w-full justify-center'>
+							<h3 className='text-2xl'>No products found...😔</h3>
 						</div>
-					</div>
+					) : null}
 				</div>
 			</div>
 		</div>
