@@ -109,6 +109,9 @@ const AdminDashboard = () => {
 			.filter((order) => order.status.some((status) => status.type === 'paid'))
 			.filter(
 				(order) => !order.status.some((status) => status.type === 'shipped')
+			)
+			.filter(
+				(order) => !order.status.some((status) => status.type === 'delivered')
 			);
 
 		const retailOrders = orders.filter((order) => order.source === 'retail');

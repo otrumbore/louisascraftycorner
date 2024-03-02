@@ -58,6 +58,9 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 			.filter(
 				(order) => !order.status.some((status) => status.type === 'shipped')
 			)
+			.filter(
+				(order) => !order.status.some((status) => status.type === 'delivered')
+			)
 			.filter((order) => {
 				return !boxOneText || order.orderId.toString().includes(boxOneText);
 			})
@@ -67,6 +70,9 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 			.filter((order) => order.status.some((status) => status.type === 'paid'))
 			.filter(
 				(order) => !order.status.some((status) => status.type === 'crafting')
+			)
+			.filter(
+				(order) => !order.status.some((status) => status.type === 'delivered')
 			)
 			.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
@@ -96,6 +102,9 @@ const Orders = ({ apiOrders, fetchOrders }) => {
 		const filterProgressOrders = orders
 			.filter((order) =>
 				order.status.some((status) => status.type === 'crafting')
+			)
+			.filter(
+				(order) => !order.status.some((status) => status.type === 'delivered')
 			)
 			.filter(
 				(order) => !order.status.some((status) => status.type === 'shipped')
