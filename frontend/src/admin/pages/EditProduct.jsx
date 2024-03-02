@@ -100,10 +100,29 @@ const EditProduct = () => {
 	}, []);
 
 	const removeImage = (img) => {
+		if (img === null) {
+			enqueueSnackbar('Could not remove image for some reason!', {
+				variant: 'error',
+			});
+			return;
+		}
+		if (image && image === img && images.length > 0) {
+			setImage(images[0]);
+		} else {
+			setImage('');
+		}
 		setImages((currentImages) =>
 			currentImages.filter((image) => image !== img)
 		);
+		console.log('removed image - ' + images.filter((image) => image === img));
+		enqueueSnackbar('Removed Image. Click save when done to reflect changes!', {
+			variant: 'success',
+		});
 	};
+
+	useEffect(() => {
+		console.log(images);
+	}, [images]);
 
 	const setDefaultImg = (img) => {
 		setImage(img);
@@ -216,13 +235,21 @@ const EditProduct = () => {
 							<div className='flex flex-col justify-center items-center mb-4'>
 								{images && images.length > 0 ? (
 									<>
-										<div className='flex flex-col'>
+										<div className='relative flex flex-col'>
 											<p className='text-center'>Main Image:</p>
 											<img
 												src={image || images[0] || DefaultProductImg}
 												alt={`Main image`}
 												className='max-w-[200px] max-h-[200px] rounded-md'
 											/>
+											<span
+												onClick={() =>
+													image ? removeImage(image) : removeImage(images[0])
+												}
+												className='absolute cursor-pointer px-1 py-[.05rem] bg-red-600 top-4 -right-1 bg-opacity-75 rounded-md text-sm text-white'
+											>
+												X
+											</span>
 										</div>
 										<p className='text-center'>Current Image(s):</p>
 										<div className='flex p-2 min-h-[100px] max-h-[150px] border-4 border-primary rounded-md w-full'>
