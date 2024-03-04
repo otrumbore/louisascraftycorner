@@ -24,7 +24,9 @@ const Events = () => {
 				<div className='flex justify-center '>
 					<div
 						className='w-full lg:w-[80%] p-4 adminHTML'
-						dangerouslySetInnerHTML={{ __html: eventsData.content }}
+						dangerouslySetInnerHTML={{
+							__html: eventsData.content?.[0].data || '',
+						}}
 					/>
 				</div>
 			</div>

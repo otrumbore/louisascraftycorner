@@ -25,7 +25,9 @@ const About = () => {
 				<div className='flex justify-center '>
 					<div
 						className='w-full lg:w-[80%] p-4 adminHTML'
-						dangerouslySetInnerHTML={{ __html: aboutData.content }}
+						dangerouslySetInnerHTML={{
+							__html: aboutData.content?.[0].data || '',
+						}}
 					/>
 				</div>
 			</div>

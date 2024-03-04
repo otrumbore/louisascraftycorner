@@ -25,7 +25,7 @@ router.put(
 			const { pageName } = request.params;
 			let updatedPage = null;
 			if (request.user.role === 'admin' || request.user.role === 'moderator') {
-				console.log(request.body);
+				//console.log(request.body);
 				updatedPage = await Page.findOneAndUpdate(
 					{ page_name: pageName },
 					{ content: request.body.content },

@@ -4,6 +4,8 @@ import Cookies from 'js-cookie';
 const API_URL = import.meta.env.VITE_SERVER_API_URL;
 const apiKey = import.meta.env.VITE_APP_APIKEY;
 
+//change events and about from events2/about2
+
 export const getEventsPage = async () => {
 	try {
 		const eventsPage = await axios.get(`${API_URL}/api/pages/events`, {
@@ -32,15 +34,7 @@ export const updatePage = async (data) => {
 				},
 			}
 		);
-		if (response.status === 200) {
-			// Update successful
-			return response.data; // You might want to return specific data if available
-		} else {
-			// Handle other status codes if needed
-			console.error(`Unexpected status code: ${response.status}`);
-			//throw new Error('Unexpected server response');
-			return response.status;
-		}
+		return response;
 	} catch (error) {
 		console.log(error);
 	}
