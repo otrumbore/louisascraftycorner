@@ -208,13 +208,13 @@ const Navbar = () => {
 			{/* Mobile Menu */}
 			{/* {isMobileMenuOpen && ( */}
 			<div
-				className={`fixed inset-0 z-50 bg-primary bg-opacity-20 ${
+				className={`fixed inset-0 z-50 bg-gray-800 bg-opacity-60 ${
 					!isMobileMenuOpen ? 'w-0' : 'w-full'
 				} transition-all duration-700 ease-in-out`}
 				onClick={toggleMobileMenu}
 			>
 				<div
-					className={`absolute inset-y-0 left-0 top-0 w-64 bg-slate-200 bg-opacity-90 rounded-r-md shadow-xl shadow-black ${
+					className={`absolute inset-y-0 left-0 top-0 w-64 bg-blue-300 bg-opacity-95 rounded-r-md shadow-xl shadow-black ${
 						!isMobileMenuOpen && ' -mx-72'
 					} transform duration-500 ease-in-out`}
 				>
