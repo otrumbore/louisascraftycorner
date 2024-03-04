@@ -6,6 +6,7 @@ import ProductCard from '../components/ProductCard';
 import { useLocation } from 'react-router-dom';
 import getProducts from '../api/products.api';
 import { useUser } from '../context/UserContext';
+import { getHomePage } from '../api/pages.api';
 
 const Home = () => {
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
@@ -15,10 +16,18 @@ const Home = () => {
 	const [showLeftArrow, setShowLeftArrow] = useState(false);
 	const [showRightArrow, setShowRightArrow] = useState(true);
 	const [showScrollTip, setShowScrollTip] = useState(true);
+	const [heroData, setHeroData] = useState([]);
 
 	const { userRole } = useUser();
 
 	const location = useLocation();
+
+	const getHomePageData = async () => {
+		try {
+			const homeData = await getHomePage();
+			setHeroData(homeData.content);
+		} catch (error) {}
+	};
 
 	const getNewArrivals = async () => {
 		try {
@@ -72,6 +81,7 @@ const Home = () => {
 	useEffect(() => {
 		setLoading(true);
 		getNewArrivals();
+		getHomePageData();
 		window.scrollTo(0, 0); // Ensure the window scrolls to the top on load
 
 		// Function to hide scroll tip on actual scroll
@@ -125,7 +135,7 @@ const Home = () => {
 	return (
 		<div>
 			<LoadingModal loading={loading} />
-			<Hero />
+			{heroData.length > 0 ? <Hero data={heroData} /> : null}
 			<div className='w-full p-4 flex justify-center'>
 				<div className='w-full max-w-[1400px] flex flex-col'>
 					{/* Links to new products */}
