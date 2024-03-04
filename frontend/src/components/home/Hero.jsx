@@ -13,7 +13,7 @@ const Hero = () => {
 	return (
 		<div className='w-full flex justify-center'>
 			<div className='w-full max-w-[2400px] lg:h-[40%] flex flex-col gap-8 items-center justify-center'>
-				<div className='w-[90vw] bg-blue-200 rounded-xl p-4 flex flex-col lg:flex-row items-center justify-between lg:justify-evenly'>
+				<div className='w-[90vw] bg-green-200 rounded-xl p-4 flex flex-col lg:flex-row items-center justify-between lg:justify-evenly'>
 					<img
 						src={HeroPic || DefaultImage}
 						className='border-2 border-primary rounded-tr-3xl rounded-bl-3xl object-fill max-w-80 lg:max-w-96'
@@ -65,7 +65,7 @@ const Hero = () => {
 							</div>
 						</div>
 					</div>
-					<div className='w-full lg:w-1/2 bg-green-200 rounded-xl p-4 flex flex-col lg:flex-row items-center justify-between lg:justify-evenly'>
+					<div className='w-full lg:w-1/2  bg-blue-200 rounded-xl p-4 flex flex-col lg:flex-row items-center justify-between lg:justify-evenly'>
 						<img
 							src={'' || DefaultImage}
 							className='border-2 border-primary rounded-tr-3xl rounded-bl-3xl object-fill max-w-80 lg:max-w-64'

@@ -48,7 +48,7 @@ const Navbar = () => {
 			setScrolled(isScrolled);
 
 			if (!isScrolled && pathName === homePagePath) {
-				setNavStyle('bg-opacity-60 bg-primary glass top-10');
+				setNavStyle('bg-opacity-90 bg-blue-200 glass top-10');
 				setLogoImg(LogoWhite);
 			} else {
 				setNavStyle(
@@ -99,7 +99,8 @@ const Navbar = () => {
 					<div className='flex items-center'>
 						<RxHamburgerMenu
 							className={`lg:hidden mr-4 ${
-								scrolled || pathName !== '/' ? 'text-gray-600' : 'text-white'
+								'text-gray-600'
+								//scrolled || pathName !== '/' ? 'text-gray-600' : 'text-white'
 							}`}
 							size={30}
 							onClick={toggleMobileMenu}
@@ -108,7 +109,7 @@ const Navbar = () => {
 						<div className='rounded-md w-auto h-[50px]'>
 							<Link to='/'>
 								<img
-									src={scrolled || pathName !== '/' ? LogoBlack : LogoWhite}
+									src={LogoBlack} //scrolled || pathName !== '/' ? LogoBlack : LogoWhite}
 									alt="Louisa's Crafty Corner Logo"
 									className='w-auto h-full'
 								/>
@@ -120,7 +121,8 @@ const Navbar = () => {
 					>
 						<div
 							className={`flex w-full items-center justify-evenly ${
-								scrolled || pathName !== '/' ? 'text-gray-600' : 'text-white'
+								'text-gray-600'
+								//scrolled || pathName !== '/' ? 'text-gray-600' : 'text-white'
 							}`}
 						>
 							{navData.map((item, index) => (
@@ -147,7 +149,8 @@ const Navbar = () => {
 					</div>
 					<div
 						className={`flex items-center gap-x-2  ${
-							scrolled || pathName !== '/' ? 'text-gray-600' : 'text-white'
+							'text-gray-600'
+							//scrolled || pathName !== '/' ? 'text-gray-600' : 'text-white'
 						}`}
 					>
 						{/* <div
