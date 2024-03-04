@@ -127,7 +127,7 @@ const Home = () => {
 			<LoadingModal loading={loading} />
 			<Hero />
 			<div className='w-full p-4 flex justify-center'>
-				<div className='w-full max-w-[1400px] flex'>
+				<div className='w-full max-w-[1400px] flex flex-col'>
 					{/* Links to new products */}
 					<div className='relative w-full py-4 flex flex-col items-center justify-center'>
 						<h3 className='text-3xl lg:text-4xl'>
@@ -173,6 +173,7 @@ const Home = () => {
 							<FaArrowRight />
 						</button>
 					</div>
+					{/* <div>Testing</div> */}
 				</div>
 			</div>
 		</div>

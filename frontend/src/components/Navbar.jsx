@@ -36,7 +36,7 @@ const Navbar = () => {
 	//end cart stuff
 
 	const defaultNavStyle =
-		'bg-opacity-90 bg-slate-200 top-0 shadow shadow-primary';
+		'bg-opacity-90 bg-blue-200 glass top-0 shadow shadow-primary';
 	const homePagePath = '/';
 
 	useEffect(() => {
@@ -48,13 +48,13 @@ const Navbar = () => {
 			setScrolled(isScrolled);
 
 			if (!isScrolled && pathName === homePagePath) {
-				setNavStyle('bg-opacity-30 bg-slate-800 glass top-10');
+				setNavStyle('bg-opacity-60 bg-primary glass top-10');
 				setLogoImg(LogoWhite);
 			} else {
 				setNavStyle(
 					isScrolled
 						? defaultNavStyle
-						: 'bg-opacity-90 bg-slate-200 top-10 shadow shadow-primary'
+						: 'bg-opacity-90 bg-blue-200 glass top-10 shadow shadow-primary'
 				);
 				setLogoImg(LogoBlack);
 			}
@@ -91,11 +91,7 @@ const Navbar = () => {
 
 	return (
 		<div>
-			<Banner
-				style={
-					scrolled ? 'hidden' : pathName !== '/' ? 'bg-gray-300 fixed' : 'fixed'
-				}
-			/>
+			<Banner style={scrolled ? 'hidden' : 'fixed'} />
 			<nav
 				className={`fixed flex ${navStyle} left-0 p-2 px-4 w-full h-[4rem] justify-center items-center z-50 transition-all duration-200`}
 			>
