@@ -22,7 +22,7 @@ const ProductCard = ({ product }) => {
 
 	return (
 		<>
-			<div className='flex w-[93vw] md:max-w-[350px] h-[450px] flex-col items-center pb-4 border-4 border-primary space-y-2 rounded-xl justify-between bg-gray-100 shadow-lg shadow-gray-600 lg:hover:scale-105'>
+			<div className='flex w-[93vw] md:max-w-[350px] h-[450px] flex-col items-center pb-4 border-4 border-primary space-y-2 rounded-xl justify-between bg-gray-100 lg:hover:scale-105'>
 				<Link
 					to={`/product/${item._id}`}
 					className='relative flex flex-col gap-y-4 w-full rounded-md'

@@ -35,8 +35,7 @@ const Navbar = () => {
 	const totalItemsCount = cartItemsCount();
 	//end cart stuff
 
-	const defaultNavStyle =
-		'bg-opacity-90 bg-blue-200 glass top-0 shadow shadow-primary';
+	const defaultNavStyle = 'bg-opacity-90 bg-blue-200 glass top-0';
 	const homePagePath = '/';
 
 	useEffect(() => {
@@ -54,7 +53,7 @@ const Navbar = () => {
 				setNavStyle(
 					isScrolled
 						? defaultNavStyle
-						: 'bg-opacity-90 bg-blue-200 glass top-10 shadow shadow-primary'
+						: 'bg-opacity-90 bg-blue-200 glass top-10'
 				);
 				setLogoImg(LogoBlack);
 			}

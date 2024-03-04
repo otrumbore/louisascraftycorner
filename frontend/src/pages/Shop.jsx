@@ -160,7 +160,7 @@ const Shop = () => {
 			<div className='w-full max-w-[1800px]'>
 				<div className='flex flex-col justify-center items-center'>
 					<h3 className='text-3xl lg:text-4xl'>Lets get shopping...</h3>
-					<div className='mt-8 gap-4 w-[95%] flex flex-col lg:flex-row items-center justify-between bg-slate-300 p-4 rounded-md'>
+					<div className='mt-8 gap-4 w-[95%] flex flex-col lg:flex-row items-center justify-between bg-blue-200 bg-opacity-90 p-4 rounded-md'>
 						<div className='flex w-full flex-col lg:flex-row items-center justify-between gap-4'>
 							<div className='relative w-full lg:w-[30%] focus-within:w-full focus-within:transform ease-in-out duration-700'>
 								<input
@@ -261,9 +261,9 @@ const Shop = () => {
 							))}
 					</div>
 					{!loading && products.length > 0 ? (
-						<>
+						<div className='mt-4 flex flex-col items-center justify-center w-full'>
 							<div
-								className={`mt-4 grid grid-cols-1 md:grid-cols-2 mx-auto lg:grid-cols-3 xl:grid-cols-4 gap-4 w-[95%]`}
+								className={` grid grid-cols-1 md:grid-cols-2 mx-auto lg:grid-cols-3 xl:grid-cols-4 gap-4 w-auto`}
 							>
 								{products.map((product, idx) => (
 									<ProductCard
@@ -274,7 +274,7 @@ const Shop = () => {
 							</div>
 							{/* Pagination */}
 							<div className='w-full flex justify-center items-center mt-12'>
-								<div className='px-4 grid max-w-[1450px] grid-cols-2 lg:grid-cols-3 w-full gap-y-6'>
+								<div className='px-4 lg:px-0 grid max-w-[1450px] grid-cols-2 lg:grid-cols-3 w-full gap-y-6'>
 									<div className='flex items-center mt-4'>
 										Page {currentPage} of {pageNumbers.length}
 									</div>
@@ -321,7 +321,7 @@ const Shop = () => {
 									</ul>
 								</div>
 							</div>
-						</>
+						</div>
 					) : !loading ? (
 						<div className='mt-4 flex w-full justify-center'>
 							<h3 className='text-2xl'>No products found...😔</h3>
