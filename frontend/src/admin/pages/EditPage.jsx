@@ -29,13 +29,39 @@ const EditPage = () => {
 
 	const updatePageContent = async () => {
 		try {
-			const data = { page_name: pageSelector, content: value };
+			let pageContent;
+			if (pageSelector === 'about') {
+				pageContent = [...aboutData.content];
+			} else if (pageSelector === 'events') {
+				pageContent = [...eventsData.content];
+			}
+			if (pageContent.length > 0) {
+				pageContent[0] = { ...pageContent[0], data: value };
+			} else {
+				pageContent.push({ data: value });
+			}
+
+			const data = {
+				page_name: pageSelector,
+				content: pageContent,
+			};
+
 			const update = await updatePage(data);
+			console.log(update);
+			if (update.status !== 200 && update.status !== 201) {
+				enqueueSnackbar(`Failed to update the page!`, {
+					variant: 'error',
+				});
+				return;
+			}
 			enqueueSnackbar(`Updated ${pageSelector} successfully!`, {
 				variant: 'success',
 			});
 		} catch (error) {
 			console.log(error);
+			enqueueSnackbar(`Failed to update the page!`, {
+				variant: 'error',
+			});
 		}
 	};
 
@@ -43,6 +69,7 @@ const EditPage = () => {
 		try {
 			const page = await getAboutPage();
 			setAboutData(page);
+			console.log(page);
 		} catch (error) {
 			console.log(error);
 		}
@@ -50,9 +77,9 @@ const EditPage = () => {
 
 	useEffect(() => {
 		if (pageSelector === 'events') {
-			setValue(eventsData.content || '');
+			setValue(eventsData.content?.[0].data || '');
 		} else if (pageSelector === 'about') {
-			setValue(aboutData.content || '');
+			setValue(aboutData.content?.[0].data || '');
 		} else {
 			console.log('something went wrong with the selection of which page!');
 		}
@@ -65,13 +92,13 @@ const EditPage = () => {
 
 	useEffect(() => {
 		if (pageSelector === 'events') {
-			setValue(eventsData.content || '');
+			setValue(eventsData.content?.[0].data || '');
 		}
 	}, [eventsData]);
 
 	useEffect(() => {
 		if (pageSelector === 'about') {
-			setValue(aboutData.content || '');
+			setValue(aboutData.content?.[0].data || '');
 		}
 	}, [aboutData]);
 
@@ -101,7 +128,7 @@ const EditPage = () => {
 				<div className='w-full'>
 					<div className='mb-4 border-4 border-primary rounded-md'>
 						<ReactQuill
-							value={value}
+							value={value || ''}
 							onChange={handleChange}
 							theme='snow'
 							modules={{
