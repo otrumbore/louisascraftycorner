@@ -3,16 +3,18 @@ import { useSnackbar } from 'notistack';
 import { useUser } from '../../context/UserContext';
 import { useNavigate, Link } from 'react-router-dom';
 import LoadingModal from '../../components/LoadingModal';
-import getAboutPage, { getEventsPage, updatePage } from '../../api/pages.api';
+import { getPageData, updatePage } from '../../api/pages.api';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import EditHomePage from '../components/pages/EditHomePage';
 
 const EditPage = () => {
 	const { enqueueSnackbar } = useSnackbar();
+	const [loading, setLoading] = useState(true);
 	const [eventsData, setEventsData] = useState([]);
 	const [aboutData, setAboutData] = useState([]);
 	const [value, setValue] = useState('');
-	const [pageSelector, setPageSelector] = useState('events');
+	const [pageSelector, setPageSelector] = useState('home');
 
 	const handleChange = (e) => {
 		setValue(e);
@@ -20,10 +22,13 @@ const EditPage = () => {
 
 	const fetchEventsPage = async () => {
 		try {
-			const page = await getEventsPage();
+			setLoading(true);
+			const page = await getPageData('events');
 			setEventsData(page);
 		} catch (error) {
 			console.log(error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -67,11 +72,14 @@ const EditPage = () => {
 
 	const fetchAboutPage = async () => {
 		try {
-			const page = await getAboutPage();
+			setLoading(true);
+			const page = await getPageData('about');
 			setAboutData(page);
-			console.log(page);
+			//console.log(page);
 		} catch (error) {
 			console.log(error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -108,10 +116,17 @@ const EditPage = () => {
 
 	return (
 		<div className='w-full flex justify-center'>
+			<LoadingModal loading={loading} />
 			<div className='p-4 w-full max-w-[1200px]'>
 				<h2 className='text-2xl mb-8 text-center'>Edit Pages</h2>
 
 				<div className='flex justify-center items-center gap-4 mb-8'>
+					<button
+						className={`${pageSelector === 'home' ? 'btn' : 'btn-outline'}`}
+						onClick={() => setPageSelector('home')}
+					>
+						Home Page
+					</button>
 					<button
 						className={`${pageSelector === 'events' ? 'btn' : 'btn-outline'}`}
 						onClick={() => setPageSelector('events')}
@@ -126,38 +141,44 @@ const EditPage = () => {
 					</button>
 				</div>
 				<div className='w-full'>
-					<div className='mb-4 border-4 border-primary rounded-md'>
-						<ReactQuill
-							value={value || ''}
-							onChange={handleChange}
-							theme='snow'
-							modules={{
-								toolbar: [
-									[{ header: [1, 2, false] }],
-									['bold', 'italic', 'underline', 'strike', 'blockquote'],
-									[
-										{ list: 'ordered' },
-										{ list: 'bullet' },
-										{ indent: '-1' },
-										{ indent: '+1' },
-									],
-									['link', 'image'],
-									['clean'],
-								],
-							}}
-						/>
-					</div>
-					<div className='flex justify-end'>
-						<button onClick={() => handleSave()} className='btn'>
-							Save Content
-						</button>
-					</div>
+					{pageSelector !== 'home' ? (
+						<>
+							<div className='mb-4 border-4 border-primary rounded-md'>
+								<ReactQuill
+									value={value || ''}
+									onChange={handleChange}
+									theme='snow'
+									modules={{
+										toolbar: [
+											[{ header: [1, 2, false] }],
+											['bold', 'italic', 'underline', 'strike', 'blockquote'],
+											[
+												{ list: 'ordered' },
+												{ list: 'bullet' },
+												{ indent: '-1' },
+												{ indent: '+1' },
+											],
+											['link', 'image'],
+											['clean'],
+										],
+									}}
+								/>
+							</div>
+							<div className='flex justify-end'>
+								<button onClick={() => handleSave()} className='btn'>
+									Save Content
+								</button>
+							</div>
 
-					<p className='text-center'>Preview:</p>
-					<div
-						className='border-4 border-primary rounded-md p-4 adminHTML'
-						dangerouslySetInnerHTML={{ __html: value }}
-					/>
+							{/* <p className='text-center'>Preview:</p>
+							<div
+								className='border-4 border-primary rounded-md p-4 adminHTML'
+								dangerouslySetInnerHTML={{ __html: value }}
+							/> */}
+						</>
+					) : (
+						<EditHomePage />
+					)}
 				</div>
 			</div>
 		</div>

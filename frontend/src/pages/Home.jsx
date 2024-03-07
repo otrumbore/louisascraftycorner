@@ -6,7 +6,7 @@ import ProductCard from '../components/ProductCard';
 import { useLocation } from 'react-router-dom';
 import getProducts from '../api/products.api';
 import { useUser } from '../context/UserContext';
-import { getHomePage } from '../api/pages.api';
+import { getPageData } from '../api/pages.api';
 
 const Home = () => {
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
@@ -24,7 +24,7 @@ const Home = () => {
 
 	const getHomePageData = async () => {
 		try {
-			const homeData = await getHomePage();
+			const homeData = await getPageData('home');
 			setHeroData(homeData.content);
 		} catch (error) {}
 	};

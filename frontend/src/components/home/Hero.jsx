@@ -46,7 +46,10 @@ const Hero = ({ data }) => {
 						<h3 className='text-3xl flex-wrap'>{heroData.hero2.title}</h3>
 					</div>
 
-					<p className='mt-4 text-lg text-center'>{heroData.hero2.data}</p>
+					<p
+						className='mt-4 text-lg text-center'
+						dangerouslySetInnerHTML={{ __html: heroData.hero2.data }}
+					></p>
 					<div className='mt-4 flex w-full justify-center'>
 						<button
 							onClick={() => goShopping(heroData.hero2.link)}
@@ -81,7 +84,10 @@ const Hero = ({ data }) => {
 						<h3 className='text-3xl flex-wrap'>{heroData.hero3.title}</h3>
 					</div>
 
-					<p className='mt-4 text-lg text-center'>{heroData.hero3.data}</p>
+					<p
+						className='mt-4 text-lg text-center'
+						dangerouslySetInnerHTML={{ __html: heroData.hero3.data }}
+					></p>
 					<div className='mt-4 flex w-full justify-center'>
 						<button
 							onClick={() => goShopping(heroData.hero3.link)}
@@ -113,7 +119,10 @@ const Hero = ({ data }) => {
 								<h3 className='text-3xl flex-wrap'>{heroData.hero1.title}</h3>
 							</div>
 
-							<p className='mt-4 text-lg text-center'>{heroData.hero1.data}</p>
+							<p
+								className='mt-4 text-lg text-center'
+								dangerouslySetInnerHTML={{ __html: heroData.hero1.data }}
+							></p>
 							<div className='mt-4 flex w-full justify-center'>
 								<button
 									onClick={() => goShopping(heroData.hero1.link)}
