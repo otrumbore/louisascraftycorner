@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { getAboutPage } from '../api/pages.api';
+import { getPageData } from '../api/pages.api';
 
 const About = () => {
 	const [aboutData, setAboutData] = useState([]);
 
 	const fetchAboutPage = async () => {
 		try {
-			const page = await getAboutPage();
+			const page = await getPageData('about');
 			setAboutData(page);
 		} catch (error) {
 			console.log(error);
