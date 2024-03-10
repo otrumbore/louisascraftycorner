@@ -78,10 +78,12 @@ const ProductCard = ({ product }) => {
 					<Link to={`/product/${item._id}`}>
 						<div className='flex w-1/4 justify-start gap-x-2 text-xl'>
 							<p className={`${item.sale > 0 ? 'line-through' : null}`}>
-								{'$' + item.price}
+								{'$' + item.price.toFixed(2)}
 							</p>
 							{item.sale > 0 && (
-								<p className={`text-red-600`}>{'$' + item.sale}</p>
+								<p className={`text-red-600`}>
+									{'$' + parseFloat(item.sale).toFixed(2)}
+								</p>
 							)}
 						</div>
 					</Link>
