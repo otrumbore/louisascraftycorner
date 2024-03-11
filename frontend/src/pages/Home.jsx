@@ -12,9 +12,12 @@ const Home = () => {
 	const API_URL = import.meta.env.VITE_SERVER_API_URL;
 
 	const [newArrivals, setNewArrivals] = useState([]);
+	const [saleProducts, setSaleProducts] = useState([]);
 	const [loading, setLoading] = useState(false);
-	const [showLeftArrow, setShowLeftArrow] = useState(false);
-	const [showRightArrow, setShowRightArrow] = useState(true);
+	const [arrivalsShowLeftArrow, setArrivalsShowLeftArrow] = useState(false);
+	const [arrivalsShowRightArrow, setArrivalsShowRightArrow] = useState(true);
+	const [salesShowLeftArrow, setSalesShowLeftArrow] = useState(false);
+	const [salesShowRightArrow, setSalesShowRightArrow] = useState(true);
 	const [showScrollTip, setShowScrollTip] = useState(true);
 	const [heroData, setHeroData] = useState([]);
 
@@ -29,7 +32,7 @@ const Home = () => {
 		} catch (error) {}
 	};
 
-	const getNewArrivals = async () => {
+	const fetchProducts = async () => {
 		try {
 			const products = await getProducts();
 			// Filter products where active is true and archived is false
@@ -41,92 +44,130 @@ const Home = () => {
 			);
 
 			// Sort filtered products based on the create date in descending order
-			const sortedProducts = filteredProducts.sort((a, b) => {
+			const sortedNewProducts = filteredProducts.sort((a, b) => {
 				const dateA = new Date(a.createdAt);
 				const dateB = new Date(b.createdAt);
 				return dateB.getTime() - dateA.getTime();
 			});
 
-			const limitedProducts = sortedProducts.slice(0, 9);
+			const limitedNewProducts = sortedNewProducts.slice(0, 9);
 
-			setNewArrivals(limitedProducts);
+			setNewArrivals(limitedNewProducts);
+
+			const saleOnlyProducts = sortedNewProducts.filter(
+				(product) => product.sale > 0
+			);
+
+			const limitedSaleProducts = saleOnlyProducts.slice(0, 9);
+
+			setSaleProducts(limitedSaleProducts);
 		} catch (error) {
 			console.error(error);
 		}
 	};
 
 	// Create a ref for the scrollable container
-	const scrollRef = useRef(null);
+	const newArrivalsRef = useRef(null);
+	const salesRef = useRef(null);
 
-	// Scroll left function
-	const scrollLeft = () => {
-		if (scrollRef.current) {
-			scrollRef.current.scrollBy({
-				left: -scrollRef.current.offsetWidth,
-				behavior: 'smooth',
-			});
-		}
-	};
-
-	// Scroll right function
-	const scrollRight = () => {
-		if (scrollRef.current) {
-			scrollRef.current.scrollBy({
-				left: scrollRef.current.offsetWidth,
-				behavior: 'smooth',
-			});
+	const scrollDirection = (ref, direction) => {
+		if (ref === 'newArrivals') {
+			if (direction === 'left') {
+				if (newArrivalsRef.current) {
+					newArrivalsRef.current.scrollBy({
+						left: -newArrivalsRef.current.offsetWidth,
+						behavior: 'smooth',
+					});
+				}
+			} else {
+				if (newArrivalsRef.current) {
+					newArrivalsRef.current.scrollBy({
+						left: newArrivalsRef.current.offsetWidth,
+						behavior: 'smooth',
+					});
+				}
+			}
+		} else {
+			if (direction === 'left') {
+				if (salesRef.current) {
+					salesRef.current.scrollBy({
+						left: -salesRef.current.offsetWidth,
+						behavior: 'smooth',
+					});
+				}
+			} else {
+				if (salesRef.current) {
+					salesRef.current.scrollBy({
+						left: salesRef.current.offsetWidth,
+						behavior: 'smooth',
+					});
+				}
+			}
 		}
 	};
 
 	useEffect(() => {
 		setLoading(true);
-		getNewArrivals();
+		fetchProducts();
 		getHomePageData();
-		window.scrollTo(0, 0); // Ensure the window scrolls to the top on load
+		window.scrollTo(0, 0);
 
-		// Function to hide scroll tip on actual scroll
 		const onScroll = () => {
-			// Hide the scroll tip once there's actual user-initiated scrolling
 			setShowScrollTip(false);
 
-			// Then remove the event listener, assuming you only want to show the tip until the first scroll
-			if (scrollRef.current) {
-				scrollRef.current.removeEventListener('scroll', onScroll);
+			if (newArrivalsRef.current && salesRef.current) {
+				newArrivalsRef.current.removeEventListener('scroll', onScroll);
+				salesRef.current.removeEventListener('scroll', onScroll);
 			}
 		};
 
 		const checkScrollPosition = () => {
-			if (scrollRef.current) {
-				const isAtLeft = scrollRef.current.scrollLeft === 0;
-				const isAtRight =
-					scrollRef.current.scrollLeft + scrollRef.current.offsetWidth >=
-					scrollRef.current.scrollWidth;
+			if (newArrivalsRef.current && salesRef.current) {
+				const arrivalsIsAtLeft = newArrivalsRef.current.scrollLeft === 0;
+				const arrivalsIsAtRight =
+					newArrivalsRef.current.scrollLeft +
+						newArrivalsRef.current.offsetWidth >=
+					newArrivalsRef.current.scrollWidth;
 
-				setShowLeftArrow(!isAtLeft);
-				setShowRightArrow(!isAtRight);
-				if (isAtLeft) {
-					setShowRightArrow(true);
+				const salesIsAtLeft = salesRef.current.scrollLeft === 0;
+				const salesIsAtRight =
+					salesRef.current.scrollLeft + salesRef.current.offsetWidth >=
+					salesRef.current.scrollWidth;
+
+				setSalesShowLeftArrow(!salesIsAtLeft);
+				setSalesShowRightArrow(!salesIsAtRight);
+				setArrivalsShowLeftArrow(!arrivalsIsAtLeft);
+				setArrivalsShowRightArrow(!arrivalsIsAtRight);
+
+				if (arrivalsIsAtLeft) {
+					setArrivalsShowRightArrow(true);
+				}
+				if (salesIsAtLeft) {
+					setSalesShowRightArrow(true);
 				}
 			}
 		};
 
-		// Initially show the scroll tip
 		setShowScrollTip(true);
 
-		// Check initial position and setup event listener for future scrolls
-		if (scrollRef.current) {
-			scrollRef.current.addEventListener('scroll', onScroll);
-			scrollRef.current.addEventListener('scroll', checkScrollPosition);
+		if (newArrivalsRef.current && salesRef.current) {
+			newArrivalsRef.current.addEventListener('scroll', onScroll);
+			newArrivalsRef.current.addEventListener('scroll', checkScrollPosition);
+			salesRef.current.addEventListener('scroll', onScroll);
+			salesRef.current.addEventListener('scroll', checkScrollPosition);
 			checkScrollPosition();
 		}
 
-		// Cleanup function to remove the event listener
 		return () => {
-			if (scrollRef.current) {
-				scrollRef.current.removeEventListener('scroll', checkScrollPosition);
+			if (newArrivalsRef.current && salesRef.current) {
+				newArrivalsRef.current.removeEventListener(
+					'scroll',
+					checkScrollPosition
+				);
+				salesRef.current.removeEventListener('scroll', checkScrollPosition);
 			}
 		};
-	}, []); // Dependencies are omitted for brevity, include them as needed
+	}, []);
 
 	useEffect(() => {
 		newArrivals && newArrivals.length > 0 ? setLoading(false) : null;
@@ -137,22 +178,24 @@ const Home = () => {
 			<LoadingModal loading={loading} />
 			{heroData.length > 0 ? <Hero data={heroData} /> : null}
 			<div className='w-full p-4 flex justify-center'>
-				<div className='w-full max-w-[1400px] flex flex-col'>
+				<div className='w-full max-w-[1500px] flex flex-col'>
 					{/* Links to new products */}
 					<div className='relative w-full py-4 flex flex-col items-center justify-center'>
 						<h3 className='text-3xl lg:text-4xl'>
-							<span className='text-primary'>New Arrivals</span>
+							<span className='text-dark_secondary'>New Arrivals</span>
 						</h3>
 						<button
-							className={`hidden lg:block absolute top-[50%] -left-6 bg-primary bg-opacity-75 px-4 py-4 text-white text-3xl rounded-full ${
-								showLeftArrow ? 'lg:opacity-75 z-20' : 'lg:opacity-0 -z-10'
-							} transition-opacity duration-500`}
-							onClick={scrollLeft}
+							className={`hidden lg:block absolute top-[50%] -left-6 bg-dark_secondary bg-opacity-75 px-4 py-4 text-white text-3xl rounded-full ${
+								arrivalsShowLeftArrow
+									? 'lg:bg-opacity-50 lg:hover:bg-opacity-90 z-20'
+									: 'lg:opacity-0 -z-10'
+							} transition-bg-opacity duration-500`}
+							onClick={() => scrollDirection('newArrivals', 'left')}
 						>
 							<FaArrowLeft />
 						</button>
 						<div
-							ref={scrollRef}
+							ref={newArrivalsRef}
 							className='mt-8 overflow-x-auto snap-mandatory snap-x flex gap-8 w-full h-[500px] rounded-md'
 						>
 							<div className='pt-4 flex gap-8 z-10'>
@@ -169,16 +212,66 @@ const Home = () => {
 						<div
 							className={`${
 								showScrollTip ? 'flex' : 'hidden'
-							} space-x-8 items-center lg:hidden absolute top-[15%] px-8 py-4 bg-primary text-white bg-opacity-50 z-20 text-2xl rounded-xl`}
+							} space-x-8 items-center lg:hidden absolute top-[15%] px-8 py-4 bg-dark_secondary text-white bg-opacity-50 z-20 text-2xl rounded-xl`}
 						>
 							<p>Swipe</p>
 							<FaArrowRight />
 						</div>
 						<button
-							className={`hidden lg:block absolute top-[50%] -right-6 bg-primary bg-opacity-75 px-4 py-4 text-white text-3xl rounded-full ${
-								showRightArrow ? 'lg:opacity-75 z-20' : 'lg:opacity-0 -z-10'
-							} transition-opacity duration-500`}
-							onClick={scrollRight}
+							className={`hidden lg:block absolute top-[50%] -right-6 bg-dark_secondary bg-opacity-75 px-4 py-4 text-white text-3xl rounded-full ${
+								arrivalsShowRightArrow
+									? 'lg:bg-opacity-50 lg:hover:bg-opacity-90 z-20'
+									: 'lg:opacity-0 -z-10'
+							} transition-bg-opacity duration-300`}
+							onClick={() => scrollDirection('newArrivals', 'right')}
+						>
+							<FaArrowRight />
+						</button>
+					</div>
+					<div className='relative w-full py-4 flex flex-col items-center justify-center'>
+						<h3 className='text-3xl lg:text-4xl'>
+							<span className='text-dark_secondary'>Sale Items</span>
+						</h3>
+						<button
+							className={`hidden lg:block absolute top-[50%] -left-6 bg-dark_secondary bg-opacity-75 px-4 py-4 text-white text-3xl rounded-full ${
+								salesShowLeftArrow
+									? 'lg:bg-opacity-50 lg:hover:bg-opacity-90 z-20'
+									: 'lg:opacity-0 -z-10'
+							} transition-bg-opacity duration-500`}
+							onClick={() => scrollDirection('sales', 'left')}
+						>
+							<FaArrowLeft />
+						</button>
+						<div
+							ref={salesRef}
+							className='mt-8 overflow-x-auto snap-mandatory snap-x flex gap-8 w-full h-[500px] rounded-md'
+						>
+							<div className='pt-4 flex gap-8 z-10'>
+								{saleProducts.map((product, idx) => (
+									<div
+										className='snap-center'
+										key={product.name + ' count ' + idx}
+									>
+										<ProductCard product={product} />
+									</div>
+								))}
+							</div>
+						</div>
+						<div
+							className={`${
+								showScrollTip ? 'flex' : 'hidden'
+							} space-x-8 items-center lg:hidden absolute top-[15%] px-8 py-4 bg-dark_secondary text-white bg-opacity-50 z-20 text-2xl rounded-xl`}
+						>
+							<p>Swipe</p>
+							<FaArrowRight />
+						</div>
+						<button
+							className={`hidden lg:block absolute top-[50%] -right-6 bg-dark_secondary bg-opacity-75 px-4 py-4 text-white text-3xl rounded-full ${
+								salesShowRightArrow
+									? 'lg:bg-opacity-50 lg:hover:bg-opacity-90 z-20'
+									: 'lg:opacity-0 -z-10'
+							} transition-bg-opacity duration-300`}
+							onClick={() => scrollDirection('sales', 'right')}
 						>
 							<FaArrowRight />
 						</button>
