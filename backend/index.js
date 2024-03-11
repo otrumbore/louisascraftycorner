@@ -32,9 +32,19 @@ const frontendURL = process.env.FRONT_END_URL;
 const JWTToken = process.env.JWT_SECRET_TOKEN;
 //const stripeClient = new stripe(stripeApiKey);
 
-// Allow requests only from your frontend URL
+const allowedOrigins = [
+	'https://louisascraftycorner.com',
+	'https://www.louisascraftycorner.com',
+];
+
 const corsOptions = {
-	origin: frontendURL,
+	origin: function (origin, callback) {
+		if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+			callback(null, true);
+		} else {
+			callback(new Error('Origin not allowed by CORS'));
+		}
+	},
 	optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
