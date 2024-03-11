@@ -97,7 +97,7 @@ const Footer = () => {
 									href='mailto:louisascraftycorner@gmail.com'
 									className='cursor-pointer text-dark_secondary hover:underline hover:underline-offset-4'
 								>
-									louisascraftycorner@gmail.com
+									sales@louisascraftycorner.com
 								</a>
 							</p>
 						</li>

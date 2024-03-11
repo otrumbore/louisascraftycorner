@@ -106,9 +106,9 @@ const ContactPage = () => {
 							<strong>Email: </strong>
 							<a
 								href='mailto:louisascraftycorner@gmail.com'
-								className='text-primary hover:underline hover:underline-offset-4'
+								className='text-dark_secondary hover:underline hover:underline-offset-4'
 							>
-								LouisasCraftyCorner@gmail.com
+								sales@louisascraftycorner.com
 							</a>
 						</p>
 
