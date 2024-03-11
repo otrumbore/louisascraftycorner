@@ -95,7 +95,7 @@ const Footer = () => {
 							<p>
 								<a
 									href='mailto:louisascraftycorner@gmail.com'
-									className='cursor-pointer text-primary hover:underline hover:underline-offset-4'
+									className='cursor-pointer text-dark_secondary hover:underline hover:underline-offset-4'
 								>
 									louisascraftycorner@gmail.com
 								</a>

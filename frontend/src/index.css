@@ -36,22 +36,22 @@
 
 @layer components {
 	.btn {
-		@apply flex items-center justify-center gap-x-2 bg-primary text-white py-2 px-8 rounded-md hover:bg-dark_primary hover:ring-2 hover:ring-primary hover:ring-offset-4 hover:ring-offset-slate-200 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed;
+		@apply flex items-center justify-center gap-x-2 bg-secondary text-gray-900 py-2 px-8 rounded-md hover:text-gray-100 hover:bg-dark_secondary hover:ring-2 hover:ring-dark_secondary hover:ring-offset-4 hover:ring-offset-primary transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed;
 	}
 
 	.btn-outline {
-		@apply flex border-2 items-center justify-center gap-x-2 border-primary py-2 px-8 bg-transparent rounded-md hover:bg-primary hover:text-white hover:ring-2 hover:ring-primary hover:ring-offset-4 hover:ring-offset-slate-200 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed;
+		@apply flex border-2 items-center justify-center gap-x-2 border-secondary py-2 px-8 bg-transparent rounded-md hover:bg-secondary hover:text-gray-100 hover:ring-2 hover:ring-secondary hover:ring-offset-4 hover:ring-offset-blue-300 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed;
 	}
 
 	.btn-ghost {
-		@apply flex items-center justify-center gap-x-2 py-2 px-8 rounded-md hover:bg-primary hover:text-white hover:ring-2 hover:ring-primary hover:ring-offset-4 hover:ring-offset-slate-200 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed;
+		@apply flex items-center justify-center gap-x-2 py-2 px-8 rounded-md hover:bg-secondary hover:text-gray-100 hover:ring-2 hover:ring-secondary hover:ring-offset-4 hover:ring-offset-blue-300 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed;
 	}
 
 	.input {
-		@apply p-4 w-full text-lg bg-slate-50 border-4 border-primary focus:border-[6px] transition-all duration-100 rounded-md shadow-md;
+		@apply p-4 w-full text-lg bg-slate-50 border-4 border-secondary focus:border-[6px] transition-all duration-100 rounded-md shadow-md;
 	}
 
 	.input-ghost {
-		@apply p-4 w-full text-lg bg-slate-50 focus:border-4 focus:border-primary transition-all duration-100 rounded-md shadow-md;
+		@apply p-4 w-full text-lg bg-slate-50 focus:border-4 focus:border-secondary transition-all duration-100 rounded-md shadow-md;
 	}
 }

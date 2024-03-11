@@ -280,9 +280,7 @@ const Login = () => {
 							<input
 								type='text'
 								className={`input ${
-									!username.match(usernamePattern)
-										? 'border-red-500'
-										: 'border-primary'
+									!username.match(usernamePattern) ? 'border-red-500' : null
 								}`}
 								placeholder='Username or Email'
 								name='username'
@@ -312,9 +310,7 @@ const Login = () => {
 								type={showPassword ? 'text' : 'password'}
 								tabIndex={2}
 								className={`input ${
-									!password.match(passwordPattern)
-										? 'border-red-500'
-										: 'border-primary'
+									!password.match(passwordPattern) ? 'border-red-500' : null
 								}`}
 								placeholder='Password'
 								name='password'

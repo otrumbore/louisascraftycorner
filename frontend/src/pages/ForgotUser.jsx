@@ -122,6 +122,7 @@ const ForgotUser = () => {
 		} else {
 			navigate('/login');
 		}
+		window.scroll(0, 0);
 	}, [page, navigate]);
 
 	const handleError = (error) => {

@@ -187,14 +187,14 @@ const Cart = () => {
 													{item.sale > 0 ? (
 														<>
 															<p className='line-through mr-2'>
-																{item.price * item.qty}
+																{parseFloat(item.price * item.qty).toFixed(2)}
 															</p>
 															<p className='text-red-600'>
-																${item.sale * item.qty}
+																${parseFloat(item.sale * item.qty).toFixed(2)}
 															</p>
 														</>
 													) : (
-														item.price * item.qty
+														parseFloat(item.price * item.qty).toFixed(2)
 													)}
 												</div>
 											</div>

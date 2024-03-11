@@ -2,6 +2,7 @@ export const setTheme = (theme) => {
 	let primaryColor;
 	let secondaryColor;
 	let darkPrimaryColor;
+	let darkSecondaryColor;
 
 	switch (theme) {
 		case 'easter':
@@ -18,12 +19,13 @@ export const setTheme = (theme) => {
 			break;
 		case 'default':
 		default:
-			primaryColor = '#0066b2';
-			secondaryColor = '#00CCCC';
+			primaryColor = '#93C5FD'; //#0066b2
+			secondaryColor = '#60A5FA'; //#00CCCC
 			break;
 	}
 
 	darkPrimaryColor = darken(primaryColor, 90);
+	darkSecondaryColor = darken(secondaryColor, 10);
 
 	return {
 		extend: {
@@ -31,6 +33,7 @@ export const setTheme = (theme) => {
 				primary: primaryColor,
 				dark_primary: darkPrimaryColor,
 				secondary: secondaryColor,
+				dark_secondary: darkSecondaryColor,
 			},
 		},
 	};

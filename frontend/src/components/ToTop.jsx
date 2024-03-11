@@ -24,8 +24,8 @@ const ToTop = () => {
 
 	return (
 		<div
-			className={`fixed right-4 bottom-4 rounded-full p-4 bg-primary text-white ${
-				isScrolled ? 'z-10 opacity-70' : '-z-10 opacity-0'
+			className={`fixed right-4 bottom-4 rounded-full p-4 bg-dark_secondary text-white ${
+				isScrolled ? 'z-10 opacity-50' : '-z-10 opacity-0'
 			} cursor-pointer hover:opacity-100 transition-opacity duration-700`}
 			onClick={scrollToTop}
 		>
