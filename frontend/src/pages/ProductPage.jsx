@@ -327,11 +327,11 @@ const ProductPage = () => {
 							<div className='mt-4 mb-10 w-full grid grid-cols-1 items-center'>
 								<div className='flex justify-evenly text-2xl'>
 									<p className={`${product.sale > 0 && 'line-through'}`}>
-										{'$' + product.price.toFixed(2)}
+										${parseFloat(product.price).toFixed(2)}
 									</p>
 									{product.sale > 0 && (
 										<p className={`text-red-600`}>
-											{'SALE: $' + product.sale.toFixed(2)}
+											SALE: ${parseFloat(product.sale).toFixed(2)}
 										</p>
 									)}
 								</div>
