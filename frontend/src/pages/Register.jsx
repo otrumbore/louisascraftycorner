@@ -34,6 +34,7 @@ const Register = () => {
 	};
 
 	useEffect(() => {
+		document.title = "Register | Louisa's Crafty Corner";
 		window.scroll(0, 0);
 	}, []);
 

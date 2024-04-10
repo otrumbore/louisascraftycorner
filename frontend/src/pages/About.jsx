@@ -15,6 +15,7 @@ const About = () => {
 
 	useEffect(() => {
 		fetchAboutPage();
+		document.title = "About | Louisa's Custom Crafts";
 		window.scroll(0, 0);
 	}, []);
 

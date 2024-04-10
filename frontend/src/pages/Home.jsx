@@ -110,6 +110,7 @@ const Home = () => {
 		setLoading(true);
 		fetchProducts();
 		getHomePageData();
+		document.title = "Louisa's Custom Crafts";
 		window.scrollTo(0, 0);
 
 		const onScroll = () => {

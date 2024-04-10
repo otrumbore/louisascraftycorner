@@ -66,6 +66,7 @@ const ProductPage = () => {
 			}
 			console.log(response);
 			setProductImage(response.image || DefaultProductImg);
+			document.title = `${response.name} @ Louisa's Crafty Corner`;
 			setProduct(response);
 			fetchRelatedProducts(response);
 		} catch (error) {

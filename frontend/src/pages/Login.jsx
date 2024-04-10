@@ -240,6 +240,8 @@ const Login = () => {
 	};
 
 	useEffect(() => {
+		window.scroll(0, 0);
+		document.title = "Login | Louisa's Custom Crafts";
 		const token = Cookies.get('token');
 
 		if (token) {

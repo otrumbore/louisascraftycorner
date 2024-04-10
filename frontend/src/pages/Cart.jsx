@@ -81,6 +81,7 @@ const Cart = () => {
 
 	useEffect(() => {
 		//console.log(cartItems);
+		document.title = "Cart | Louisa's Custom Crafts";
 		if (cartItems.length > 0) {
 			updateCartPrices();
 		}

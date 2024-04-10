@@ -93,6 +93,7 @@ const ContactPage = () => {
 		// You can perform further actions like sending data to the server
 	};
 	useEffect(() => {
+		document.title = "Contact | Louisa's Crafty Corner";
 		window.scroll(0, 0);
 	}, []);
 

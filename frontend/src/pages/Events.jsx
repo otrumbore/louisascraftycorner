@@ -15,6 +15,7 @@ const Events = () => {
 
 	useEffect(() => {
 		fetchEventsPage();
+		document.title = "Events | Louisa's Crafts";
 		window.scroll(0, 0);
 	}, []);
 	return (

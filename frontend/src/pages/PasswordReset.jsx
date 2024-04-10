@@ -72,6 +72,8 @@ const PasswordReset = () => {
 		if (!emailToken || token) {
 			navigate('/login');
 		}
+		document.title = "Reset Password | Louisa's Crafty Corner";
+		window.scroll(0, 0);
 	}, []);
 	return (
 		<div className='w-full min-h-[65vh] flex justify-center'>

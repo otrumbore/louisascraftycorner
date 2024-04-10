@@ -122,6 +122,7 @@ const ForgotUser = () => {
 		} else {
 			navigate('/login');
 		}
+		document.title = "Forgot User | Louisa's Crafty Corner";
 		window.scroll(0, 0);
 	}, [page, navigate]);
 

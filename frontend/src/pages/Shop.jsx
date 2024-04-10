@@ -146,6 +146,7 @@ const Shop = () => {
 	useEffect(() => {
 		fetchData();
 		fetchSettings();
+		document.title = "Shop Louisa's Custom Crafts";
 		window.scroll(0, 0);
 	}, []);
 
