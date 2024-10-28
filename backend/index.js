@@ -35,6 +35,7 @@ const JWTToken = process.env.JWT_SECRET_TOKEN;
 const allowedOrigins = [
 	'https://louisascraftycorner.com',
 	'https://www.louisascraftycorner.com',
+	'https://louisascraftycorner-production.up.railway.app',
 	`${frontendURL}`,
 ];
 
